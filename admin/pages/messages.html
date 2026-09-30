@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-page="Messages">Messages — Store</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <nav class="nav">
+      <a class="brand" href="./dashboard.html">
+        <span class="brand-mark"><svg class="ic" aria-hidden="true"><use href="#i-shield"></use></svg></span>
+        <span class="brand-text"><span data-brand>Store</span><small>Messages</small></span>
+      </a>
+      <div class="nav-actions">
+        <a href="#" class="btn btn-ghost btn-sm" data-site-link target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg> View store</a>
+        <a href="#" class="btn btn-ghost btn-icon" data-logout aria-label="Log out"><svg class="ic" aria-hidden="true"><use href="#i-logout"></use></svg></a>
+        <button class="nav-toggle" aria-label="Menu"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="side-backdrop"></div>
+
+<div class="dash">
+  <aside class="side"></aside>
+
+  <main class="dash-main">
+
+    <div class="dash-head">
+      <div class="flex gap-2 center">
+        <button class="btn btn-ghost btn-icon side-toggle" style="display:none" aria-label="Open menu" aria-expanded="false"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+        <div>
+          <div class="breadcrumb fs-sm text-muted" style="margin-bottom:4px">
+            <a href="./dashboard.html">Admin</a><span class="sep">/</span><span>Messages</span>
+          </div>
+          <h1><svg class="ic" aria-hidden="true"><use href="#i-mail"></use></svg> Contact messages</h1>
+          <p>Everything sent through the contact form on the storefront.</p>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <button class="btn btn-ghost btn-sm" id="readAll"><svg class="ic" aria-hidden="true"><use href="#i-check"></use></svg> Mark all read</button>
+        <button class="btn btn-ghost btn-sm" id="reloadBtn"><svg class="ic" aria-hidden="true"><use href="#i-refresh"></use></svg> Refresh</button>
+      </div>
+    </div>
+
+    <div class="grid g-4 mb-3">
+      <div class="card card-pad"><div class="fs-xs text-muted">Total</div><b class="fs-lg" id="kTotal">0</b></div>
+      <div class="card card-pad"><div class="fs-xs text-muted">Unread</div><b class="fs-lg" id="kUnread">0</b></div>
+      <div class="card card-pad"><div class="fs-xs text-muted">This week</div><b class="fs-lg" id="kWeek">0</b></div>
+      <div class="card card-pad"><div class="fs-xs text-muted">Latest</div><b class="fs-sm" id="kLatest">—</b></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h3 class="mb-0">Inbox</h3>
+        <div class="flex gap-2">
+          <select class="select" id="filter" style="width:auto">
+            <option value="all">All messages</option>
+            <option value="unread">Unread only</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body" id="list"></div>
+    </div>
+
+  </main>
+</div>
+
+  <footer style="padding:22px 0;font-size:.82rem;color:var(--ink-400);text-align:center">
+    <div class="container">&copy; <span data-year></span> <span data-brand>Store</span> &middot; Admin Panel &middot; <span data-auth-email></span></div>
+  </footer>
+
+<script type="module" src="../js/components/navigation.js"></script>
+<script type="module" src="../js/components/motion.js"></script>
+<script type="module" src="../js/components/icons.js"></script>
+<script type="module" src="../js/core/app.js"></script>
+<script type="module" src="../js/core/header.js"></script>
+<script type="module" src="../js/pages/messages.js"></script>
+</body>
+</html>

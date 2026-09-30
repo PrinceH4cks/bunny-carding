@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-page="Coupons">Coupons — Store</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <nav class="nav">
+      <a class="brand" href="./dashboard.html">
+        <span class="brand-mark"><svg class="ic" aria-hidden="true"><use href="#i-shield"></use></svg></span>
+        <span class="brand-text"><span data-brand>Store</span><small>Coupons</small></span>
+      </a>
+      <div class="nav-actions">
+        <a href="#" class="btn btn-ghost btn-sm" data-site-link target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg> View store</a>
+        <a href="#" class="btn btn-ghost btn-icon" data-logout aria-label="Log out"><svg class="ic" aria-hidden="true"><use href="#i-logout"></use></svg></a>
+        <button class="nav-toggle" aria-label="Menu"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="side-backdrop"></div>
+
+<div class="dash">
+  <aside class="side"></aside>
+
+  <main class="dash-main">
+
+    <div class="dash-head">
+      <div class="flex gap-2 center">
+        <button class="btn btn-ghost btn-icon side-toggle" style="display:none" aria-label="Open menu" aria-expanded="false"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+        <div>
+          <div class="breadcrumb fs-sm text-muted" style="margin-bottom:4px">
+            <a href="./dashboard.html">Admin</a><span class="sep">/</span><span>Coupons</span>
+          </div>
+          <h1><svg class="ic" aria-hidden="true"><use href="#i-ticket"></use></svg> Coupons</h1>
+          <p>Discount codes customers can enter at checkout.</p>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <button class="btn btn-ghost btn-sm" id="reloadBtn"><svg class="ic" aria-hidden="true"><use href="#i-refresh"></use></svg> Refresh</button>
+      </div>
+    </div>
+
+    <div class="grid split">
+      <div>
+        <div class="grid g-4 mb-3">
+          <div class="card card-pad"><div class="fs-xs text-muted">Total</div><b class="fs-lg" id="kTotal">0</b></div>
+          <div class="card card-pad"><div class="fs-xs text-muted">Live</div><b class="fs-lg" id="kLive">0</b></div>
+          <div class="card card-pad"><div class="fs-xs text-muted">Scheduled</div><b class="fs-lg" id="kSoon">0</b></div>
+          <div class="card card-pad"><div class="fs-xs text-muted">Expired</div><b class="fs-lg" id="kOver">0</b></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3 class="mb-0">All coupons</h3></div>
+          <div class="card-body" id="list"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3 class="mb-0" id="formTitle">New coupon</h3></div>
+        <div class="card-body">
+          <div class="field">
+            <label>Code <span class="req">*</span></label>
+            <input class="input" id="cCode" placeholder="SHOP10" style="text-transform:uppercase">
+          </div>
+          <div class="grid g-2">
+            <div class="field">
+              <label>Type</label>
+              <select class="select" id="cKind">
+                <option value="percent">Percent off</option>
+                <option value="flat">Flat amount off</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Value</label>
+              <input class="input" id="cValue" type="number" min="0" placeholder="10">
+              <div class="field-hint" id="kindHint">Percent off (max 100)</div>
+            </div>
+          </div>
+          <div class="grid g-2">
+            <div class="field">
+              <label>Minimum order</label>
+              <input class="input" id="cMin" type="number" min="0" placeholder="0">
+            </div>
+            <div class="field">
+              <label>Uses per customer</label>
+              <input class="input" id="cPer" type="number" min="1" placeholder="1">
+            </div>
+          </div>
+          <div class="field">
+            <label>Total uses (0 = unlimited)</label>
+            <input class="input" id="cMax" type="number" min="0" placeholder="0">
+          </div>
+          <div class="grid g-2">
+            <div class="field">
+              <label>Starts</label>
+              <input class="input" id="cStart" type="date">
+            </div>
+            <div class="field">
+              <label>Ends</label>
+              <input class="input" id="cEnd" type="date">
+            </div>
+          </div>
+          <div class="field">
+            <label class="flex gap-2 center" style="cursor:pointer">
+              <input type="checkbox" id="cOn" checked style="width:auto"> <span>Active</span>
+            </label>
+          </div>
+          <div class="flex gap-2">
+            <button class="btn btn-primary" id="cSave"><svg class="ic" aria-hidden="true"><use href="#i-save"></use></svg> Save coupon</button>
+            <button class="btn btn-ghost hidden" id="cCancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+  <footer style="padding:22px 0;font-size:.82rem;color:var(--ink-400);text-align:center">
+    <div class="container">&copy; <span data-year></span> <span data-brand>Store</span> &middot; Admin Panel &middot; <span data-auth-email></span></div>
+  </footer>
+
+<script type="module" src="../js/components/navigation.js"></script>
+<script type="module" src="../js/components/motion.js"></script>
+<script type="module" src="../js/components/icons.js"></script>
+<script type="module" src="../js/core/app.js"></script>
+<script type="module" src="../js/core/header.js"></script>
+<script type="module" src="../js/pages/coupons.js"></script>
+</body>
+</html>

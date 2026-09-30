@@ -1,0 +1,394 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-page="Site content">Site content — Store</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <nav class="nav">
+      <a class="brand" href="./dashboard.html">
+        <span class="brand-mark"><svg class="ic" aria-hidden="true"><use href="#i-shield"></use></svg></span>
+        <span class="brand-text"><span data-brand>Store</span><small>Site content</small></span>
+      </a>
+      <div class="nav-actions">
+        <a href="#" class="btn btn-ghost btn-sm" data-site-link target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg> View store</a>
+        <a href="#" class="btn btn-ghost btn-icon" data-logout aria-label="Log out"><svg class="ic" aria-hidden="true"><use href="#i-logout"></use></svg></a>
+        <button class="nav-toggle" aria-label="Menu"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="side-backdrop"></div>
+
+<div class="dash">
+  <aside class="side"></aside>
+
+  <main class="dash-main">
+
+    <div class="dash-head">
+      <div class="flex gap-2 center">
+        <button class="btn btn-ghost btn-icon side-toggle" style="display:none" aria-label="Open menu" aria-expanded="false"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+        <div>
+          <div class="breadcrumb fs-sm text-muted" style="margin-bottom:4px">
+            <a href="./dashboard.html">Admin</a><span class="sep">/</span><span>Site content</span>
+          </div>
+          <h1><svg class="ic" aria-hidden="true"><use href="#i-settings"></use></svg> Site content</h1>
+          <p>Everything a shopper sees on the storefront. Changes go live as soon as you save.</p>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <button class="btn btn-ghost btn-sm" id="reloadBtn"><svg class="ic" aria-hidden="true"><use href="#i-refresh"></use></svg> Discard changes</button>
+        <button class="btn btn-primary btn-sm" id="saveBtn"><svg class="ic" aria-hidden="true"><use href="#i-save"></use></svg> Save all</button>
+      </div>
+    </div>
+
+    <div data-tabs>
+      <div class="tabs mb-3">
+        <button class="tab active" data-tab="c1">Homepage</button>
+        <button class="tab" data-tab="c2">Store details</button>
+        <button class="tab" data-tab="c3">Card look</button>
+        <button class="tab" data-tab="c4">Reviews</button>
+        <button class="tab" data-tab="c5">FAQ</button>
+      </div>
+    </div>
+
+    <!-- ============ HOMEPAGE ============ -->
+    <div class="tab-panel active" id="c1">
+      <div class="grid g-2">
+        <div class="card">
+          <div class="card-head"><h3 class="mb-0">Announcement bar</h3></div>
+          <div class="card-body">
+            <div class="field">
+              <label class="flex gap-2 center" style="cursor:pointer">
+                <input type="checkbox" id="annOn" style="width:auto"> <span>Show the announcement bar</span>
+              </label>
+            </div>
+            <div class="field">
+              <label>Announcement text</label>
+              <input class="input" id="annText" placeholder="New offers live this week">
+              <div class="field-hint">Leave empty to hide the bar.</div>
+            </div>
+            <div class="field">
+              <label>Link (optional)</label>
+              <input class="input" id="annHref" placeholder="cards.html?category=gift">
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3 class="mb-0">Trust ticker</h3></div>
+          <div class="card-body">
+            <div class="field">
+              <label>Badges, one per line</label>
+              <textarea class="textarea" id="ticker" rows="7" placeholder="100% GENUINE&#10;INSTANT ACCESS"></textarea>
+              <div class="field-hint">The scrolling strip under the hero. Up to 12.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-3">
+        <div class="card-head"><h3 class="mb-0">Hero</h3></div>
+        <div class="card-body">
+          <div class="field">
+            <label>Eyebrow</label>
+            <input class="input" id="hEye" placeholder="Live now - flat 20% off with code SHOP10">
+          </div>
+          <div class="field">
+            <label>Headline</label>
+            <input class="input" id="hHead" placeholder="Thousands of cards, the lowest prices">
+          </div>
+          <div class="field">
+            <label>Supporting text</label>
+            <textarea class="textarea" id="hLead" rows="3"></textarea>
+          </div>
+          <div class="grid g-2">
+            <div class="field">
+              <label>Primary button label</label>
+              <input class="input" id="hCta1" placeholder="Shop all products">
+            </div>
+            <div class="field">
+              <label>Secondary button label</label>
+              <input class="input" id="hCta2" placeholder="How it works">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-3">
+        <div class="card-head"><h3 class="mb-0">Hero stats</h3></div>
+        <div class="card-body">
+          <div class="grid g-3" id="statRows"></div>
+          <div class="field-hint">Three numbers shown under the hero buttons.</div>
+        </div>
+      </div>
+
+      <div class="card mt-3">
+        <div class="card-head"><h3 class="mb-0">Closing quote</h3></div>
+        <div class="card-body">
+          <div class="field">
+            <label>Quote text</label>
+            <textarea class="textarea" id="qText" rows="2"></textarea>
+          </div>
+          <div class="field">
+            <label>Button label</label>
+            <input class="input" id="qCta" placeholder="Shop cards">
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-3">
+        <div class="card-head"><h3 class="mb-0">Sections on the homepage</h3></div>
+        <div class="card-body">
+          <div class="grid g-2" id="secRows"></div>
+          <div class="field-hint">Untick a section to hide it from the storefront.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ STORE DETAILS ============ -->
+    <div class="tab-panel" id="c2">
+      <div class="card">
+        <div class="card-head"><h3 class="mb-0">Shop name</h3></div>
+        <div class="card-body">
+          <p class="text-muted" style="margin:0 0 14px">
+            The shop's name goes into the wordmark in the header, the tab title, the
+            footer, the page description, and the name a customer sees on a payment
+            request. It is not written into the pages, so changing it here changes it
+            everywhere at once.
+          </p>
+          <div class="grid g-2">
+            <div class="field">
+              <label for="siteName">Shop name</label>
+              <input class="input" id="siteName" maxlength="40" placeholder="Your shop name">
+            </div>
+            <div class="field">
+              <label for="siteTagline">Line under the name</label>
+              <input class="input" id="siteTagline" maxlength="60" placeholder="Gift cards &amp; prepaid vouchers">
+            </div>
+          </div>
+          <div class="field">
+            <label for="siteDesc">Page description</label>
+            <textarea class="textarea" id="siteDesc" rows="2" maxlength="200"
+              placeholder="What the shop sells, in one line — this goes under the name in search results."></textarea>
+            <small class="text-muted">One or two sentences. Mentioning the shop's name here helps it show up in search.</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-3">
+        <div class="card-head"><h3 class="mb-0">Contact details</h3></div>
+        <div class="card-body">
+          <div class="grid g-2">
+            <div class="field">
+              <label>Helpline</label>
+              <input class="input" id="sPhone" placeholder="1800-123-456">
+            </div>
+            <div class="field">
+              <label>Support email</label>
+              <input class="input" id="sEmail" type="email" placeholder="support@bunnystore.in">
+            </div>
+            <div class="field">
+              <label>Office address</label>
+              <input class="input" id="sAddr" placeholder="Lucknow, Uttar Pradesh">
+            </div>
+            <div class="field">
+              <label>Store hours</label>
+              <input class="input" id="sHours" placeholder="Mon-Sat, 9 AM - 8 PM">
+            </div>
+          </div>
+          <div class="alert alert-warn mt-3">
+            <svg class="ic" aria-hidden="true"><use href="#i-alert"></use></svg>
+            <div>These values replace the contact block in the footer of <b>every</b> page, and the contact page.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-3">
+        <div class="card-head"><h3 class="mb-0">Preview</h3></div>
+        <div class="card-body">
+          <p class="text-muted fs-sm mb-2">This is how the footer will read once saved.</p>
+          <div class="card card-pad" style="background:var(--ink-900);color:#fff;border:0">
+            <div class="fs-sm" id="pvPhone"></div>
+            <div class="fs-sm" id="pvEmail"></div>
+            <div class="fs-sm" id="pvAddr"></div>
+            <div class="fs-sm" id="pvHours"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ CARD LOOK ============ -->
+    <div class="tab-panel" id="c3">
+      <div class="grid split">
+        <div class="card">
+          <div class="card-head">
+            <h3 class="mb-0">Card colours by network</h3>
+            <button class="btn btn-ghost btn-xs" id="themeReset">Reset all</button>
+          </div>
+          <div class="card-body">
+            <p class="text-muted fs-sm">
+              Pick a look for each card network. Anything left on <b>Default</b> keeps the
+              colour that network ships with. The change applies everywhere a card is shown.
+            </p>
+            <div id="themeRows"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3 class="mb-0">Preview</h3></div>
+          <div class="card-body">
+            <div class="field">
+              <label>Network</label>
+              <select class="select" id="pvNet"></select>
+            </div>
+            <div id="pvCard"></div>
+            <div class="field mt-3">
+              <label>Preset looks</label>
+              <div id="pvSwatches" class="flex gap-2 wrap"></div>
+            </div>
+            <div class="alert alert-info mt-3">
+              <svg class="ic" aria-hidden="true"><use href="#i-info"></use></svg>
+              <div>Six presets ship with the theme. Each one is a tuned gradient, so text
+                always keeps enough contrast on the card.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ REVIEWS ============ -->
+    <div class="tab-panel" id="c4">
+      <div class="grid split">
+        <div class="card">
+          <div class="card-head">
+            <h3 class="mb-0">Customer reviews</h3>
+            <span class="pill" id="revCount">0</span>
+          </div>
+          <div class="card-body">
+            <div id="revList"></div>
+            <div class="field-hint">These replace the homepage testimonials. Leave fewer than three and the built-in ones stay.</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3 class="mb-0" id="revFormTitle">Add a review</h3></div>
+          <div class="card-body">
+            <div class="field">
+              <label>Customer name <span class="req">*</span></label>
+              <input class="input" id="rvName" placeholder="Rahul Kumar">
+            </div>
+            <div class="grid g-2">
+              <div class="field">
+                <label>City</label>
+                <input class="input" id="rvPlace" placeholder="Lucknow">
+              </div>
+              <div class="field">
+                <label>Stars</label>
+                <select class="select" id="rvStars">
+                  <option value="5">5 - Excellent</option>
+                  <option value="4">4 - Good</option>
+                  <option value="3">3 - Average</option>
+                  <option value="2">2 - Poor</option>
+                  <option value="1">1 - Bad</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Review text <span class="req">*</span></label>
+              <textarea class="textarea" id="rvText" rows="4" placeholder="What did they say?"></textarea>
+            </div>
+            <div class="grid g-2">
+              <div class="field">
+                <label>Sort order</label>
+                <input class="input" id="rvSort" type="number" value="0">
+              </div>
+              <div class="field">
+                <label>Visibility</label>
+                <select class="select" id="rvOn">
+                  <option value="1">Visible</option>
+                  <option value="0">Hidden</option>
+                </select>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button class="btn btn-primary" id="rvSave"><svg class="ic" aria-hidden="true"><use href="#i-save"></use></svg> Save review</button>
+              <button class="btn btn-ghost hidden" id="rvCancel">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ FAQ ============ -->
+    <div class="tab-panel" id="c5">
+      <div class="grid split">
+        <div class="card">
+          <div class="card-head">
+            <h3 class="mb-0">FAQ entries</h3>
+            <span class="pill" id="faqCount">0</span>
+          </div>
+          <div class="card-body">
+            <div id="faqList"></div>
+            <div class="field-hint">Published to the contact page FAQ section.</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3 class="mb-0" id="faqFormTitle">Add a question</h3></div>
+          <div class="card-body">
+            <div class="field">
+              <label>Question <span class="req">*</span></label>
+              <input class="input" id="fqQ" placeholder="How fast is delivery?">
+            </div>
+            <div class="field">
+              <label>Answer <span class="req">*</span></label>
+              <textarea class="textarea" id="fqA" rows="5"></textarea>
+            </div>
+            <div class="grid g-2">
+              <div class="field">
+                <label>Sort order</label>
+                <input class="input" id="fqSort" type="number" value="0">
+              </div>
+              <div class="field">
+                <label>Visibility</label>
+                <select class="select" id="fqOn">
+                  <option value="1">Visible</option>
+                  <option value="0">Hidden</option>
+                </select>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button class="btn btn-primary" id="fqSave"><svg class="ic" aria-hidden="true"><use href="#i-save"></use></svg> Save question</button>
+              <button class="btn btn-ghost hidden" id="fqCancel">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+  <footer style="padding:22px 0;font-size:.82rem;color:var(--ink-400);text-align:center">
+    <div class="container">&copy; <span data-year></span> <span data-brand>Store</span> &middot; Admin Panel &middot; <span data-auth-email></span></div>
+  </footer>
+
+<script type="module" src="../js/components/navigation.js"></script>
+<script type="module" src="../js/components/motion.js"></script>
+<script type="module" src="../js/components/icons.js"></script>
+<script type="module" src="../js/core/app.js"></script>
+<script type="module" src="../js/core/header.js"></script>
+<script type="module" src="../js/pages/content.js"></script>
+</body>
+</html>

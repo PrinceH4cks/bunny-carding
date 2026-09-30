@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-page="Admin Dashboard">Admin Dashboard — Store</title>
+  <meta name="description" content="Revenue, orders, products and users at a glance.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%236d3df5%22%2F%3E%3Cpath%20d%3D%22M11%2012c-1.6-3-1.4-6%20.2-6.6%201.4-.5%202.8%202%203.2%204.6%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M21%2012c1.6-3%201.4-6-.2-6.6-1.4-.5-2.8%202-3.2%204.6%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2219%22%20r%3D%227%22%20fill%3D%22%23fff%22%2F%3E%3Ccircle%20cx%3D%2213.4%22%20cy%3D%2218%22%20r%3D%221.15%22%20fill%3D%22%236d3df5%22%2F%3E%3Ccircle%20cx%3D%2218.6%22%20cy%3D%2218%22%20r%3D%221.15%22%20fill%3D%22%236d3df5%22%2F%3E%3Cpath%20d%3D%22M14.6%2021.4h2.8%22%20stroke%3D%22%236d3df5%22%20stroke-width%3D%221.3%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <nav class="nav">
+        <a class="brand" href="./dashboard.html">
+          <span class="brand-mark" style="background:linear-gradient(135deg,#0b1020,#4338ca)"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
+          <span class="brand-text"><span data-brand>Store</span><small>Admin Panel</small></span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="./dashboard.html" class="active">Dashboard</a></li>
+          <li><a href="./products.html">Products</a></li>
+          <li><a href="./orders.html">Orders</a></li>
+          <li><a href="./users.html">Users</a></li>
+          <li><a href="#" data-site-link target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-external"></use></svg> Store</a></li>
+        </ul>
+        <div class="nav-actions">
+        <div class="dropdown">
+          <button class="btn btn-ghost btn-sm">
+            <span class="avatar avatar-sm" style="background:linear-gradient(135deg,#0b1020,#4338ca)">A</span>
+            <span data-auth-name>Admin</span> <svg class="ic ic-sm" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+          </button>
+          <div class="dropdown-menu">
+            <div class="dropdown-head"><b data-auth-name>Admin</b><div class="fs-xs text-muted" data-auth-email></div></div>
+            <a class="dropdown-item" href="./dashboard.html"><svg class="ic" aria-hidden="true"><use href="#i-chart"></use></svg> Dashboard</a>
+            <a class="dropdown-item" href="./products.html"><svg class="ic" aria-hidden="true"><use href="#i-cart"></use></svg> Products</a>
+            <a class="dropdown-item" href="./orders.html"><svg class="ic" aria-hidden="true"><use href="#i-box"></use></svg> Orders</a>
+            <a class="dropdown-item" href="./users.html"><svg class="ic" aria-hidden="true"><use href="#i-users"></use></svg> Users</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item danger" href="#" data-logout><svg class="ic" aria-hidden="true"><use href="#i-logout"></use></svg> Log out</a>
+          </div>
+        </div>
+          <button class="nav-toggle" aria-label="Menu"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="side-backdrop"></div>
+
+  <div class="dash">
+  <aside class="side"></aside>
+
+  <main class="dash-main">
+
+    <div class="dash-head">
+      <div class="flex gap-2 center">
+        <div>
+          <h1><svg class="ic" aria-hidden="true"><use href="#i-chart"></use></svg> Admin dashboard</h1>
+          <p id="sub">Live business overview&hellip;</p>
+        </div>
+      </div>
+      <div class="flex gap-2 wrap">
+        <button class="btn btn-ghost btn-sm" id="refresh" aria-label="Refresh"><svg class="ic" aria-hidden="true"><use href="#i-refresh"></use></svg> Refresh</button>
+        <a href="./products.html?new=1" class="btn btn-primary btn-sm"><svg class="ic" aria-hidden="true"><use href="#i-plus-circle"></use></svg> New product</a>
+      </div>
+    </div>
+
+    <div class="grid g-4 mb-3" id="kpis">
+      <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
+      <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
+      <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
+      <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
+    </div>
+
+    <div class="grid g-3 mb-3" id="alerts">
+      <div class="card card-pad"><div class="sk sk-line" style="width:70%"></div></div>
+      <div class="card card-pad"><div class="sk sk-line" style="width:70%"></div></div>
+      <div class="card card-pad"><div class="sk sk-line" style="width:70%"></div></div>
+    </div>
+
+    <div class="grid home-split">
+
+      <section class="card">
+        <div class="card-head">
+          <h3 class="mb-0">Revenue, last 7 days</h3>
+          <span class="badge badge-brand" id="chartTotal">&mdash;</span>
+        </div>
+        <div class="card-body">
+          <div id="chart" style="display:flex;align-items:flex-end;gap:12px;height:210px;padding-top:10px">
+            <div class="sk" style="height:150px;flex:1"></div>
+            <div class="sk" style="height:120px;flex:1"></div>
+            <div class="sk" style="height:170px;flex:1"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h3 class="mb-0">Top products</h3>
+          <a href="./products.html" class="btn btn-xs btn-ghost">Manage <svg class="ic ic-sm" aria-hidden="true"><use href="#i-arrow-right"></use></svg></a>
+        </div>
+        <div class="card-body" id="topProd">
+          <div class="sk sk-line" style="width:80%"></div>
+          <div class="sk sk-line" style="width:65%"></div>
+          <div class="sk sk-line" style="width:70%"></div>
+        </div>
+      </section>
+    </div>
+
+    <section class="card mt-3">
+      <div class="card-head">
+        <h3 class="mb-0">Latest orders</h3>
+        <a href="./orders.html" class="btn btn-xs btn-primary">All orders <svg class="ic ic-sm" aria-hidden="true"><use href="#i-arrow-right"></use></svg></a>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th></tr>
+          </thead>
+          <tbody id="recent">
+            <tr><td colspan="7"><div class="sk sk-line" style="width:70%;margin:0"></div></td></tr>
+            <tr><td colspan="7"><div class="sk sk-line" style="width:60%;margin:0"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+  <footer style="padding:22px 0;font-size:.82rem;color:var(--ink-400);text-align:center">
+    <div class="container">&copy; <span data-year></span> <span data-brand>Store</span> &middot; Admin Panel &middot; <span data-auth-email></span></div>
+  </footer>
+
+<script type="module" src="../js/components/navigation.js"></script>
+<script type="module" src="../js/components/motion.js"></script>
+<script type="module" src="../js/components/icons.js"></script>
+<script type="module" src="../js/core/app.js"></script>
+<script type="module" src="../js/core/header.js"></script>
+<script type="module" src="../js/pages/dashboard.js"></script>
+</body>
+</html>

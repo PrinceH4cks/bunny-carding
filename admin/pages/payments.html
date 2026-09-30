@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-page="Payments">Payments — Store</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <nav class="nav">
+      <a class="brand" href="./dashboard.html">
+        <span class="brand-mark" style="background:linear-gradient(135deg,#0c1222,#4a34d4)"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
+        <span class="brand-text"><span data-brand>Store</span><small>Admin Panel</small></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="./dashboard.html">Dashboard</a></li>
+        <li><a href="./products.html">Cards</a></li>
+        <li><a href="./orders.html">Orders</a></li>
+        <li><a href="./users.html">Users</a></li>
+        <li><a href="./payments.html" class="active">Payments</a></li>
+      </ul>
+      <div class="nav-actions">
+        <div class="dropdown">
+          <button class="btn btn-ghost btn-sm">
+            <span class="avatar avatar-sm" style="background:linear-gradient(135deg,#0c1222,#4a34d4)">A</span>
+            <span data-auth-name>Admin</span> <svg class="ic ic-sm" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+          </button>
+          <div class="dropdown-menu">
+            <div class="dropdown-head"><b data-auth-name>Admin</b><div class="fs-xs text-muted" data-auth-email></div></div>
+            <a class="dropdown-item" href="./dashboard.html"><svg class="ic" aria-hidden="true"><use href="#i-chart"></use></svg> Dashboard</a>
+            <a class="dropdown-item" href="./products.html"><svg class="ic" aria-hidden="true"><use href="#i-cart"></use></svg> Cards</a>
+            <a class="dropdown-item" href="./orders.html"><svg class="ic" aria-hidden="true"><use href="#i-box"></use></svg> Orders</a>
+            <a class="dropdown-item" href="./users.html"><svg class="ic" aria-hidden="true"><use href="#i-users"></use></svg> Users</a>
+            <a class="dropdown-item" href="./payments.html"><svg class="ic" aria-hidden="true"><use href="#i-wallet"></use></svg> Payments</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item danger" href="#" data-logout><svg class="ic" aria-hidden="true"><use href="#i-logout"></use></svg> Log out</a>
+          </div>
+        </div>
+        <button class="nav-toggle" aria-label="Menu"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="side-backdrop"></div>
+
+<div class="dash">
+  <aside class="side"></aside>
+
+  <main class="dash-main">
+
+    <div class="dash-head">
+      <div class="flex gap-2 center">
+        <div>
+          <h1><svg class="ic" aria-hidden="true"><use href="#i-wallet"></use></svg> Payments</h1>
+          <p>Gateway settings, deposit approvals and payment verification.</p>
+        </div>
+      </div>
+      <div class="flex gap-2 wrap">
+        <button class="btn btn-ghost btn-sm" id="refresh" aria-label="Refresh"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-refresh"></use></svg> Refresh</button>
+      </div>
+    </div>
+
+    <div class="grid g-4 mb-3" id="mini">
+      <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
+      <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
+      <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
+      <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
+    </div>
+
+    <div data-tabs>
+      <div class="tabs mb-3">
+        <button class="tab active" data-tab="t-dep">Wallet deposits</button>
+        <button class="tab" data-tab="t-ord">Order payments</button>
+        <button class="tab" data-tab="t-gw">Gateway settings</button>
+      </div>
+    </div>
+
+    <!-- deposits -->
+    <div class="tab-panel active" id="t-dep">
+      <div class="card">
+        <div class="card-head">
+          <h3 class="mb-0"><svg class="ic" aria-hidden="true"><use href="#i-coins"></use></svg> Deposit requests</h3>
+          <div class="flex gap-1 wrap" id="depChips">
+            <button class="chip active" data-df="">All</button>
+            <button class="chip" data-df="submitted">Awaiting</button>
+            <button class="chip" data-df="pending">Created</button>
+            <button class="chip" data-df="approved">Approved</button>
+            <button class="chip" data-df="rejected">Rejected</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>User</th><th>Method</th><th>Amount</th><th>Reference</th><th>Status</th><th>Date</th><th class="tr">Action</th></tr>
+            </thead>
+            <tbody id="depRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- order payments -->
+    <div class="tab-panel" id="t-ord">
+      <div class="card">
+        <div class="card-head"><h3 class="mb-0"><svg class="ic" aria-hidden="true"><use href="#i-box"></use></svg> Orders waiting for payment verification</h3></div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>Order</th><th>Customer</th><th>To pay</th><th>UTR</th><th>Pay status</th><th>Order status</th><th class="tr">Action</th></tr>
+            </thead>
+            <tbody id="ordRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- gateway settings -->
+    <div class="tab-panel" id="t-gw">
+      <div class="grid g-2" style="align-items:start">
+        <div class="card">
+          <div class="card-head">
+      <h3 class="mb-0"><svg class="ic" aria-hidden="true"><use href="#i-sliders"></use></svg> Deposit methods</h3>
+      <span class="fs-sm text-muted">Each method is switched on separately</span>
+    </div>
+    <div class="card-body">
+      <form id="gwForm" novalidate>
+        <div class="alert alert-info" id="gwSummary"></div>
+        <div id="gwMethods"></div>
+        <button class="btn btn-primary mt-3" type="submit" id="gwSave"><span class="btn-txt"><svg class="ic" aria-hidden="true"><use href="#i-save"></use></svg> Save all methods</span></button>
+      </form>
+    </div>
+  </div>
+
+        <div>
+          <div class="card card-pad">
+            <h4 class="mb-1"><svg class="ic" aria-hidden="true"><use href="#i-bulb"></use></svg> How payments flow</h4>
+            <ul class="timeline">
+              <li class="done"><b>1. Customer picks a method</b><small>Any method you have switched on shows up in the Add money popup.</small></li>
+              <li class="done"><b>2. They pay</b><small>UPI gateway, manual UPI QR, or a crypto address, depending on the method.</small></li>
+              <li class="done"><b>3. The wallet is credited</b><small>Automatically for the gateway once it confirms, or by you approving a manual or crypto deposit.</small></li>
+              <li class="done"><b>4. They buy cards</b><small>The wallet balance is what pays for a card, and the card details are released at once.</small></li>
+            </ul>
+          </div>
+          <div class="card card-pad mt-3">
+            <h4 class="mb-1"><svg class="ic" aria-hidden="true"><use href="#i-shield"></use></svg> Notes on your API keys</h4>
+            <p class="fs-sm text-muted mb-2">This is a static site, so any key saved here is visible in the
+              page source. Use a sandbox key for testing, and for a live store add a small serverless
+              function so the secret never reaches the browser.</p>
+            <div class="alert alert-warn"><svg class="ic" aria-hidden="true"><use href="#i-alert"></use></svg>
+              <div>Never use your live production secret key on a static site.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<footer style="padding:22px 0;font-size:.82rem;color:var(--ink-400);text-align:center">
+  <div class="container">&copy; <span data-year></span> <span data-brand>Store</span> &middot; Admin Panel &middot; <span data-auth-email></span></div>
+</footer>
+
+<script type="module" src="../js/components/navigation.js"></script>
+<script type="module" src="../js/components/motion.js"></script>
+<script type="module" src="../js/components/icons.js"></script>
+<script type="module" src="../js/core/app.js"></script>
+<script type="module" src="../js/core/header.js"></script>
+<script type="module" src="../js/services/payment-service.js"></script>
+<script type="module" src="../js/pages/payments.js"></script>
+</body>
+</html>

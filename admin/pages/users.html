@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-page="Manage Users">Manage Users — Store</title>
+  <meta name="description" content="View users, block accounts and read contact messages.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%236d3df5%22%2F%3E%3Cpath%20d%3D%22M11%2012c-1.6-3-1.4-6%20.2-6.6%201.4-.5%202.8%202%203.2%204.6%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M21%2012c1.6-3%201.4-6-.2-6.6-1.4-.5-2.8%202-3.2%204.6%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2219%22%20r%3D%227%22%20fill%3D%22%23fff%22%2F%3E%3Ccircle%20cx%3D%2213.4%22%20cy%3D%2218%22%20r%3D%221.15%22%20fill%3D%22%236d3df5%22%2F%3E%3Ccircle%20cx%3D%2218.6%22%20cy%3D%2218%22%20r%3D%221.15%22%20fill%3D%22%236d3df5%22%2F%3E%3Cpath%20d%3D%22M14.6%2021.4h2.8%22%20stroke%3D%22%236d3df5%22%20stroke-width%3D%221.3%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <nav class="nav">
+        <a class="brand" href="./dashboard.html">
+          <span class="brand-mark" style="background:linear-gradient(135deg,#0b1020,#4338ca)"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
+          <span class="brand-text"><span data-brand>Store</span><small>Admin Panel</small></span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="./dashboard.html">Dashboard</a></li>
+          <li><a href="./products.html">Products</a></li>
+          <li><a href="./orders.html">Orders</a></li>
+          <li><a href="./users.html" class="active">Users</a></li>
+          <li><a href="#" data-site-link target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-external"></use></svg> Store</a></li>
+        </ul>
+        <div class="nav-actions">
+        <div class="dropdown">
+          <button class="btn btn-ghost btn-sm">
+            <span class="avatar avatar-sm" style="background:linear-gradient(135deg,#0b1020,#4338ca)">A</span>
+            <span data-auth-name>Admin</span> <svg class="ic ic-sm" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+          </button>
+          <div class="dropdown-menu">
+            <div class="dropdown-head"><b data-auth-name>Admin</b><div class="fs-xs text-muted" data-auth-email></div></div>
+            <a class="dropdown-item" href="./dashboard.html"><svg class="ic" aria-hidden="true"><use href="#i-chart"></use></svg> Dashboard</a>
+            <a class="dropdown-item" href="./products.html"><svg class="ic" aria-hidden="true"><use href="#i-cart"></use></svg> Products</a>
+            <a class="dropdown-item" href="./orders.html"><svg class="ic" aria-hidden="true"><use href="#i-box"></use></svg> Orders</a>
+            <a class="dropdown-item" href="./users.html"><svg class="ic" aria-hidden="true"><use href="#i-users"></use></svg> Users</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item danger" href="#" data-logout><svg class="ic" aria-hidden="true"><use href="#i-logout"></use></svg> Log out</a>
+          </div>
+        </div>
+          <button class="nav-toggle" aria-label="Menu"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="side-backdrop"></div>
+
+  <div class="dash">
+  <aside class="side"></aside>
+
+  <main class="dash-main">
+
+    <div class="dash-head">
+      <div class="flex gap-2 center">
+        <div>
+          <h1><svg class="ic" aria-hidden="true"><use href="#i-users"></use></svg> Users</h1>
+          <p>Registered users, their orders and wallet balances.</p>
+        </div>
+      </div>
+      <div class="flex gap-2 wrap">
+        <button class="btn btn-ghost btn-sm" id="export"><svg class="ic" aria-hidden="true"><use href="#i-download"></use></svg> Export CSV</button>
+        <button class="btn btn-ghost btn-sm" id="refresh" aria-label="Refresh"><svg class="ic" aria-hidden="true"><use href="#i-refresh"></use></svg></button>
+      </div>
+    </div>
+
+    <div class="grid g-5 mb-3" id="mini">
+      <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
+      <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
+      <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
+      <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
+      <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
+    </div>
+
+    <div class="grid" style="align-items:start">
+
+      <section class="card">
+        <div class="card-head">
+          <h3 class="mb-0" id="tblTitle">All users</h3>
+          <div class="flex gap-2 center">
+            <span class="fs-sm text-muted" id="count"></span>
+                      </div>
+        </div>
+
+        <div class="u-filters" id="filters">
+          <button class="chip is-on" data-filter="all">All</button>
+          <button class="chip" data-filter="buyers">Buyers</button>
+          <button class="chip" data-filter="wallet">Has balance</button>
+          <button class="chip" data-filter="frozen">Frozen</button>
+          <button class="chip" data-filter="blocked">Blocked</button>
+        </div>
+
+        <div class="bulkbar hidden" id="bulk">
+          <b class="fs-sm" id="bulkN">0 selected</b>
+          <div class="flex gap-1 wrap">
+            <button class="btn btn-primary btn-xs" id="bCredit">Add wallet credit</button>
+            <button class="btn btn-ghost btn-xs" id="bUnblock">Unblock</button>
+            <button class="btn btn-danger btn-xs" id="bBlock">Block</button>
+            <button class="btn btn-ghost btn-xs" id="bClear">Clear</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="w-pick"><input type="checkbox" id="pickAll" aria-label="Select all on this page"></th>
+                <th><button class="th-sort" data-sort="name">User</button></th>
+                <th>Contact</th>
+                <th class="tr"><button class="th-sort" data-sort="orders">Orders</button></th>
+                <th class="tr"><button class="th-sort" data-sort="spent">Spent</button></th>
+        <th class="tr"><button class="th-sort" data-sort="wallet">Wallet</button></th>
+        <th>Status</th>
+        <th class="tr">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+
+    <div id="pager"></div>
+
+  </main>
+</div>
+
+<div class="modal-back" id="uModal">
+  <div class="modal modal-lg">
+    <div class="modal-head"><h3>User details</h3><button class="x-btn" data-close aria-label="Close"><svg class="ic" aria-hidden="true"><use href="#i-x"></use></svg></button></div>
+    <div class="modal-body" id="uBody"></div>
+    <div class="modal-foot"><button class="btn btn-ghost" data-close>Close</button></div>
+  </div>
+</div>
+
+<div class="modal-back" id="bulkModal">
+  <div class="modal">
+    <div class="modal-head"><h3>Wallet credit for selected users</h3><button class="x-btn" data-close aria-label="Close"><svg class="ic" aria-hidden="true"><use href="#i-x"></use></svg></button></div>
+    <div class="modal-body">
+      <p class="fs-sm text-muted" id="bulkWho"></p>
+      <div class="seg" id="bulkModes" role="group" aria-label="Adjustment type">
+        <button class="seg-btn is-on" data-bmode="add">Add to each</button>
+        <button class="seg-btn" data-bmode="sub">Remove from each</button>
+      </div>
+      <div class="grid g-2 gap-2">
+        <label class="field">
+          <span class="fs-xs text-muted">Amount per user (â‚¹)</span>
+          <input class="input mono" id="bAmt" type="number" min="0" step="1" inputmode="numeric" placeholder="0">
+        </label>
+        <label class="field">
+          <span class="fs-xs text-muted">Reason — shown in their history</span>
+          <input class="input" id="bNote" maxlength="120" placeholder="Promotional credit">
+        </label>
+      </div>
+      <div class="wctl-quick" id="bQuick"></div>
+      <p class="fs-xs text-muted mb-0" id="bHint"></p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" data-close>Cancel</button>
+      <button class="btn btn-primary" id="bGo">Apply to all</button>
+    </div>
+  </div>
+</div>
+
+  <footer style="padding:22px 0;font-size:.82rem;color:var(--ink-400);text-align:center">
+    <div class="container">&copy; <span data-year></span> <span data-brand>Store</span> &middot; Admin Panel &middot; <span data-auth-email></span></div>
+  </footer>
+
+<script type="module" src="../js/components/navigation.js"></script>
+<script type="module" src="../js/components/motion.js"></script>
+<script type="module" src="../js/components/icons.js"></script>
+<script type="module" src="../js/core/app.js"></script>
+<script type="module" src="../js/core/header.js"></script>
+<script type="module" src="../js/pages/users.js"></script>
+</body>
+</html>

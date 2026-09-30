@@ -1,0 +1,146 @@
+﻿rules_version = '2';
+
+// Firebase Console > Firestore > Rules me paste karein.
+// Naya collection yahan likhe bina invisible rahega — app bhi yahi use karti hai.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Badalna ho to yahan aur admin/js/auth.js ke OWNER_UID me wahi UID.
+    function OWNER_UID() { return 'Hku49smD1xhjdZn9KybkqREH3of2'; }
+
+    function signedIn() { return request.auth != null; }
+    function isSelf(uid) { return signedIn() && request.auth.uid == uid; }
+
+    // Sirf wo UID. Role 'admin' likha kar kisi ko bhi panel ya database ka
+    // access nahi milta — role sirf record rahta hai, power nahi.
+    function isAdmin() {
+      return signedIn() && request.auth.uid == OWNER_UID();
+    }
+
+    match /users/{userId} {
+      allow read: if isSelf(userId) || isAdmin();
+      allow create: if isSelf(userId);
+      // disabled aur createdAt ko value se rokte hain, naam se nahi - profile
+      // form har field spread karta hai, to naye field par bhi ye sahi rehta hai.
+      allow update: if isAdmin()
+        || (isSelf(userId)
+            && request.resource.data.disabled == resource.data.get('disabled', false)
+            && request.resource.data.createdAt == resource.data.get('createdAt', null));
+      allow delete: if isAdmin() || isSelf(userId);
+    }
+
+    // Read jaan bujh kar public hai: cart aur checkout bina filter ke saare
+    // products maangte hain, aur Firestore un-filtered query ko reject kar deta
+    // hai — cart khali ho jata. Band karna hai to cart.js me onlyActive:true
+    // karke cart ko "ab available nahi" dikhana padega.
+    match /products/{productId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Balance sirf ghat sakta hai. Bina is check ke koi customer console se
+    // apna balance badha kar asli card khareed sakta tha.
+    match /wallets/{uid} {
+      allow read: if isSelf(uid) || isAdmin();
+      allow create: if (isSelf(uid) || isAdmin())
+        && request.resource.data.balance == 0
+        && request.resource.data.locked == 0;
+      allow update: if isAdmin()
+        || (isSelf(uid)
+            && request.resource.data.balance <= resource.data.get('balance', 0)
+            && request.resource.data.locked == resource.data.get('locked', 0)
+            && request.resource.data.createdAt == resource.data.get('createdAt', null)
+            && request.resource.data.diff(resource.data).affectedKeys().hasAll(['balance']));
+      allow delete: if isAdmin();
+    }
+
+    // Append-only ledger. 'credit' tab likha jata hai jab admin deposit approve
+    // karta hai, isliye customer sirf apna debit likh sakta hai.
+    match /wallet_txns/{txnId} {
+      allow read: if isSelf(resource.data.userId) || isAdmin();
+      allow create: if isSelf(request.resource.data.userId)
+        && request.resource.data.type == 'debit'
+        && request.resource.data.amount is number
+        && request.resource.data.amount > 0;
+      allow update, delete: if isAdmin();
+    }
+
+    match /deposits/{depositId} {
+      allow create: if isSelf(request.resource.data.userId)
+        && request.resource.data.status == 'pending'
+        && request.resource.data.amount is number
+        && request.resource.data.amount > 0
+        && request.resource.data.method is string
+        && request.resource.data.method.size() > 0;
+      allow read: if isSelf(resource.data.userId) || isAdmin();
+      // Sirf UTR/hash, sirf pending deposit me. Amount aur userId list me nahi.
+      allow update: if isAdmin()
+        || (isSelf(resource.data.userId)
+            && resource.data.status == 'pending'
+            && request.resource.data.diff(resource.data).affectedKeys()
+                 .hasOnly(['utr', 'hash', 'gatewayOrderId', 'gatewayStatusAt', 'updatedAt'])
+            && request.resource.data.userId == resource.data.userId
+            && request.resource.data.amount == resource.data.amount);
+      allow delete: if isAdmin();
+    }
+
+    // Isme card number, PIN aur CVV hote hain: padhna sirf khareedare ko.
+    match /orders/{orderId} {
+      allow create: if isSelf(request.resource.data.userId)
+        && request.resource.data.status in ['received', 'pending', 'paid'];
+      allow read: if isSelf(resource.data.userId) || isAdmin();
+      // Sirf cancel — total, items aur payment status apna nahi badal sakta.
+      allow update: if isAdmin()
+        || (isSelf(resource.data.userId)
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt'])
+            && request.resource.data.status == 'cancelled'
+            && resource.data.status != 'cancelled'
+            && resource.data.status != 'completed');
+      allow delete: if isAdmin();
+    }
+
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if isSelf(request.resource.data.userId);
+      allow update: if isAdmin()
+        || (isSelf(resource.data.userId) && request.resource.data.userId == resource.data.userId);
+      allow delete: if isAdmin() || isSelf(resource.data.userId);
+    }
+
+    // Bina login bhi bheja ja sakta hai. Length ki zaroorat isliye ki koi 5MB
+    // ka blob daal kar database bhar na de.
+    match /messages/{msgId} {
+      allow create: if request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 120
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 200
+        && request.resource.data.message is string
+        && request.resource.data.message.size() > 0
+        && request.resource.data.message.size() <= 4000;
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /faqs/{faqId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /coupons/{couponId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Checkout ko gateway ki details chahiye. Jo browser me chahiye wo browser
+    // me chhupi nahi hoti — secret keys Cloud Functions me rakho, yahan nahi.
+    match /settings/{any} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

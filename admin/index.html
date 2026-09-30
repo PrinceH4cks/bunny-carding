@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-page="Admin Login">Admin Login — Store</title>
+  <meta name="description" content="Store admin panel.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+<div class="auth-wrap">
+
+  <aside class="auth-side">
+    <div class="auth-side-in">
+      <a class="brand" href="./pages/dashboard.html">
+        <span class="brand-mark"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
+        <span class="brand-text"><span data-brand>Store</span><small>Admin Panel</small></span>
+      </a>
+
+      <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-lock"></use></svg> Restricted area</span>
+      <h2>Administrators only</h2>
+      <p>Sign in with your admin account to manage products, orders and users.</p>
+
+      <ul class="auth-feats">
+        <li><span class="ic-step"><svg class="ic" aria-hidden="true"><use href="#i-chart"></use></svg></span><span>Revenue, orders and a 7-day chart</span></li>
+        <li><span class="ic-step"><svg class="ic" aria-hidden="true"><use href="#i-cart"></use></svg></span><span>Product CRUD with image upload</span></li>
+        <li><span class="ic-step"><svg class="ic" aria-hidden="true"><use href="#i-box"></use></svg></span><span>Order status and payment updates</span></li>
+        <li><span class="ic-step"><svg class="ic" aria-hidden="true"><use href="#i-users"></use></svg></span><span>User management and account blocking</span></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="auth-main">
+    <div class="auth-card">
+      <!-- Shown on a phone only, where the marketing panel is hidden. -->
+      <a class="brand auth-card-brand" href="./pages/dashboard.html" id="mobileBrand">
+        <span class="brand-mark"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
+        <span class="brand-text"><span data-brand>Store</span><small>Admin Panel</small></span>
+      </a>
+
+      <header class="auth-head">
+        <h1>Admin login</h1>
+        <p>Enter your admin email and password.</p>
+      </header>
+
+      <div id="alertBox"></div>
+
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="email">Email <span class="req">*</span></label>
+          <div class="input-group">
+            <span class="ig-icon"><svg class="ic" aria-hidden="true"><use href="#i-mail"></use></svg></span>
+            <input id="email" class="input" name="email" type="email" placeholder="admin@example.com" autocomplete="email" required>
+          </div>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="field">
+          <label for="password">Password <span class="req">*</span></label>
+          <div class="input-group">
+            <span class="ig-icon"><svg class="ic" aria-hidden="true"><use href="#i-lock"></use></svg></span>
+            <input id="password" class="input" name="password" type="password" placeholder="Your password" autocomplete="current-password" required>
+            <button class="ig-action" type="button" data-peek aria-label="Show password" aria-pressed="false">
+              <svg class="ic" aria-hidden="true"><use href="#i-eye"></use></svg>
+            </button>
+          </div>
+          <div class="field-error"></div>
+        </div>
+
+        <label class="check auth-check"><input type="checkbox" id="remember" checked><span>Keep me signed in</span></label>
+
+        <button class="btn btn-primary btn-lg btn-block auth-submit" type="submit" id="btn">
+          <span class="btn-txt"><svg class="ic" aria-hidden="true"><use href="#i-unlock"></use></svg> Sign in to admin</span>
+        </button>
+      </form>
+
+      <!-- Replaced a "send a password reset email" button. A reset link goes to
+           an inbox, and the person locked out of this panel is usually the
+           person who cannot reach that inbox — so the way out is a person.
+           What this loses: there is no longer a self-serve way back in. That is
+           a deliberate trade, not an oversight. -->
+      <section class="dev-help" aria-labelledby="devHelpTitle">
+        <div class="dev-help-head">
+          <img class="dev-help-av" data-dev-logo alt="" width="42" height="42" decoding="async">
+          <div class="dev-help-head-txt">
+            <b id="devHelpTitle">Locked out?</b>
+            <small>Talk to the developer &mdash; help is usually a few minutes away.</small>
+          </div>
+        </div>
+
+        <div class="dev-help-acts">
+          <a class="dev-help-btn dev-help-wa" data-dev-wa href="https://wa.me/917488739325" target="_blank" rel="noopener">
+            <svg class="ic" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+            <span class="dev-help-label">WhatsApp</span>
+          </a>
+          <a class="dev-help-btn dev-help-tg" data-dev-tg href="https://t.me/PRINCE_H4CKS" target="_blank" rel="noopener">
+            <svg class="ic" aria-hidden="true"><use href="#i-telegram"></use></svg>
+            <span class="dev-help-label">Telegram</span>
+          </a>
+        </div>
+
+        <p class="dev-help-foot">This panel is built and supported by <b data-dev>PRINCE HACKS</b>.</p>
+      </section>
+
+      <p class="auth-note">
+        <svg class="ic" aria-hidden="true"><use href="#i-shield"></use></svg>
+        <span>Only the account whose UID is listed in the code can sign in here.</span>
+      </p>
+    </div>
+  </main>
+</div>
+
+<script type="module" src="./js/components/navigation.js"></script>
+<script type="module" src="./js/components/motion.js"></script>
+<script type="module" src="./js/components/icons.js"></script>
+<script type="module" src="./js/core/app.js"></script>
+<script type="module" src="./js/pages/login.js"></script>
+</body>
+</html>

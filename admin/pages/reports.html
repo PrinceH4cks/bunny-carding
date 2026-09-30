@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-page="Reports">Reports — Store</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <nav class="nav">
+      <a class="brand" href="./dashboard.html">
+        <span class="brand-mark"><svg class="ic" aria-hidden="true"><use href="#i-shield"></use></svg></span>
+        <span class="brand-text"><span data-brand>Store</span><small>Reports</small></span>
+      </a>
+      <div class="nav-actions">
+        <a href="#" class="btn btn-ghost btn-sm" data-site-link target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg> View store</a>
+        <a href="#" class="btn btn-ghost btn-icon" data-logout aria-label="Log out"><svg class="ic" aria-hidden="true"><use href="#i-logout"></use></svg></a>
+        <button class="nav-toggle" aria-label="Menu"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="side-backdrop"></div>
+
+<div class="dash">
+  <aside class="side"></aside>
+
+  <main class="dash-main">
+
+    <div class="dash-head">
+      <div class="flex gap-2 center">
+        <button class="btn btn-ghost btn-icon side-toggle" style="display:none" aria-label="Open menu" aria-expanded="false"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+        <div>
+          <div class="breadcrumb fs-sm text-muted" style="margin-bottom:4px">
+            <a href="./dashboard.html">Admin</a><span class="sep">/</span><span>Reports</span>
+          </div>
+          <h1><svg class="ic" aria-hidden="true"><use href="#i-chart"></use></svg> Reports</h1>
+          <p>Totals across the store, and a CSV you can open in any spreadsheet.</p>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <select class="select" id="range" style="width:auto">
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="365">Last 12 months</option>
+          <option value="0">All time</option>
+        </select>
+        <button class="btn btn-ghost btn-sm" id="reloadBtn"><svg class="ic" aria-hidden="true"><use href="#i-refresh"></use></svg> Refresh</button>
+      </div>
+    </div>
+
+    <div class="grid g-4 mb-3" id="kpis"></div>
+
+    <div class="grid g-2">
+      <div class="card">
+        <div class="card-head">
+          <h3 class="mb-0">Revenue trend</h3>
+          <button class="btn btn-ghost btn-xs" data-csv="orders"><svg class="ic" aria-hidden="true"><use href="#i-download"></use></svg> Orders CSV</button>
+        </div>
+        <div class="card-body"><div id="trend"></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h3 class="mb-0">Orders by status</h3>
+        </div>
+        <div class="card-body"><div id="byStatus"></div></div>
+      </div>
+    </div>
+
+    <div class="grid g-2 mt-3">
+      <div class="card">
+        <div class="card-head">
+          <h3 class="mb-0">Top products</h3>
+          <button class="btn btn-ghost btn-xs" data-csv="products"><svg class="ic" aria-hidden="true"><use href="#i-download"></use></svg> Products CSV</button>
+        </div>
+        <div class="card-body"><div id="topProducts"></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h3 class="mb-0">Low stock</h3>
+          <button class="btn btn-ghost btn-xs" data-csv="users"><svg class="ic" aria-hidden="true"><use href="#i-download"></use></svg> Users CSV</button>
+        </div>
+        <div class="card-body"><div id="lowStock"></div></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+  <footer style="padding:22px 0;font-size:.82rem;color:var(--ink-400);text-align:center">
+    <div class="container">&copy; <span data-year></span> <span data-brand>Store</span> &middot; Admin Panel &middot; <span data-auth-email></span></div>
+  </footer>
+
+<script type="module" src="../js/components/navigation.js"></script>
+<script type="module" src="../js/components/motion.js"></script>
+<script type="module" src="../js/components/icons.js"></script>
+<script type="module" src="../js/core/app.js"></script>
+<script type="module" src="../js/core/header.js"></script>
+<script type="module" src="../js/pages/reports.js"></script>
+</body>
+</html>

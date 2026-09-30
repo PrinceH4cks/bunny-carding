@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-page="Crypto requests">Crypto requests — Store</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body data-method="crypto">
+
+
+
+<header class="site-header">
+  <div class="container">
+    <nav class="nav">
+      <a class="brand" href="./dashboard.html">
+        <span class="brand-mark" style="background:linear-gradient(135deg,#0c1222,#4a34d4)"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
+        <span class="brand-text"><span data-brand>Store</span><small>Admin Panel</small></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="./dashboard.html">Dashboard</a></li>
+        <li><a href="./products.html">Cards</a></li>
+        <li><a href="./orders.html">Orders</a></li>
+        <li><a href="./users.html">Users</a></li>
+        <li><a href="./payments.html" class="active">Payments</a></li>
+      </ul>
+      <div class="nav-actions">
+        <div class="dropdown">
+          <button class="btn btn-ghost btn-sm">
+            <span class="avatar avatar-sm" style="background:linear-gradient(135deg,#0c1222,#4a34d4)">A</span>
+            <span data-auth-name>Admin</span> <svg class="ic ic-sm" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+          </button>
+          <div class="dropdown-menu">
+            <div class="dropdown-head"><b data-auth-name>Admin</b><div class="fs-xs text-muted" data-auth-email></div></div>
+            <a class="dropdown-item" href="./dashboard.html"><svg class="ic" aria-hidden="true"><use href="#i-chart"></use></svg> Dashboard</a>
+            <a class="dropdown-item" href="./products.html"><svg class="ic" aria-hidden="true"><use href="#i-cart"></use></svg> Cards</a>
+            <a class="dropdown-item" href="./orders.html"><svg class="ic" aria-hidden="true"><use href="#i-box"></use></svg> Orders</a>
+            <a class="dropdown-item" href="./users.html"><svg class="ic" aria-hidden="true"><use href="#i-users"></use></svg> Users</a>
+            <a class="dropdown-item" href="./payments.html"><svg class="ic" aria-hidden="true"><use href="#i-wallet"></use></svg> Payments</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item danger" href="#" data-logout><svg class="ic" aria-hidden="true"><use href="#i-logout"></use></svg> Log out</a>
+          </div>
+        </div>
+        <button class="nav-toggle" aria-label="Menu"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="side-backdrop"></div>
+
+<div class="dash">
+  <aside class="side"></aside>
+
+  
+
+  <main class="dash-main">
+
+    <div class="dash-head">
+      <div class="flex gap-2 center">
+        <div>
+          <h1><svg class="ic" aria-hidden="true"><use href="#i-coins"></use></svg> Crypto requests</h1>
+          <p>Transfers customers sent to your deposit address. Confirm one once the network has settled it.</p>
+        </div>
+      </div>
+      <div class="flex gap-2 wrap">
+        <button class="btn btn-ghost btn-sm" id="refresh" aria-label="Refresh"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-refresh"></use></svg> Refresh</button>
+      </div>
+    </div>
+
+    <div class="grid g-4 mb-3" id="mini">
+      <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
+      <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
+      <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
+      <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
+    </div>
+
+    <div class="card" id="requests">
+      <div class="card-head">
+        <h3 class="mb-0"><svg class="ic" aria-hidden="true"><use href="#i-coins"></use></svg> Crypto requests</h3>
+        <div class="flex gap-1 wrap" id="depChips">
+          <button class="chip active" data-df="">All</button>
+          <button class="chip" data-df="submitted">Awaiting</button>
+          <button class="chip" data-df="pending">Created</button>
+          <button class="chip" data-df="approved">Approved</button>
+          <button class="chip" data-df="rejected">Rejected</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr><th>Customer</th><th>Amount</th><th>Transaction hash</th><th>Details</th><th>Status</th><th>Date</th><th class="tr">Action</th></tr>
+          </thead>
+          <tbody id="depRows"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<footer style="padding:22px 0;font-size:.82rem;color:var(--ink-400);text-align:center">
+  <div class="container">&copy; <span data-year></span> <span data-brand>Store</span> &middot; Admin</div>
+</footer>
+
+<script type="module" src="../js/components/navigation.js"></script>
+<script type="module" src="../js/components/motion.js"></script>
+<script type="module" src="../js/components/icons.js"></script>
+<script type="module" src="../js/core/app.js"></script>
+<script type="module" src="../js/core/header.js"></script>
+<script type="module" src="../js/services/payment-service.js"></script>
+<script type="module" src="../js/pages/payments-method.js"></script>
+</body>
+</html>

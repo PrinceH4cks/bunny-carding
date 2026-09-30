@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-page="Manage Products">Manage Products — Store</title>
+  <meta name="description" content="Add, edit and remove products, manage stock and images.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%236d3df5%22%2F%3E%3Cpath%20d%3D%22M11%2012c-1.6-3-1.4-6%20.2-6.6%201.4-.5%202.8%202%203.2%204.6%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M21%2012c1.6-3%201.4-6-.2-6.6-1.4-.5-2.8%202-3.2%204.6%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2219%22%20r%3D%227%22%20fill%3D%22%23fff%22%2F%3E%3Ccircle%20cx%3D%2213.4%22%20cy%3D%2218%22%20r%3D%221.15%22%20fill%3D%22%236d3df5%22%2F%3E%3Ccircle%20cx%3D%2218.6%22%20cy%3D%2218%22%20r%3D%221.15%22%20fill%3D%22%236d3df5%22%2F%3E%3Cpath%20d%3D%22M14.6%2021.4h2.8%22%20stroke%3D%22%236d3df5%22%20stroke-width%3D%221.3%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <nav class="nav">
+        <a class="brand" href="./dashboard.html">
+          <span class="brand-mark" style="background:linear-gradient(135deg,#0b1020,#4338ca)"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
+          <span class="brand-text"><span data-brand>Store</span><small>Admin Panel</small></span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="./dashboard.html">Dashboard</a></li>
+          <li><a href="./products.html" class="active">Products</a></li>
+          <li><a href="./orders.html">Orders</a></li>
+          <li><a href="./users.html">Users</a></li>
+          <li><a href="#" data-site-link target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-external"></use></svg> Store</a></li>
+        </ul>
+        <div class="nav-actions">
+        <div class="dropdown">
+          <button class="btn btn-ghost btn-sm">
+            <span class="avatar avatar-sm" style="background:linear-gradient(135deg,#0b1020,#4338ca)">A</span>
+            <span data-auth-name>Admin</span> <svg class="ic ic-sm" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+          </button>
+          <div class="dropdown-menu">
+            <div class="dropdown-head"><b data-auth-name>Admin</b><div class="fs-xs text-muted" data-auth-email></div></div>
+            <a class="dropdown-item" href="./dashboard.html"><svg class="ic" aria-hidden="true"><use href="#i-chart"></use></svg> Dashboard</a>
+            <a class="dropdown-item" href="./products.html"><svg class="ic" aria-hidden="true"><use href="#i-cart"></use></svg> Products</a>
+            <a class="dropdown-item" href="./orders.html"><svg class="ic" aria-hidden="true"><use href="#i-box"></use></svg> Orders</a>
+            <a class="dropdown-item" href="./users.html"><svg class="ic" aria-hidden="true"><use href="#i-users"></use></svg> Users</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item danger" href="#" data-logout><svg class="ic" aria-hidden="true"><use href="#i-logout"></use></svg> Log out</a>
+          </div>
+        </div>
+          <button class="nav-toggle" aria-label="Menu"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="side-backdrop"></div>
+
+  <div class="dash">
+  <aside class="side"></aside>
+
+  <main class="dash-main">
+
+    <div class="dash-head prod-head">
+      <div class="flex gap-2 center">
+        <div>
+          <h1><svg class="ic" aria-hidden="true"><use href="#i-credit-card"></use></svg> Cards</h1>
+          <p>Add a card, set its price and the value the customer gets.</p>
+        </div>
+      </div>
+      <div class="flex gap-2 wrap prod-tools">
+        <input class="input" id="q" type="search" placeholder="Search products" aria-label="Search products">
+        <button class="btn btn-primary btn-sm" id="addBtn"><svg class="ic" aria-hidden="true"><use href="#i-plus-circle"></use></svg> New card</button>
+      </div>
+    </div>
+
+    <div class="alert alert-info mb-3">
+      <svg class="ic" aria-hidden="true"><use href="#i-bulb"></use></svg>
+      <div><b>Demo products are loaded.</b> There are sample cards for practice only &mdash;
+        delete them and add your own cards when you are ready.</div>
+    </div>
+
+    <div class="flex between center wrap gap-2 mb-3 prod-bar">
+      <div class="flex gap-1 wrap" id="chips">
+        <button class="chip active" data-f="all">All</button>
+        <button class="chip" data-f="low"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-alert"></use></svg> Low stock</button>
+        <button class="chip" data-f="out"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-ban"></use></svg> Out of stock</button>
+        <button class="chip" data-f="active"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-eye"></use></svg> Live</button>
+        <button class="chip" data-f="hidden"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-eye-off"></use></svg> Hidden</button>
+        <button class="chip" data-f="featured"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-star"></use></svg> Featured</button>
+      </div>
+      <div class="flex gap-2 center prod-bar-end">
+        <span class="fs-sm text-muted" id="count"></span>
+        <select class="select" id="sort" aria-label="Sort products">
+          <option value="manual">My order</option>
+          <option value="new">Newest first</option>
+          <option value="name">Name (A-Z)</option>
+          <option value="lowStock">Stock: low to high</option>
+          <option value="highStock">Stock: high to low</option>
+          <option value="highPrice">Price: high to low</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- The bar that appears once cards are chosen. It stays out of the way
+         until something is ticked, because a row of bulk buttons over an
+         untouched list is just noise. -->
+    <div class="pick-bar" id="pickBar" hidden>
+      <div class="pick-bar-in">
+        <label class="check">
+          <input type="checkbox" id="pickAll">
+          <span><b id="pickCount">0 cards selected</b></span>
+        </label>
+        <div class="pick-bar-acts">
+          <button class="btn btn-ghost btn-sm" id="pickHide" type="button">
+            <svg class="ic ic-sm" aria-hidden="true"><use href="#i-eye-off"></use></svg> Hide
+          </button>
+          <button class="btn btn-ghost btn-sm" id="pickShow" type="button">
+            <svg class="ic ic-sm" aria-hidden="true"><use href="#i-eye"></use></svg> Show
+          </button>
+          <button class="btn btn-ghost btn-sm" id="pickFeature" type="button">
+            <svg class="ic ic-sm" aria-hidden="true"><use href="#i-star"></use></svg> Feature
+          </button>
+          <button class="btn btn-ghost btn-sm" id="pickUnfeature" type="button">
+            <svg class="ic ic-sm" aria-hidden="true"><use href="#i-star"></use></svg> Unfeature
+          </button>
+          <button class="btn btn-danger btn-sm" id="pickDelete" type="button">
+            <svg class="ic ic-sm" aria-hidden="true"><use href="#i-trash"></use></svg> Delete
+          </button>
+          <button class="btn btn-ghost btn-sm" id="pickClear" type="button">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="prod-grid" id="grid"></div>
+
+    <div id="pager"></div>
+
+  </main>
+</div>
+
+<div class="modal-back" id="pModal">
+  <div class="modal modal-lg">
+    <div class="modal-head">
+      <h3 id="mTitle">New card</h3>
+      <button class="x-btn" data-close aria-label="Close"><svg class="ic" aria-hidden="true"><use href="#i-x"></use></svg></button>
+    </div>
+    <div class="modal-body">
+      <form id="pForm" novalidate>
+
+        <!-- live summary of what the customer will see -->
+        <div class="p-sum" id="pSum">
+          <div class="p-sum-row">
+            <div class="p-sum-cell">
+              <small>Customer pays</small>
+              <b class="mono" id="sumPay">&#8377;0</b>
+            </div>
+            <span class="p-sum-arrow"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-arrow-right"></use></svg></span>
+            <div class="p-sum-cell">
+              <small>Customer gets</small>
+              <b class="mono" id="sumGet">&#8377;0</b>
+            </div>
+            <div class="p-sum-cell">
+              <small>Saving</small>
+              <b class="mono" id="sumSave">&mdash;</b>
+            </div>
+            <div class="p-sum-cell">
+              <small>Stock</small>
+              <b class="mono" id="sumStock">0</b>
+            </div>
+          </div>
+          <div class="p-sum-name" id="sumName">No product name yet</div>
+        </div>
+
+        <div class="p-sec">
+          <div class="p-sec-h">
+            <svg class="ic ic-sm" aria-hidden="true"><use href="#i-info"></use></svg> Basics
+          </div>
+
+        <div class="field">
+          <label for="name">Product name <span class="req">*</span></label> <input id="name" class="input" name="name" placeholder="Amazon Pay Prepaid Card" required>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="grid g-2">
+          <div class="field">
+            <label for="brand">Brand</label> <input id="brand" class="input" name="brand" placeholder="Amazon">
+          </div>
+          <div class="field">
+          <label for="catSelect">Category <span class="req">*</span></label>
+          <select class="select" name="category" id="catSelect" required></select>
+          </div>
+        </div>
+        </div><!-- /.p-sec -->
+
+        <div class="p-sec">
+          <div class="p-sec-h">
+            <svg class="ic ic-sm" aria-hidden="true"><use href="#i-wallet"></use></svg> Pricing and stock
+          </div>
+
+        <div class="grid g-4">
+          <div class="field">
+            <label for="price">Customer pays (₹) <span class="req">*</span></label> <input id="price" class="input mono" name="price" type="number" min="1" placeholder="1499" required>
+            <div class="field-error"></div>
+          </div>
+          <div class="field">
+            <label for="value">Card value (₹) <span class="req">*</span></label> <input id="value" class="input mono" name="value" type="number" min="0" placeholder="2000" required>
+            <div class="field-hint">What the customer gets</div>
+            <div class="field-error"></div>
+          </div>
+          <div class="field">
+            <label for="mrp">MRP (₹)</label> <input id="mrp" class="input mono" name="mrp" type="number" min="0" placeholder="2199">
+            <div class="field-hint">Leave empty for no discount</div>
+            <div class="field-error"></div>
+          </div>
+          <div class="field">
+            <label for="stock">Stock <span class="req">*</span></label> <input id="stock" class="input mono" name="stock" type="number" min="0" placeholder="25" required>
+            <div class="field-error"></div>
+          </div>
+        </div>
+        </div><!-- /.p-sec -->
+
+        <div class="p-sec">
+          <div class="p-sec-h">
+            <svg class="ic ic-sm" aria-hidden="true"><use href="#i-credit-card"></use></svg> Card details
+            <span class="p-sec-note">released to the customer only after payment</span>
+          </div>
+
+        <div class="card card-pad" style="background:var(--ink-50)">
+
+          <div class="grid g-3">
+            <div class="field">
+          <label for="netSelect">Network</label>
+          <select class="select" name="network" id="netSelect"></select>
+            </div>
+            <div class="field">
+              <label for="expiry">Expiry (MM/YY)</label> <input id="expiry" class="input mono" name="expiry" placeholder="2908" maxlength="4">
+            </div>
+            <div class="field">
+              <label for="holderName">Name on card</label> <input id="holderName" class="input" name="holderName" placeholder="CARD HOLDER">
+            </div>
+          </div>
+
+          <div class="grid g-3">
+            <div class="field">
+              <label for="cardNo">Card number</label> <input id="cardNo" class="input mono" name="cardNo" placeholder="auto-generated" maxlength="19">
+              <div class="field-hint">Leave empty to generate one</div>
+            </div>
+            <div class="field">
+              <label for="pin">PIN</label> <input id="pin" class="input mono" name="pin" placeholder="auto" maxlength="8">
+            </div>
+            <div class="field">
+              <label for="cvv">CVV</label> <input id="cvv" class="input mono" name="cvv" placeholder="auto" maxlength="4">
+            </div>
+          </div>
+
+          <div id="cardPreview" class="mt-2"></div>
+        </div>
+        </div><!-- /.p-sec -->
+
+        <div class="p-sec">
+          <div class="p-sec-h">
+            <svg class="ic ic-sm" aria-hidden="true"><use href="#i-store"></use></svg> Store listing
+          </div>
+
+        <div class="field">
+          <label for="description">Short description</label> <textarea id="description" class="textarea" name="description" placeholder="What comes in the box&hellip;"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="benefits">Key features (one per line)</label> <textarea id="benefits" class="textarea" name="benefits" placeholder="Instant delivery&#10;No expiry for 12 months" style="min-height:90px"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="instructions">Usage instructions</label>
+          <textarea id="instructions" class="textarea" name="instructions" placeholder="Scratch the panel on the reverse to reveal the PIN. Activate once, then use for payments."></textarea>
+          <div class="field-hint">Shown to the customer on the card's own page after they buy it.</div>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="field">
+          <label class="check"><input type="checkbox" id="nfc" name="nfc" checked><span><svg class="ic ic-sm" aria-hidden="true"><use href="#i-nfc"></use></svg> Contactless enabled</span></label>
+          <label class="check"><input type="checkbox" id="featured" name="featured"><span><svg class="ic ic-sm" aria-hidden="true"><use href="#i-star"></use></svg> Show as featured</span></label>
+          <label class="check"><input type="checkbox" id="active" name="active" checked><span><svg class="ic ic-sm" aria-hidden="true"><use href="#i-eye"></use></svg> Keep live on the store</span></label>
+        </div>
+        </div><!-- /.p-sec -->
+      </form>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" data-close>Cancel</button>
+      <button class="btn btn-primary" id="saveBtn"><span class="btn-txt"><svg class="ic" aria-hidden="true"><use href="#i-save"></use></svg> Save card</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-back" id="sModal">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-head"><h3>Update stock</h3><button class="x-btn" data-close aria-label="Close"><svg class="ic" aria-hidden="true"><use href="#i-x"></use></svg></button></div>
+    <div class="modal-body">
+      <p class="fs-sm text-muted" id="sName">&mdash;</p>
+      <div class="field">
+          <label for="sInput">New stock level</label>
+          <input class="input" id="sInput" type="number" min="0">
+        <div class="field-hint">Saved immediately.</div>
+      </div>
+      <div class="flex gap-1 wrap">
+        <button class="chip" data-add="5">+5</button>
+        <button class="chip" data-add="10">+10</button>
+        <button class="chip" data-add="25">+25</button>
+        <button class="chip" data-add="-5">&minus;5</button>
+        <button class="chip" data-set="0">0 (out of stock)</button>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" data-close>Cancel</button>
+      <button class="btn btn-primary" id="sSave">Update stock</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-back" id="dModal">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-head"><h3>Delete this product?</h3><button class="x-btn" data-close aria-label="Close"><svg class="ic" aria-hidden="true"><use href="#i-x"></use></svg></button></div>
+    <div class="modal-body"><p id="dMsg" class="mb-0">This product will be permanently removed.</p></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" data-close>Cancel</button>
+      <button class="btn btn-danger" id="dYes"><svg class="ic" aria-hidden="true"><use href="#i-trash"></use></svg> Delete product</button>
+    </div>
+  </div>
+</div>
+
+  <footer style="padding:22px 0;font-size:.82rem;color:var(--ink-400);text-align:center">
+    <div class="container">&copy; <span data-year></span> <span data-brand>Store</span> &middot; Admin Panel &middot; <span data-auth-email></span></div>
+  </footer>
+
+<script type="module" src="../js/components/navigation.js"></script>
+<script type="module" src="../js/components/motion.js"></script>
+<script type="module" src="../js/components/icons.js"></script>
+<script type="module" src="../js/core/app.js"></script>
+<script type="module" src="../js/core/header.js"></script>
+<script type="module" src="../js/pages/products.js"></script>
+</body>
+</html>
