@@ -4,7 +4,7 @@
 import { brandName } from "../core/brand.js";
 import { $, $$, esc } from "../core/app.js";
 import { emptyState } from "../components/ui.js";
-import { getProducts, seedIfEmpty, CATEGORIES, catLabel } from "../services/product-service.js";
+import { getProducts, CATEGORIES, catLabel } from "../services/product-service.js";
 import { cardTile, skTiles } from "../components/card-visual.js";
 import { icon } from "../components/icons.js";
 
@@ -216,7 +216,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   box.innerHTML = skTiles(9);
 
   try {
-    await seedIfEmpty();
     state.all = await getProducts({ onlyActive: true, limitN: 500 });
     fillBrands();
     render();

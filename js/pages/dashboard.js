@@ -7,7 +7,7 @@ import { $, inr, esc, fmtDate, timeAgo, statusBadge, ORDER_STATUS } from "../cor
 import { emptyState } from "../components/ui.js";
 import { cardTile } from "../components/card-visual.js";
 import { getUserOrders } from "../services/order-service.js";
-import { getProducts, seedIfEmpty } from "../services/product-service.js";
+import { getProducts } from "../services/product-service.js";
 import { requireLogin, PROFILE, CURRENT } from "../core/auth.js";
 import { getCart, cartCount } from "../services/cart-service.js";
 import { getWallet } from "../services/wallet-service.js";
@@ -67,7 +67,6 @@ function renderRecent(orders) {
 async function loadSuggest() {
   const box = $("#suggest");
   try {
-    await seedIfEmpty();
       box.innerHTML = (await getProducts({ sort: "popular", limitN: 4 })).map(cardTile).join("");
   } catch {
     box.innerHTML = '<p class="text-muted mb-0">Recommendations are unavailable right now.</p>';

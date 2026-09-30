@@ -240,40 +240,7 @@ const DEMO = [
   ["Fuel Voucher 2000",           "IndianOil",  "fuel",      "visa",        1999, 2000, 26, "416553", exp(30, "05"), ["2000 fuel credit", "All partner outlets", "No expiry", "Partial redemption allowed"]]
 ];
 
-export async function seedIfEmpty() {
-  const s = await getDocs(query(collection(db, COL.products), limit(1)));
-  if (!s.empty) return false;
 
-  let i = 0;
-  for (const [name, brand, category, network, price, value, stock, prefix, expiry, features] of DEMO) {
-    const no = cardNo(prefix, name + i);
-    const mrp = Math.round(value * 1.08);
-    await setDoc(doc(db, COL.products, uid()), {
-      name, brand, category, network,
-      price: rupees(price), mrp, value: rupees(value), stock,
-      discount: Math.round(((mrp - price) / mrp) * 100),
-      cardNo: no,
-      pin: String(1000 + ((no.charCodeAt(15) * 37 + i * 91) % 9000)),
-      cvv: String(100 + ((no.charCodeAt(14) * 17 + i * 53) % 900)),
-      expiry,
-      nfc: network !== "netbanking",
-      holderName: "CARD HOLDER",
-      isCard: true,
-      description: name + " with a value of " + value + ". Shown in your account the moment you pay, with no shipping and no expiry lock.",
-      benefits: features,
-      instructions: "Scratch the panel on the reverse to reveal the PIN. Activate once, then use for payments.",
-      image: "",
-      gallery: [],
-      featured: i % 5 === 0,
-      active: true,
-      rating: Math.round((4 + Math.random()) * 10) / 10,
-      sold: Math.floor(Math.random() * 90) + 4,
-      createdAt: serverTimestamp(), updatedAt: serverTimestamp()
-    });
-    i++;
-  }
-  return true;
-}
 
 
 

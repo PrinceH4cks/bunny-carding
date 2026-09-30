@@ -5,7 +5,7 @@ import { pageUrl } from "../core/app.js";
 import { $, esc } from "../core/app.js";
 import { emptyState } from "../components/ui.js";
   import { cardTile, skTiles } from "../components/card-visual.js";
-import { getProducts, seedIfEmpty, CATEGORIES } from "../services/product-service.js";
+import { getProducts, CATEGORIES } from "../services/product-service.js";
 import { icon } from "../components/icons.js";
 
 /* category grid, driven by CATEGORIES in db.js */
@@ -52,7 +52,6 @@ function paintCats(counts) {
     box.innerHTML = skTiles(6);
     skCats(CATEGORIES.length);
     try {
-      await seedIfEmpty();
       /* one query feeds both the showcase and the category counts */
       const all = await getProducts({ sort: "popular", limitN: 500 });
       box.className = "grid g-auto-lg";
