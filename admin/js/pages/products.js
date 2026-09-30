@@ -5,7 +5,7 @@ import { $, $$, inr, esc, field, formData, setError, timeAgo } from "../core/app
 import { toast } from "../components/toast.js";
 import { skCards, emptyState } from "../components/ui.js";
 import { openModal, closeModal, confirmBox } from "../components/modal.js";
-import { getProducts, upsertProduct, removeProduct, setProductFlag, seedIfEmpty, CATEGORIES } from "../services/product-service.js";
+import { getProducts, upsertProduct, removeProduct, setProductFlag, CATEGORIES } from "../services/product-service.js";
 import { requireAdmin } from "../core/auth.js";
 import { updateDoc, writeBatch, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { db, COL } from "../core/db.js";
@@ -22,7 +22,6 @@ let delTarget = null;
 
 async function load() {
   try {
-    await seedIfEmpty();
     ALL = await getProducts({ onlyActive: false, limitN: 500 });
     /* the owner's own order, so the first card they see is the first card they
        put at the top */

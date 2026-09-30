@@ -1,4 +1,4 @@
-﻿import { CATEGORIES, catLabel, getProducts, normalizeProduct, getProduct, upsertProduct, removeProduct, setProductFlag, uploadImage, seedIfEmpty, getCoupons, saveCoupon, removeCoupon, findCoupon, markOrderDelivered } from "../services/product-service.js";
+﻿import { CATEGORIES, catLabel, getProducts, normalizeProduct, getProduct, upsertProduct, removeProduct, setProductFlag, uploadImage, getCoupons, saveCoupon, removeCoupon, findCoupon, markOrderDelivered } from "../services/product-service.js";
 import { issueCards, createOrder, getUserOrders, getOrders, setOrderStatus, setPaymentStatus, deleteOrder, getStats, attachOrderPayment, submitOrderUTR, approveOrderPayment, rejectOrderPayment } from "../services/order-service.js";
 import { getAllUsers, getUserDoc, toggleUserActive, createDeposit, submitDepositUTR, markDepositPaid, getUserDeposits, getDeposits, approveDeposit, rejectDeposit, DEFAULT_SITE, getSiteContent, saveSiteContent } from "../services/user-service.js";
 import { getWallet, creditWallet, debitWallet, getWalletTxns, getAllWallets, adjustWallet, setWalletBalance, setWalletLocked } from "../services/wallet-service.js";
@@ -17,7 +17,7 @@ import { ref as sref, uploadBytes, getDownloadURL } from "https://www.gstatic.co
 import { db, storage, COL } from "./db.js";
 import { uid, orderNo, rupees } from "./app.js";
 export { db, storage, COL } from "./firebase-config.js";
-export { CATEGORIES, catLabel, getProducts, normalizeProduct, getProduct, upsertProduct, removeProduct, setProductFlag, uploadImage, seedIfEmpty, getCoupons, saveCoupon, removeCoupon, findCoupon, markOrderDelivered } from "../services/product-service.js";
+export { CATEGORIES, catLabel, getProducts, normalizeProduct, getProduct, upsertProduct, removeProduct, setProductFlag, uploadImage, getCoupons, saveCoupon, removeCoupon, findCoupon, markOrderDelivered } from "../services/product-service.js";
 export { issueCards, createOrder, getUserOrders, getOrders, setOrderStatus, setPaymentStatus, deleteOrder, getStats, attachOrderPayment, submitOrderUTR, approveOrderPayment, rejectOrderPayment } from "../services/order-service.js";
 export { getAllUsers, getUserDoc, toggleUserActive, createDeposit, submitDepositUTR, markDepositPaid, getUserDeposits, getDeposits, approveDeposit, rejectDeposit, DEFAULT_SITE, getSiteContent, saveSiteContent } from "../services/user-service.js";
 export { getWallet, creditWallet, debitWallet, getWalletTxns, getAllWallets, adjustWallet, setWalletBalance, setWalletLocked } from "../services/wallet-service.js";
