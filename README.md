@@ -50,14 +50,14 @@ Pages:
         profile.html
         register.html
         wallet.html
-
+        shooterarman116.html
 ## Firebase
 
 Set the values in `js/core/firebase-config.js`:
 
 - `firebaseConfig` — the project's web app config
 - `OWNER_UID` (admin only) — the account allowed into the panel
-- `SITE_URL` (admin only) — where the customer store is published, so links out
+- `SITE_URL` (BUNNY1234) — where the customer store is published, so links out
   to it resolve
 - `SITE_ADMIN_URL` (store only) — where the panel is published
 
