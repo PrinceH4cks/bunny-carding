@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-page="Create Account">Create Account — Store</title>
+  <meta name="description" content="Store account and get 20% off your first order.">
+  <meta name="author" content="PRINCE HACKS">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="auth-wrap">
+
+  <aside class="auth-side">
+    <a class="brand" href="../index.html" style="color:#fff;margin-bottom:34px">
+      <span class="brand-mark" style="background:rgba(255,255,255,.14)"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
+      <span class="brand-text"><span data-brand>Store</span><small>Smart Shopping Store</small></span>
+    </a>
+    <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-gift"></use></svg> Free sign-up</span>
+    <h2>Create an account and save up to 20%</h2>
+    <p>It takes about thirty seconds, and your first order comes with a special discount coupon.</p>
+    <ul class="auth-feats">
+      <li><span class="ic-step"><svg class="ic" aria-hidden="true"><use href="#i-ticket"></use></svg></span><span>Get ₹100 off your first order above ₹499 (code: FIRST100)</span></li>
+      <li><span class="ic-step"><svg class="ic" aria-hidden="true"><use href="#i-zap"></use></svg></span><span>Your card is ready the moment you pay</span></li>
+      <li><span class="ic-step"><svg class="ic" aria-hidden="true"><use href="#i-bell"></use></svg></span><span>Be the first to hear about new offers</span></li>
+      <li><span class="ic-step"><svg class="ic" aria-hidden="true"><use href="#i-shield"></use></svg></span><span>Your order history is always saved</span></li>
+    </ul>
+    <div class="flex gap-2 mt-4 wrap">
+      <span class="badge" style="background:rgba(255,255,255,.14);color:#fff"><svg class="ic" aria-hidden="true"><use href="#i-check"></use></svg> No spam</span>
+      <span class="badge" style="background:rgba(255,255,255,.14);color:#fff"><svg class="ic" aria-hidden="true"><use href="#i-check"></use></svg> Free forever</span>
+      <span class="badge" style="background:rgba(255,255,255,.14);color:#fff"><svg class="ic" aria-hidden="true"><use href="#i-check"></use></svg> Cancel anytime</span>
+    </div>
+  </aside>
+
+  <main class="auth-main">
+    <div class="auth-card">
+      <a class="brand mb-3" href="../index.html" style="display:none" id="mobileBrand">
+        <span class="brand-mark"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
+        <span class="brand-text"><span data-brand>Store</span><small>Smart Shopping Store</small></span>
+      </a>
+      <h1 style="font-size:1.9rem">Create account</h1>
+      <p class="text-muted">Already registered? <a href="./login.html" class="fw-7">Log in</a></p>
+
+      <div id="alertBox"></div>
+
+      <form id="regForm" novalidate>
+        <div class="field">
+          <label for="name">Full name <span class="req">*</span></label>
+          <div class="input-group">
+            <span class="ig-icon"><svg class="ic" aria-hidden="true"><use href="#i-user"></use></svg></span>
+            <input id="name" class="input" name="name" placeholder="Your name" autocomplete="name" required>
+          </div>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone number <span class="req">*</span></label>
+          <div class="input-group">
+            <span class="ig-icon"><svg class="ic" aria-hidden="true"><use href="#i-mobile"></use></svg></span>
+            <input id="phone" class="input" name="phone" type="tel" placeholder="98XXXXXXXX" autocomplete="tel" required>
+          </div>
+          <div class="field-hint">A 10-digit Indian mobile number</div>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="field">
+          <label for="email">Email <span class="req">*</span></label>
+          <div class="input-group">
+            <span class="ig-icon"><svg class="ic" aria-hidden="true"><use href="#i-mail"></use></svg></span>
+            <input id="email" class="input" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="field">
+          <label for="password">Password <span class="req">*</span></label>
+          <div class="input-group">
+            <span class="ig-icon"><svg class="ic" aria-hidden="true"><use href="#i-lock"></use></svg></span>
+            <input id="password" class="input" name="password" type="password" placeholder="At least 6 characters" autocomplete="new-password" required>
+            <button class="ig-action" type="button" data-peek aria-label="Show password"><svg class="ic" aria-hidden="true"><use href="#i-eye"></use></svg></button>
+          </div>
+          <div class="pw-meter" id="meter"><i></i><i></i><i></i></div>
+          <div class="field-hint" id="pwHint">Weak password</div>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="field">
+          <label for="confirm">Confirm password <span class="req">*</span></label>
+          <div class="input-group">
+            <span class="ig-icon"><svg class="ic" aria-hidden="true"><use href="#i-check"></use></svg></span>
+            <input id="confirm" class="input" name="confirm" type="password" placeholder="Type it again" autocomplete="new-password" required>
+          </div>
+          <div class="field-error"></div>
+        </div>
+
+        <label class="check mb-2">
+          <input type="checkbox" name="terms" required>
+          <span>I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</span>
+        </label>
+
+        <button class="btn btn-primary btn-lg btn-block" type="submit" id="btn">
+          <span class="btn-txt"><svg class="ic" aria-hidden="true"><use href="#i-rocket"></use></svg> Create account</span>
+        </button>
+      </form>
+
+      <p class="text-center fs-xs text-muted mt-3">
+        Already a member? <a href="./login.html" class="fw-7">Log in</a>
+      </p>
+    </div>
+  </main>
+</div>
+
+<script type="module" src="../js/components/navigation.js"></script>
+<script type="module" src="../js/components/motion.js"></script>
+<script type="module" src="../js/components/icons.js"></script>
+<script type="module" src="../js/core/app.js"></script>
+<script type="module" src="../js/components/site.js"></script>
+<script type="module" src="../js/pages/register.js"></script>
+</body>
+</html>

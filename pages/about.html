@@ -1,0 +1,312 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-page="About Us">About Us — Store</title>
+  <meta name="description" content="Learn about Store — who we are, how we work and why customers trust us.">
+  <meta name="author" content="PRINCE HACKS">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%236d3df5%22%2F%3E%3Cpath%20d%3D%22M11%2012c-1.6-3-1.4-6%20.2-6.6%201.4-.5%202.8%202%203.2%204.6%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M21%2012c1.6-3%201.4-6-.2-6.6-1.4-.5-2.8%202-3.2%204.6%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2219%22%20r%3D%227%22%20fill%3D%22%23fff%22%2F%3E%3Ccircle%20cx%3D%2213.4%22%20cy%3D%2218%22%20r%3D%221.15%22%20fill%3D%22%236d3df5%22%2F%3E%3Ccircle%20cx%3D%2218.6%22%20cy%3D%2218%22%20r%3D%221.15%22%20fill%3D%22%236d3df5%22%2F%3E%3Cpath%20d%3D%22M14.6%2021.4h2.8%22%20stroke%3D%22%236d3df5%22%20stroke-width%3D%221.3%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <nav class="nav">
+        <a class="brand" href="../index.html">
+          <span class="brand-mark"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
+          <span class="brand-text"><span data-brand>Store</span><small>Smart Shopping Store</small></span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="./cards.html">Shop</a></li>
+
+          <li><a href="./about.html" class="active">About</a></li>
+          <li><a href="./contact.html">Contact</a></li>
+        </ul>
+        <div class="nav-actions">
+          <a href="./cart.html" class="btn btn-ghost btn-icon cart-btn" aria-label="Cart">
+            <svg class="ic" aria-hidden="true"><use href="#i-cart"></use></svg><span class="cart-count" data-cart-count>0</span>
+          </a>
+          <a href="./wallet.html" class="nav-wallet" id="navWallet"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-wallet"></use></svg><span id="navWalletAmt" hidden></span></a>
+          <a href="./login.html" class="btn btn-ghost btn-sm" data-when-guest>Log in</a>
+          <a href="./register.html" class="btn btn-primary btn-sm" data-when-guest>Sign up</a>
+
+          <div class="dropdown hidden" data-when-login>
+            <button class="btn btn-ghost btn-sm">
+              <span class="avatar avatar-sm" data-auth-initial>U</span>
+              <span data-auth-name>User</span> <svg class="ic ic-sm" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+            </button>
+            <div class="dropdown-menu">
+              <div class="dropdown-head">
+                <b data-auth-name>User</b>
+                <div class="fs-xs text-muted" data-auth-email></div>
+              </div>
+              <a class="dropdown-item" href="./dashboard.html"><svg class="ic" aria-hidden="true"><use href="#i-chart"></use></svg> Dashboard</a>
+              <a class="dropdown-item" href="./orders.html"><svg class="ic" aria-hidden="true"><use href="#i-box"></use></svg> My orders</a>
+              <a class="dropdown-item" href="./profile.html"><svg class="ic" aria-hidden="true"><use href="#i-user"></use></svg> Profile</a>
+            <a class="dropdown-item" href="../index.html"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg> Store front</a>
+              <a class="dropdown-item" href="./contact.html"><svg class="ic" aria-hidden="true"><use href="#i-support"></use></svg> Help</a>
+              <a class="dropdown-item hidden" href="#" data-admin-link data-admin-only><svg class="ic" aria-hidden="true"><use href="#i-shield"></use></svg> Admin panel</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item danger" href="#" data-logout><svg class="ic" aria-hidden="true"><use href="#i-logout"></use></svg> Log out</a>
+            </div>
+          </div>
+          <button class="nav-toggle" aria-label="Menu"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <section class="page-head">
+    <div class="container">
+      <div class="breadcrumb" style="color:rgba(255,255,255,.7)">
+        <a href="../index.html" style="color:rgba(255,255,255,.7)">Home</a><span class="sep">/</span><span>About</span>
+      </div>
+      <h1>We are <span data-brand>Store</span></h1>
+      <p>One simple mission — the right product, at the right price, without any hassle.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid g-2" style="align-items:center;gap:44px">
+        <div>
+          <span class="badge badge-brand">Our story</span>
+          <h2 class="mt-1">From one small shop to a full online store</h2>
+          <p class="text-muted">We started in 2022 with a single small shop in Lucknow. Back then,
+            shopping meant visiting three different stores for three different products, waiting in
+            queues and paying more than you had to. <span data-brand>Store</span> brings all of that into one place,
+            at honest prices, straight to your account.</p>
+          <p class="text-muted">Today more than 12,500 customers trust us, and we have issued over 3,000
+            orders every week across twelve categories.</p>
+          <div class="flex gap-2 wrap mt-3">
+            <a href="./cards.html" class="btn btn-primary"><svg class="ic" aria-hidden="true"><use href="#i-cart"></use></svg> Start shopping</a>
+            <a href="./contact.html" class="btn btn-ghost"><svg class="ic" aria-hidden="true"><use href="#i-phone"></use></svg> Contact us</a>
+          </div>
+        </div>
+        <div class="card card-pad">
+          <h3>Numbers that speak</h3>
+          <div class="grid g-2 mt-2">
+            <div class="stat"><div class="stat-ic" style="background:var(--brand-50);color:var(--brand-600)"><svg class="ic" aria-hidden="true"><use href="#i-users"></use></svg></div>
+              <div><div class="stat-v">12.5K+</div><div class="stat-l">Customers</div></div></div>
+            <div class="stat"><div class="stat-ic" style="background:var(--warn-50);color:var(--accent-600)"><svg class="ic" aria-hidden="true"><use href="#i-cart"></use></svg></div>
+              <div><div class="stat-v">3K+</div><div class="stat-l">Weekly orders</div></div></div>
+            <div class="stat"><div class="stat-ic" style="background:var(--ok-50);color:var(--ok-600)"><svg class="ic" aria-hidden="true"><use href="#i-star"></use></svg></div>
+              <div><div class="stat-v">4.9</div><div class="stat-l">Rating</div></div></div>
+            <div class="stat"><div class="stat-ic" style="background:var(--ink-900);color:var(--accent-400)"><svg class="ic" aria-hidden="true"><use href="#i-box"></use></svg></div>
+              <div><div class="stat-v">28K+</div><div class="stat-l">Products listed</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-sm bg-white">
+    <div class="container">
+      <div class="section-head"><h2>Why customers choose us</h2></div>
+      <div class="grid g-4">
+        <div class="card card-pad card-hover"><div class="f-icon"><svg class="ic" aria-hidden="true"><use href="#i-shield"></use></svg></div>
+          <h3>Verified stock</h3><p class="fs-sm text-muted mb-0">We check every batch ourselves. Duplicate
+            or tampered products never leave our warehouse.</p></div>
+        <div class="card card-pad card-hover"><div class="f-icon alt"><svg class="ic" aria-hidden="true"><use href="#i-wallet"></use></svg></div>
+          <h3>Honest pricing</h3><p class="fs-sm text-muted mb-0">No hidden charges. The price you see is
+            the price you pay.</p></div>
+        <div class="card card-pad card-hover"><div class="f-icon ok"><svg class="ic" aria-hidden="true"><use href="#i-zap"></use></svg></div>
+          <h3>Instant access</h3><p class="fs-sm text-muted mb-0">Pay from your wallet and the card
+            details appear in your account right away.</p></div>
+        <div class="card card-pad card-hover"><div class="f-icon dk"><svg class="ic" aria-hidden="true"><use href="#i-support"></use></svg></div>
+          <h3>Real human support</h3><p class="fs-sm text-muted mb-0">No chatbots. Talk to an actual person
+            on chat or phone.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><h2>Meet the team</h2><p>A small team that takes every order personally.</p></div>
+      <div class="grid g-4">
+        <div class="card card-pad card-hover text-center"><span class="avatar avatar-lg" style="margin:0 auto 14px">AK</span>
+          <h3 class="mb-1">Amit Kumar</h3><p class="fs-sm text-muted">Founder &amp; Sourcing</p></div>
+        <div class="card card-pad card-hover text-center"><span class="avatar avatar-lg" style="margin:0 auto 14px;background:linear-gradient(135deg,#ea580c,#f97316)">NS</span>
+          <h3 class="mb-1">Neha Singh</h3><p class="fs-sm text-muted">Customer Support</p></div>
+        <div class="card card-pad card-hover text-center"><span class="avatar avatar-lg" style="margin:0 auto 14px;background:linear-gradient(135deg,#0f766e,#10b981)">RV</span>
+          <h3 class="mb-1">Rohit Verma</h3><p class="fs-sm text-muted">Product &amp; Quality</p></div>
+        <div class="card card-pad card-hover text-center"><span class="avatar avatar-lg" style="margin:0 auto 14px;background:linear-gradient(135deg,#4338ca,#a855f7)">MJ</span>
+          <h3 class="mb-1">Manish Jain</h3><p class="fs-sm text-muted">Quality Control</p></div>
+      </div>
+  </div>
+</section>
+
+<!-- The credit. It names who built the shop rather than who runs it, which is a
+     different thing — and it is not dressed up as a fifth team member, because
+     inventing a person to hold a role nobody holds is worse than saying plainly
+     who did the work. -->
+<section class="section-sm">
+  <div class="container">
+    <div class="built-by">
+      <span class="built-by-mark">
+        <img data-dev-logo alt="Portrait of the developer" width="62" height="62" loading="lazy" decoding="async">
+      </span>
+      <div class="built-by-txt">
+        <div class="built-by-kicker">Designed &amp; developed by</div>
+        <p class="built-by-name"><span data-dev>PRINCE HACKS</span></p>
+        <div class="built-by-role">Store design, build and everything you are using right now.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Work with the person who built it.
+
+     A shop is a small shop. The person who designed and built it is the person
+     who can build the next thing too, and there is no reason for that to be a
+     secret. This section is the whole point of the credit above it: the About
+     page is where somebody already curious about who made this will look. -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>Need a website or an app?</h2>
+      <p>Websites, online stores, mobile apps, dashboards — built from scratch, and
+         handed over so you own everything in it.</p>
+    </div>
+
+    <div class="hire-grid">
+      <a class="hire-card" data-dev-wa href="https://wa.me/917488739325" target="_blank" rel="noopener">
+        <span class="hire-ic hire-ic-wa" aria-hidden="true">
+          <svg class="ic ic-lg" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+        </span>
+        <span class="hire-txt">
+          <b>Chat on WhatsApp</b>
+          <small>Fastest reply — usually within a few minutes.</small>
+          <em data-dev-wa-text>7488739325</em>
+        </span>
+      </a>
+
+      <a class="hire-card" data-dev-tg href="https://t.me/PRINCE_H4CKS" target="_blank" rel="noopener">
+        <span class="hire-ic hire-ic-tg" aria-hidden="true">
+          <svg class="ic ic-lg" aria-hidden="true"><use href="#i-telegram"></use></svg>
+        </span>
+        <span class="hire-txt">
+          <b>Message on Telegram</b>
+          <small>Good for sending a brief, a reference, or a screen recording.</small>
+          <em data-dev-tg-text>@PRINCE_H4CKS</em>
+        </span>
+      </a>
+    </div>
+
+    <ul class="hire-list">
+      <li><b>Business websites</b> — company sites, landing pages, portfolios</li>
+      <li><b>Online stores</b> — catalogue, cart, payments, order tracking, admin panel</li>
+      <li><b>Mobile apps</b> — Android and iOS, from idea to store listing</li>
+      <li><b>Dashboards &amp; tools</b> — booking systems, billing, internal panels</li>
+      <li><b>Fixes &amp; upgrades</b> — speed, design, bugs, and features on what you already have</li>
+    </ul>
+
+    <p class="hire-note">
+      Tell me what you are trying to do and I will tell you honestly whether I am
+      the right person for it — and what it will roughly take.
+    </p>
+  </div>
+</section>
+
+<section class="section-sm bg-white">
+  <div class="container">
+    <div class="section-head"><h2>Frequently asked questions</h2></div>
+      <div style="max-width:760px;margin:0 auto;text-align:left">
+        <div class="faq-item open">
+          <button class="faq-q">Are all products genuine?<svg class="ic ic-sm arw" aria-hidden="true"><use href="#i-chevron-down"></use></svg></button>
+          <div class="faq-a"><p>Yes. Every batch is verified before it is listed on the store.
+            If you want photos of a specific batch, message us on WhatsApp.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">How fast do I get my card?<svg class="ic ic-sm arw" aria-hidden="true"><use href="#i-chevron-down"></use></svg></button>
+          <div class="faq-a"><p>Instantly. The moment your wallet payment goes through, the card details
+            appear under My orders and in your account. Nothing to wait for, and no delivery charge.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Which payment methods do you accept?<svg class="ic ic-sm arw" aria-hidden="true"><use href="#i-chevron-down"></use></svg></button>
+          <div class="faq-a"><p>UPI, debit and credit cards, net banking, and wallet payment.
+            We never store your payment details.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Do you help with product setup?<svg class="ic ic-sm arw" aria-hidden="true"><use href="#i-chevron-down"></use></svg></button>
+          <div class="faq-a"><p>Absolutely. Every order includes a setup guide, and our team will walk you
+            through it over a video call if you need help.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">What if I receive a damaged product?<svg class="ic ic-sm arw" aria-hidden="true"><use href="#i-chevron-down"></use></svg></button>
+          <div class="faq-a"><p>Send us the order ID and we will look into it right away, with a
+            full refund, whichever you prefer.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="f-grid">
+        <div class="f-brand">
+          <a class="brand" href="../index.html" style="color:#fff">
+            <span class="brand-mark" style="background:rgba(255,255,255,.14)"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
+            <span class="brand-text"><span data-brand>Store</span><small>Gift cards &amp; prepaid vouchers</small></span>
+          </a>
+          <p class="fs-sm">100% genuine cards, shown in your account the moment you pay.</p>
+          <div class="socials">
+            <a href="#" aria-label="Facebook" title="Facebook">f</a>
+            <a href="#" aria-label="Twitter" title="Twitter">t</a>
+            <a href="#" aria-label="YouTube" title="YouTube"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-play"></use></svg></a>
+            <a href="#" aria-label="LinkedIn" title="LinkedIn">in</a>
+          </div>
+        </div>
+
+        <div>
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="./cards.html">All products</a></li>
+            <li><a href="./cards.html?category=prepaid">Prepaid</a></li>
+            <li><a href="./cards.html?category=gift">Gift cards</a></li>
+            <li><a href="./cards.html?sort=popular">Bestsellers</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Account</h4>
+          <ul>
+            <li><a href="./orders.html">My orders</a></li>
+            <li><a href="./wallet.html">Wallet</a></li>
+            <li><a href="./profile.html">Profile</a></li>
+            <li><a href="./contact.html">Help</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Talk to us</h4>
+          <ul>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-mail"></use></svg><a href="mailto:support@bunnystore.in" data-site="store.email">support@bunnystore.in</a></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-phone"></use></svg><a href="tel:+91180123456" data-site="store.phone">1800-123-456</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="f-bottom">
+        <span>&copy; <span data-year></span> <span data-brand>Store</span>. All rights reserved.</span>
+          <p class="f-credit"><span class="f-credit-tag"><span class="f-credit-mark">PH</span>Developed by <span data-dev>PRINCE HACKS</span></span></p>
+        <span class="payments"><i>UPI</i><i>VISA</i><i>MC</i><i>RuPay</i></span>
+      </div>
+    </div>
+  </footer>
+
+<script type="module" src="../js/components/navigation.js"></script>
+<script type="module" src="../js/components/motion.js"></script>
+<script type="module" src="../js/components/icons.js"></script>
+<script type="module" src="../js/core/app.js"></script>
+<script type="module" src="../js/components/site.js"></script>
+<script type="module" src="../js/core/header.js"></script>
+<script type="module" src="../js/pages/about.js"></script>
+</body>
+</html>

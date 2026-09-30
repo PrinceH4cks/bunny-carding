@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-page="Log in">Log in — Store</title>
+  <meta name="description" content="Log in to your Store account.">
+  <meta name="author" content="PRINCE HACKS">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="auth-wrap">
+
+  <aside class="auth-side">
+    <a class="brand" href="../index.html" style="color:#fff;margin-bottom:34px">
+      <span class="brand-mark" style="background:rgba(255,255,255,.14)"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
+      <span class="brand-text"><span data-brand>Store</span><small>Smart Shopping Store</small></span>
+    </a>
+    <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-wave"></use></svg> Welcome back</span>
+    <h2>Sign in to your account</h2>
+    <p>Track your orders, review your details and unlock member-only offers.</p>
+    <ul class="auth-feats">
+      <li><span class="ic-step"><svg class="ic" aria-hidden="true"><use href="#i-check"></use></svg></span><span>Order history and live tracking</span></li>
+      <li><span class="ic-step"><svg class="ic" aria-hidden="true"><use href="#i-check"></use></svg></span><span>Member-only discount coupons</span></li>
+      <li><span class="ic-step"><svg class="ic" aria-hidden="true"><use href="#i-check"></use></svg></span><span>Your saved details make every order faster</span></li>
+      <li><span class="ic-step"><svg class="ic" aria-hidden="true"><use href="#i-check"></use></svg></span><span>Priority customer support</span></li>
+    </ul>
+    <div class="flex gap-3 mt-4 wrap">
+      <div><b style="display:block;font-size:1.5rem">12.5K+</b><small style="color:rgba(255,255,255,.6)">Members</small></div>
+      <div><b style="display:block;font-size:1.5rem">4.9 &#9733;</b><small style="color:rgba(255,255,255,.6)">Rating</small></div>
+    </div>
+  </aside>
+
+  <main class="auth-main">
+    <div class="auth-card">
+      <a class="brand mb-3" href="../index.html" style="display:none" id="mobileBrand">
+        <span class="brand-mark"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
+        <span class="brand-text"><span data-brand>Store</span><small>Smart Shopping Store</small></span>
+      </a>
+      <h1 style="font-size:1.9rem">Log in</h1>
+      <p class="text-muted">No account yet? <a href="./register.html" class="fw-7">Create one free</a></p>
+
+      <div id="alertBox"></div>
+
+      <button class="btn btn-ghost btn-lg btn-block mb-3" type="button" id="googleBtn">
+        <span class="btn-txt"><svg class="ic" aria-hidden="true"><use href="#i-google"></use></svg> Continue with Google</span>
+      </button>
+
+      <div class="divider-or">or sign in with your email</div>
+
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="loginEmail">Email <span class="req">*</span></label>
+          <div class="input-group">
+            <span class="ig-icon"><svg class="ic" aria-hidden="true"><use href="#i-mail"></use></svg></span>
+            <input id="loginEmail" class="input" name="email" type="email" placeholder="you@example.com" autocomplete="email" autocapitalize="none" spellcheck="false" required>
+          </div>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="field">
+          <label for="loginPassword">Password <span class="req">*</span></label>
+          <div class="input-group">
+            <span class="ig-icon"><svg class="ic" aria-hidden="true"><use href="#i-lock"></use></svg></span>
+            <input id="loginPassword" class="input" name="password" type="password" placeholder="Your password" autocomplete="current-password" required>
+            <button class="ig-action" type="button" data-peek aria-label="Show password" aria-pressed="false">
+              <svg class="ic" aria-hidden="true"><use href="#i-eye"></use></svg><span data-peek-word>Show</span>
+            </button>
+          </div>
+          <div class="field-error"></div>
+        </div>
+
+        <!-- One row, always. "Keep me signed in" and "Forgot password?" are two
+             ends of the same line, and at 320px the two of them together are a
+             shade wider than the form, so a wrapping row dropped the second one
+             onto a line of its own and the pair stopped reading as a pair.
+             nowrap holds them together; the label gives up the width first,
+             which is the one of the two that can afford to. -->
+        <div class="auth-row">
+          <label class="check"><input type="checkbox" id="remember" checked><span>Keep me signed in</span></label>
+          <a href="./forgot-password.html" class="fs-sm fw-7">Forgot password?</a>
+        </div>
+
+        <button class="btn btn-primary btn-lg btn-block" type="submit" id="btn">
+          <span class="btn-txt"><svg class="ic" aria-hidden="true"><use href="#i-unlock"></use></svg> Log in</span>
+        </button>
+      </form>
+
+      <div class="divider-or">or</div>
+
+      <a class="btn btn-ghost btn-block" href="./register.html"><svg class="ic" aria-hidden="true"><use href="#i-plus-circle"></use></svg> Create a new account</a>
+
+      <p class="text-center fs-xs text-muted mt-3 mb-0">
+        <svg class="ic" aria-hidden="true"><use href="#i-lock"></use></svg> Your password is sent over an encrypted connection and is never written down.
+      </p>
+    </div>
+  </main>
+</div>
+
+<script type="module" src="../js/components/navigation.js"></script>
+<script type="module" src="../js/components/motion.js"></script>
+<script type="module" src="../js/components/icons.js"></script>
+<script type="module" src="../js/core/app.js"></script>
+<script type="module" src="../js/components/site.js"></script>
+<script type="module" src="../js/pages/login.js"></script>
+</body>
+</html>

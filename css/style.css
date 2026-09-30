@@ -1,0 +1,4067 @@
+﻿/* =========================================================
+   css/style.css   (premium light theme)
+
+   Typography : Space Grotesk (display) + Inter (body) + JetBrains Mono (numbers)
+   Palette    : white surfaces, indigo -> violet brand, soft coloured glows
+   Motion     : reveal on scroll, glow hover, gradient shine, magnetic buttons
+   Icons      : inline SVG only, no emoji
+   ========================================================= */
+
+/* ---------- 1. TOKENS ---------- */
+:root {
+  /* surfaces */
+  --bg:        #f7f9fc;
+  --surface:   #ffffff;
+  --surface-2: #fbfcfe;
+  --surface-3: #f1f4fa;
+  --border:    #e6eaf2;
+  --border-2:  #d8dfec;
+
+  /* ink */
+  --ink-900: #0c1222;
+  --ink-800: #17203a;
+  --ink-700: #2a3550;
+  --ink-600: #48536e;
+  --ink-500: #6b7690;
+  --ink-400: #8f99b0;
+  --ink-300: #b8c1d4;
+  --ink-200: #dde3ee;
+  --ink-100: #eef1f7;
+  --ink-50:  #f6f8fc;
+
+  /* brand */
+  --brand-50:  #eef1ff;
+  --brand-100: #e0e5ff;
+  --brand-200: #c9d0ff;
+  --brand-300: #a7aefb;
+  --brand-400: #8b86f6;
+  --brand-500: #6c5cf0;
+  --brand-600: #5b47e8;
+  --brand-700: #4a34d4;
+  --brand-800: #3b28ae;
+
+  --violet-500: #8b5cf6;
+  --cyan-500:   #06b6d4;
+
+  /* accents */
+  --gold-50:  #fffaeb;
+  --gold-400: #e0a83a;
+  --gold-500: #c98f1e;
+  --gold-600: #a97614;
+
+  --ok-50:  #eafaf3;
+  --ok-200: #a7efd1;
+  --ok-500: #10b981;
+  --ok-600: #059669;
+
+  --warn-50:  #fff8ec;
+  --warn-200: #fde3b0;
+  --warn-500: #f59e0b;
+  --warn-600: #d97706;
+
+  --danger-50:  #fef3f4;
+  --danger-200: #fcd0d4;
+  --danger-500: #ef4444;
+  --danger-600: #dc2626;
+
+  --info-50:  #eff6ff;
+  --info-200: #bfdbfe;
+  --info-500: #3b82f6;
+  --info-600: #1d4ed8;
+
+  /* gradients */
+  --grad-brand:  linear-gradient(135deg, #6c5cf0 0%, #8b5cf6 45%, #a855f7 100%);
+  --grad-cool:   linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #06b6d4 100%);
+  --grad-gold:   linear-gradient(135deg, #c98f1e 0%, #f0c463 50%, #b8811a 100%);
+  --grad-mint:   linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+  --grad-ink:    linear-gradient(160deg, #0c1222 0%, #1e2440 55%, #3b2a6b 100%);
+
+  /* radius */
+  --r-xs: 7px;
+  --r-sm: 11px;
+  --r-md: 15px;
+  --r-lg: 22px;
+  --r-xl: 30px;
+  --r-full: 999px;
+
+  /* shadows — soft + coloured glows */
+  --sh-xs: 0 1px 2px rgba(12, 18, 34, .05);
+  --sh-sm: 0 2px 8px rgba(12, 18, 34, .05);
+  --sh-md: 0 10px 30px rgba(12, 18, 34, .07);
+  --sh-lg: 0 24px 60px rgba(12, 18, 34, .11);
+  --sh-xl: 0 36px 90px rgba(12, 18, 34, .16);
+  --sh-brand:   0 10px 28px rgba(92, 71, 232, .26);
+  --sh-brand-lg: 0 18px 44px rgba(92, 71, 232, .34);
+  --sh-gold:    0 8px 24px rgba(201, 143, 30, .24);
+  --sh-inset:   inset 0 1px 0 rgba(255, 255, 255, .7);
+
+  /* type */
+  --ff:      "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ff-disp: "Space Grotesk", var(--ff);
+  --ff-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --nav-h: 76px;
+  --container: 1240px;
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --ease-2: cubic-bezier(.4, 0, .2, 1);
+}
+
+/* ---------- 1b. SVG ICONS ---------- */
+.ic {
+  width: 1.15em; height: 1.15em;
+  flex: 0 0 auto;
+  vertical-align: -0.18em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  overflow: visible;
+}
+.ic-sm { width: 1em;   height: 1em;   stroke-width: 2.2; }
+.ic-lg { width: 1.6em; height: 1.6em; }
+.ic-xl { width: 2.3em; height: 2.3em; stroke-width: 1.6; }
+.ic-fill { fill: currentColor; stroke: none; }
+
+.brand-mark .ic  { width: 1.35rem; height: 1.35rem; stroke-width: 1.9; }
+.f-icon .ic      { width: 1.6rem;  height: 1.6rem;  stroke-width: 1.8; }
+.stat-ic .ic     { width: 1.35rem; height: 1.35rem; stroke-width: 1.8; }
+.empty-ic .ic    { width: 2.3rem;  height: 2.3rem;  stroke-width: 1.5; }
+.side-link .ic   { width: 1.1rem;  height: 1.1rem; }
+.avatar .ic      { width: 1.15rem; height: 1.15rem; }
+.upload-pill .ic { width: 1rem;    height: 1rem; }
+.file-drop .ic   { width: 2rem;    height: 2rem;    stroke-width: 1.6; }
+.badge .ic, .chip .ic { width: 1em; height: 1em; }
+.timeline .ic    { width: 1.05rem; height: 1.05rem; }
+
+/* ---------- 1c. AMBIENT / MOTION LAYERS ---------- */
+.bg-orbs { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.bg-orbs i {
+  position: absolute; display: block; border-radius: 50%;
+  filter: blur(90px); opacity: .5; will-change: transform;
+}
+.bg-orbs i:nth-child(1) { width: 560px; height: 560px; top: -160px; left: -140px; background: radial-gradient(circle, #6c5cf0, transparent 70%); }
+.bg-orbs i:nth-child(2) { width: 480px; height: 480px; top: 22%; right: -170px; background: radial-gradient(circle, #06b6d4, transparent 70%); opacity: .34; }
+.bg-orbs i:nth-child(3) { width: 460px; height: 460px; bottom: -160px; left: 30%; background: radial-gradient(circle, #a855f7, transparent 70%); opacity: .3; }
+.bg-orbs i:nth-child(4) { width: 380px; height: 380px; top: 46%; left: -150px; background: radial-gradient(circle, #f0cc60, transparent 70%); opacity: .18; }
+
+.bg-grid {
+  position: fixed; inset: 0; z-index: -2; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(12, 18, 34, .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(12, 18, 34, .035) 1px, transparent 1px);
+  background-size: 58px 58px;
+  -webkit-mask-image: radial-gradient(ellipse 90% 62% at 50% 0%, #000 38%, transparent 100%);
+          mask-image: radial-gradient(ellipse 90% 62% at 50% 0%, #000 38%, transparent 100%);
+}
+
+/* cursor spotlight */
+.cursor-glow {
+  position: fixed; top: 0; left: 0; z-index: 1;
+  width: 420px; height: 420px; border-radius: 50%;
+  pointer-events: none; opacity: 0;
+  background: radial-gradient(circle, rgba(108, 92, 240, .10) 0%, rgba(6, 182, 212, .06) 45%, transparent 70%);
+  transition: opacity .4s var(--ease), width .3s var(--ease), height .3s var(--ease);
+  will-change: transform;
+}
+.cursor-glow.on { opacity: 1; }
+
+/* preloader */
+.preload {
+  position: fixed; inset: 0; z-index: 900;
+  display: grid; place-items: center; gap: 0;
+  background: linear-gradient(160deg, #0c1222 0%, #1e2440 55%, #3b2a6b 100%);
+  transition: opacity .55s var(--ease), visibility .55s;
+}
+.preload.done { opacity: 0; visibility: hidden; }
+.preload-mark {
+  width: 68px; height: 68px; border-radius: 20px;
+  background: linear-gradient(135deg, #6c5cf0, #a855f7);
+  color: #fff; display: grid; place-items: center;
+  box-shadow: 0 18px 46px rgba(108, 92, 240, .5);
+  animation: pre-pulse 1.3s var(--ease) infinite;
+}
+.preload-bar {
+  position: absolute; bottom: 22%; width: 180px; height: 3px;
+  background: rgba(255, 255, 255, .12); border-radius: 99px; overflow: hidden;
+}
+.preload-bar i {
+  display: block; height: 100%; width: 40%;
+  background: linear-gradient(90deg, #6c5cf0, #06b6d4);
+  border-radius: 99px;
+  animation: pre-slide 1.1s var(--ease) infinite;
+}
+@keyframes pre-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.09); } }
+@keyframes pre-slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(350%); } }
+
+/* page enter */
+html.loading body { opacity: 0; }
+body { transition: opacity .5s var(--ease); }
+html.ready .hero-grid > *, html.ready .page-head .container > * { animation: riseIn .8s var(--ease) both; }
+html.ready .hero-grid > *:nth-child(1) > * { animation-delay: .05s; }
+@keyframes riseIn { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+
+/* split text */
+.is-split .word {
+  display: inline-block;
+  opacity: 0; transform: translateY(70%) rotate(4deg);
+  animation: wordUp .85s var(--ease) forwards;
+  animation-delay: calc(var(--i) * 55ms + 180ms);
+}
+@keyframes wordUp { to { opacity: 1; transform: none; } }
+
+/* marquee */
+[data-marquee] { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.mq-track { display: flex; gap: 56px; width: max-content; animation: mq 26s linear infinite; }
+[data-marquee]:hover .mq-track { animation-play-state: paused; }
+@keyframes mq { to { transform: translateX(-50%); } }
+
+/* ---------- 2. RESET / BASE ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--nav-h) + 16px); }
+
+body {
+  margin: 0;
+  font-family: var(--ff);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--ink-600);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* Kept on the root element, not on the body. Any overflow value other than
+   visible on the body turns the body into a scroller of its own, so the page
+   stops scrolling with the window: scrollIntoView and window.scrollTo then move
+   nothing, and the mobile URL bar never collapses. */
+html { overflow-x: hidden; }
+body.no-scroll { overflow: hidden; }
+
+h1, h2, h3, h4, h5 {
+  margin: 0 0 .5em;
+  font-family: var(--ff-disp);
+  line-height: 1.14;
+  font-weight: 700;
+  color: var(--ink-900);
+  letter-spacing: -.022em;
+}
+h1 { font-size: clamp(2.1rem, 5.4vw, 3.6rem); }
+h2 { font-size: clamp(1.6rem, 3.6vw, 2.5rem); }
+h3 { font-size: 1.22rem; letter-spacing: -.015em; }
+h4 { font-size: 1.04rem; }
+p  { margin: 0 0 1rem; }
+
+a { color: var(--brand-600); text-decoration: none; transition: color .2s var(--ease-2); }
+a:hover { color: var(--brand-700); }
+
+img { max-width: 100%; display: block; }
+
+ul, ol { margin: 0 0 1rem; padding-left: 1.15rem; }
+
+hr { border: 0; border-top: 1px solid var(--border); margin: 1.6rem 0; }
+
+::selection { background: var(--brand-200); color: var(--ink-900); }
+
+:focus-visible { outline: 3px solid var(--brand-400); outline-offset: 3px; border-radius: var(--r-xs); }
+
+/* ---------- tap highlight cleanup ----------
+   Mobile browsers paint a translucent blue rectangle over anything that is
+   tapped, and desktop Chrome keeps a focus ring on some buttons after a mouse
+   click. Both read as a rendering fault next to the designed hover and selected
+   states, so the tap flash is switched off for every interactive element and
+   only a keyboard focus is allowed to draw a ring.
+
+   The selector is :focus:not(:focus-visible) rather than a blanket outline:none,
+   so keyboard users keep the ring above: an element focused by keyboard matches
+   :focus-visible, which means the :not() branch never applies to them. */
+a, button, input, select, textarea, summary, label,
+[role="button"], [role="tab"], [role="option"], [tabindex] {
+  -webkit-tap-highlight-color: transparent;
+}
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible),
+input:focus:not(:focus-visible),
+select:focus:not(:focus-visible),
+textarea:focus:not(:focus-visible),
+summary:focus:not(:focus-visible),
+[role="button"]:focus:not(:focus-visible),
+[role="tab"]:focus:not(:focus-visible),
+[role="option"]:focus:not(:focus-visible),
+[tabindex]:focus:not(:focus-visible) {
+  outline: none;
+}
+
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: var(--ink-100); }
+::-webkit-scrollbar-thumb { background: var(--ink-300); border-radius: var(--r-full); border: 3px solid var(--ink-100); }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-400); }
+
+/* ---------- 3. LAYOUT ---------- */
+.container { width: 100%; max-width: var(--container); margin: 0 auto; padding: 0 22px; }
+.container-sm { max-width: 860px; }
+.container-xs { max-width: 480px; }
+
+.section { padding: 84px 0; }
+.section-sm { padding: 52px 0; }
+
+.section-head { text-align: center; max-width: 680px; margin: 0 auto 52px; }
+.section-head.left { text-align: left; margin-left: 0; }
+.section-head p { color: var(--ink-500); font-size: 1.04rem; margin: 0; }
+.section-head h2 { margin-bottom: .35em; }
+
+.grid { display: grid; gap: 24px; }
+.g-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.g-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.g-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.g-auto { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+.g-auto-lg { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+
+.flex { display: flex; }
+.between { justify-content: space-between; }
+.center { align-items: center; }
+.wrap { flex-wrap: wrap; }
+.col { flex-direction: column; }
+.gap-1 { gap: 8px; } .gap-2 { gap: 14px; } .gap-3 { gap: 24px; }
+.mt-0 { margin-top: 0; } .mt-1 { margin-top: 8px; } .mt-2 { margin-top: 16px; } .mt-3 { margin-top: 28px; } .mt-4 { margin-top: 44px; }
+.mb-0 { margin-bottom: 0; } .mb-1 { margin-bottom: 8px; } .mb-2 { margin-bottom: 16px; } .mb-3 { margin-bottom: 28px; } .mb-4 { margin-bottom: 44px; }
+.text-center { text-align: center; }
+.hidden { display: none !important; }
+
+.page-head {
+  position: relative; overflow: hidden;
+  background: var(--grad-ink);
+  color: #fff;
+  padding: 62px 0 68px;
+}
+.page-head::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(760px 300px at 12% 0%, rgba(139, 92, 246, .5), transparent 70%),
+    radial-gradient(620px 280px at 88% 110%, rgba(6, 182, 212, .34), transparent 70%);
+}
+.page-head > * { position: relative; z-index: 1; }
+.page-head h1, .page-head h2, .page-head h3 { color: #fff; }
+.page-head p { color: rgba(255, 255, 255, .74); max-width: 660px; }
+
+/* ---------- 4. BUTTONS ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  padding: 12px 22px;
+  font-family: var(--ff);
+  font-size: .95rem; font-weight: 600;
+  line-height: 1.2;
+  border: 1.5px solid transparent;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  transition: transform .25s var(--ease), box-shadow .3s var(--ease),
+              background .25s var(--ease-2), color .2s, border-color .25s;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+.btn:disabled, .btn[disabled] { opacity: .5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+/* shine sweep on hover */
+.btn::after {
+  content: ""; position: absolute; top: 0; left: -120%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .28), transparent);
+  transform: skewX(-18deg);
+  transition: left .6s var(--ease);
+}
+.btn:hover::after { left: 130%; }
+
+.btn-primary { background: var(--grad-brand); color: #fff; box-shadow: var(--sh-brand); }
+.btn-primary:hover { color: #fff; box-shadow: var(--sh-brand-lg); }
+
+.btn-accent { background: var(--grad-gold); color: #fff; box-shadow: var(--sh-gold); }
+.btn-accent:hover { color: #fff; }
+
+.btn-dark { background: var(--ink-900); color: #fff; }
+.btn-dark:hover { background: var(--ink-700); color: #fff; box-shadow: var(--sh-md); }
+
+.btn-ghost { background: var(--surface); color: var(--ink-800); border-color: var(--border-2); box-shadow: var(--sh-xs); }
+.btn-ghost:hover { border-color: var(--brand-300); color: var(--brand-700); box-shadow: 0 8px 22px rgba(92, 71, 232, .14); }
+
+.btn-outline { background: transparent; color: var(--brand-600); border-color: var(--brand-200); }
+.btn-outline:hover { background: var(--brand-50); color: var(--brand-700); border-color: var(--brand-300); }
+
+.btn-danger { background: var(--danger-500); color: #fff; box-shadow: 0 8px 22px rgba(239, 68, 68, .24); }
+.btn-danger:hover { background: var(--danger-600); color: #fff; }
+
+.btn-ok { background: var(--grad-mint); color: #fff; box-shadow: 0 8px 22px rgba(16, 185, 129, .26); }
+.btn-ok:hover { color: #fff; }
+
+.btn-white { background: #fff; color: var(--brand-700); box-shadow: 0 8px 26px rgba(0, 0, 0, .18); }
+.btn-white:hover { color: var(--brand-800); }
+
+.btn-outline-white { background: rgba(255, 255, 255, .06); color: #fff; border-color: rgba(255, 255, 255, .3); backdrop-filter: blur(8px); }
+.btn-outline-white:hover { background: rgba(255, 255, 255, .16); color: #fff; }
+
+.btn-sm { padding: 8px 14px; font-size: .86rem; border-radius: var(--r-xs); }
+.btn-xs { padding: 6px 11px; font-size: .79rem; border-radius: var(--r-xs); gap: 5px; }
+.btn-lg { padding: 15px 32px; font-size: 1.03rem; border-radius: var(--r-md); }
+.btn-block { width: 100%; }
+.btn-icon { padding: 10px; width: 42px; height: 42px; }
+.btn-round { border-radius: var(--r-full); }
+
+/* ---------- 5. HEADER / NAV ---------- */
+/* the dark "Helpline / free delivery" strip that used to sit above the header
+   has been removed from every page, so its rules went with it */
+
+.site-header {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(255, 255, 255, .8);
+  backdrop-filter: saturate(180%) blur(18px);
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+  border-bottom: 1px solid var(--border);
+  transition: box-shadow .3s var(--ease-2), background .3s;
+}
+.site-header.scrolled { box-shadow: var(--sh-md); background: rgba(255, 255, 255, .93); }
+
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 18px; min-height: var(--nav-h); }
+
+.brand { display: inline-flex; align-items: center; gap: 12px; font-family: var(--ff-disp); font-weight: 700; font-size: 1.24rem; color: var(--ink-900); letter-spacing: -.02em; }
+.brand:hover { color: var(--ink-900); }
+.brand-mark {
+  width: 44px; height: 44px; border-radius: 13px;
+  background: var(--grad-brand);
+  color: #fff;
+  display: grid; place-items: center;
+  box-shadow: var(--sh-brand);
+  transition: transform .4s var(--ease);
+}
+.brand:hover .brand-mark { transform: rotate(-8deg) scale(1.06); }
+.brand-text small { display: block; font-size: .64rem; font-weight: 600; letter-spacing: .12em; color: var(--ink-400); text-transform: uppercase; }
+
+.nav-links { display: flex; align-items: center; gap: 2px; list-style: none; margin: 0; padding: 0; }
+.nav-links a {
+  position: relative;
+  padding: 9px 14px; border-radius: var(--r-sm);
+  font-size: .93rem; font-weight: 500; color: var(--ink-600);
+}
+.nav-links a:hover { background: var(--brand-50); color: var(--brand-700); }
+.nav-links a.active { color: var(--brand-700); font-weight: 600; }
+.nav-links a.active::after {
+  content: ""; position: absolute; left: 14px; right: 14px; bottom: 2px;
+  height: 2px; border-radius: 2px; background: var(--grad-brand);
+}
+
+.nav-actions { display: flex; align-items: center; gap: 10px; }
+
+.cart-btn { position: relative; }
+.cart-count {
+  position: absolute; top: -5px; right: -5px;
+  min-width: 21px; height: 21px; padding: 0 5px;
+  background: var(--grad-gold); color: #fff;
+  border-radius: var(--r-full); border: 2px solid #fff;
+  font-family: var(--ff-mono); font-size: .66rem; font-weight: 700;
+  display: grid; place-items: center;
+  box-shadow: var(--sh-gold);
+}
+
+.nav-toggle {
+  display: none; background: var(--ink-100); border: 0;
+  width: 42px; height: 42px; border-radius: var(--r-sm);
+  font-size: 1.2rem; cursor: pointer; color: var(--ink-800);
+}
+
+.dropdown { position: relative; }
+.dropdown-menu {
+  position: absolute; right: 0; top: calc(100% + 12px);
+  min-width: 240px;
+  background: rgba(255, 255, 255, .96);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: var(--sh-lg);
+  padding: 8px;
+  opacity: 0; visibility: hidden; transform: translateY(-8px) scale(.97);
+  transition: all .25s var(--ease);
+  z-index: 210;
+}
+.dropdown.open .dropdown-menu { opacity: 1; visibility: visible; transform: none; }
+.dropdown-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: var(--r-sm);
+  font-size: .92rem; font-weight: 500; color: var(--ink-700);
+}
+.dropdown-item:hover { background: var(--brand-50); color: var(--brand-700); }
+.dropdown-head { padding: 12px; border-bottom: 1px solid var(--border); margin-bottom: 6px; }
+.dropdown-divider { height: 1px; background: var(--border); margin: 6px 0; }
+.dropdown-item.danger { color: var(--danger-600); }
+.dropdown-item.danger:hover { background: var(--danger-50); }
+
+.avatar {
+  width: 40px; height: 40px; border-radius: var(--r-full);
+  background: var(--grad-brand); color: #fff;
+  display: grid; place-items: center;
+  font-weight: 700; font-size: .92rem; font-family: var(--ff-disp);
+  object-fit: cover; flex: 0 0 auto;
+  box-shadow: 0 4px 12px rgba(92, 71, 232, .22);
+}
+.avatar-lg { width: 80px; height: 80px; font-size: 1.7rem; }
+.avatar-sm { width: 32px; height: 32px; font-size: .76rem; }
+
+/* LIVE badge */
+.live-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 5px 12px; border-radius: var(--r-full);
+  background: var(--ok-50); color: var(--ok-600);
+  border: 1px solid var(--ok-200);
+  font-size: .72rem; font-weight: 700; letter-spacing: .07em;
+}
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok-500); box-shadow: 0 0 0 0 rgba(16, 185, 129, .6); animation: pulse-dot 2s infinite; }
+
+/* ---------- 6. HERO ---------- */
+.hero {
+  position: relative; overflow: hidden;
+  padding: 100px 0 116px;
+  background: var(--grad-ink);
+  color: #fff;
+}
+.hero::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(820px 340px at 10% 0%, rgba(139, 92, 246, .5), transparent 70%),
+    radial-gradient(700px 320px at 88% 100%, rgba(6, 182, 212, .32), transparent 70%);
+}
+.hero-grid {
+  display: grid; grid-template-columns: 1.05fr .95fr;
+  gap: 60px; align-items: center;
+  position: relative; z-index: 1;
+}
+.hero h1 { color: #fff; margin-bottom: .35em; }
+.hero p.lead { color: rgba(255, 255, 255, .78); font-size: 1.12rem; max-width: 540px; }
+.hero-stats { display: flex; gap: 42px; margin-top: 46px; flex-wrap: wrap; }
+.hero-stats b { display: block; font-family: var(--ff-disp); font-size: 1.8rem; font-weight: 700; color: #fff; line-height: 1.2; }
+.hero-stats small { color: rgba(255, 255, 255, .6); font-size: .82rem; }
+
+.gradient-text {
+  background: linear-gradient(90deg, #a5b4fc 0%, #e9d5ff 40%, #67e8f9 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .16);
+  color: #fff; padding: 6px 15px; border-radius: var(--r-full);
+  font-size: .8rem; font-weight: 600; margin-bottom: 20px;
+  backdrop-filter: blur(8px);
+}
+
+.card-stack { position: relative; height: 400px; }
+.card-mock {
+  position: absolute; width: 330px; height: 208px;
+  border-radius: 20px; padding: 22px;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, .5);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, .16);
+  backdrop-filter: blur(4px);
+}
+.card-mock::after {
+  content: ""; position: absolute; right: -16px; top: -16px;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: rgba(255, 255, 255, .16);
+}
+.card-mock .chip {
+  width: 42px; height: 32px; border-radius: 7px; margin-bottom: 18px;
+  background: linear-gradient(135deg, #f6e08a, #c8922a);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, .6);
+}
+.card-mock .num { font-family: var(--ff-mono); font-size: 1.12rem; letter-spacing: .1em; font-weight: 600; }
+.card-mock .nm { font-size: .78rem; text-transform: uppercase; letter-spacing: .11em; opacity: .82; margin-top: 14px; }
+.card-mock .ex { position: absolute; right: 22px; bottom: 22px; font-family: var(--ff-mono); font-size: .72rem; opacity: .75; }
+.cm-1 { top: 0; left: 6%; background: linear-gradient(135deg, #4f46e5, #a855f7); transform: rotate(-8deg); z-index: 3; }
+.cm-2 { top: 96px; left: 24%; background: linear-gradient(135deg, #c98f1e, #f0c463); transform: rotate(7deg); z-index: 2; }
+.cm-3 { top: 178px; left: 12%; background: linear-gradient(135deg, #0f766e, #10b981); transform: rotate(-2deg); z-index: 1; }
+
+.float { animation: float 7s ease-in-out infinite; }
+@keyframes float { 0%, 100% { transform: translateY(0) rotate(-8deg); } 50% { transform: translateY(-16px) rotate(-8deg); } }
+
+.strip { background: var(--surface); border-block: 1px solid var(--border); padding: 28px 0; }
+.strip-logos { display: flex; gap: 56px; justify-content: center; flex-wrap: wrap; font-family: var(--ff-disp); font-weight: 700; font-size: 1.05rem; letter-spacing: .06em; color: var(--ink-300); }
+
+/* ---------- 7. CARDS / SURFACES ---------- */
+.card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-sm);
+  transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .3s;
+}
+.card-pad { padding: 26px; }
+
+/* 3D tilt with glare — driven by --rx/--ry/--gx/--gy from motion.js */
+.card-hover, .product, .ctile, .trust-item { transform-style: preserve-3d; will-change: transform; }
+.card-hover:hover, .product:hover, .ctile:hover, .trust-item:hover {
+  transform: perspective(1000px) translateY(-8px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) !important;
+}
+
+/* glare follows the cursor */
+.ctile::after, .card-hover::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  pointer-events: none; opacity: 0; transition: opacity .4s var(--ease);
+  background: radial-gradient(420px circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, .55), transparent 42%);
+  mix-blend-mode: soft-light;
+}
+.ctile:hover::after, .card-hover:hover::after { opacity: .9; }
+
+.card-hover::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  padding: 1px; z-index: 3;
+  background: linear-gradient(135deg, rgba(92, 71, 232, .6), rgba(6, 182, 212, .35), transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity: 0; transition: opacity .35s var(--ease);
+}
+.card-hover:hover::before { opacity: 1; }
+.card-hover:hover { transform: translateY(-7px); box-shadow: var(--sh-lg); border-color: transparent; }
+
+.card-head { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.card-body { padding: 24px; }
+.card-foot { padding: 16px 24px; border-top: 1px solid var(--border); background: var(--ink-50); border-radius: 0 0 var(--r-lg) var(--r-lg); }
+
+.f-icon {
+  width: 58px; height: 58px; border-radius: 17px;
+  display: grid; place-items: center;
+  background: var(--brand-50); color: var(--brand-600);
+  margin-bottom: 20px;
+  box-shadow: 0 8px 20px rgba(92, 71, 232, .14);
+  transition: transform .4s var(--ease);
+}
+.card-hover:hover .f-icon { transform: scale(1.08) rotate(-6deg); }
+.f-icon.alt { background: var(--gold-50); color: var(--gold-500); box-shadow: 0 8px 20px rgba(201, 143, 30, .16); }
+.f-icon.ok  { background: var(--ok-50);  color: var(--ok-500);  box-shadow: 0 8px 20px rgba(16, 185, 129, .16); }
+.f-icon.dk  { background: var(--ink-900); color: #fff; box-shadow: var(--sh-md); }
+
+/* ---------- 8. PRODUCT ----------
+   The product card is .ctile in card-visual.js now, so there is no separate
+   .product component any more. */
+
+/* The product card no longer has a photo block, so the badges sit in a normal
+   row at the top of the card body instead of floating over an image. */
+.product-top {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; flex-wrap: wrap; margin-bottom: 12px; min-height: 24px;
+}
+.product-tags { position: static; display: flex; gap: 6px; flex-wrap: wrap; }
+.product-off {
+  background: var(--grad-gold); color: #fff;
+  font-family: var(--ff-mono); font-size: .72rem; font-weight: 700;
+  padding: 4px 10px; border-radius: var(--r-full);
+  box-shadow: var(--sh-gold);
+}
+.product-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+
+.price { font-family: var(--ff-mono); font-size: 1.3rem; font-weight: 700; color: var(--ink-900); line-height: 1.2; letter-spacing: -.02em; }
+.price s { font-size: .84rem; color: var(--ink-400); font-weight: 500; margin-right: 6px; }
+.stock { font-size: .8rem; font-weight: 600; }
+.stock.in { color: var(--ok-600); }
+.stock.low { color: var(--warn-600); }
+.stock.out { color: var(--danger-600); }
+
+/* ---------- 8b. CARD VISUALS (gift / prepaid cards) ---------- */
+.ccard, .ctile-face {
+  position: relative;
+  display: block;
+  border-radius: 20px;
+  padding: 22px 24px;
+  color: var(--ink, #fff);
+  background:
+    radial-gradient(120% 90% at 12% 8%, rgba(255, 255, 255, .26), transparent 55%),
+    linear-gradient(135deg, var(--c1) 0%, var(--c2) 100%);
+  box-shadow: 0 18px 40px rgba(12, 18, 34, .22), inset 0 1px 0 rgba(255, 255, 255, .22);
+  overflow: hidden;
+  text-align: left;
+  font-family: var(--ff);
+}
+/* A tile's artwork is sized by its width, not by a min-height, so it keeps the
+   real 1.586 card proportion in a narrow phone column as well as on desktop. */
+.ctile-face { min-height: 0; }
+.ccard { min-height: 196px; }
+.ccard--lg { min-height: 244px; border-radius: 26px; padding: 30px 32px; }
+.ccard--sm { min-height: 152px; padding: 16px 18px; border-radius: 16px; }
+
+.ccard-glow {
+  position: absolute; right: -40px; top: -60px;
+  width: 190px; height: 190px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, .3), transparent 65%);
+  pointer-events: none;
+}
+.ccard-gloss {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(115deg, transparent 34%, rgba(255, 255, 255, .22) 47%, transparent 60%);
+  opacity: 0; transition: opacity .5s var(--ease);
+}
+.ccard:hover .ccard-gloss { opacity: 1; }
+
+.ccard-row { display: flex; align-items: center; }
+.ccard-row--top { justify-content: space-between; }
+.ccard-row--bottom { margin-top: auto; padding-top: 18px; gap: 26px; flex-wrap: wrap; }
+
+.ccard-chip {
+  width: 44px; height: 33px; border-radius: 7px;
+  background: linear-gradient(135deg, #f7e3a4, #c8922a 55%, #f0cc60);
+  display: grid; place-items: center;
+  color: #7a5a10;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, .7), 0 2px 6px rgba(0, 0, 0, .2);
+}
+.ccard-chip .ic { width: 24px; height: 24px; stroke-width: 1.7; }
+
+.ccard-net {
+  font-family: var(--ff-disp);
+  font-size: .95rem; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; opacity: .95;
+}
+.ccard--lg .ccard-net { font-size: 1.15rem; }
+
+.ccard-nfc {
+  position: absolute; right: 24px; bottom: 68px; opacity: .5;
+  transform: rotate(90deg);
+}
+
+.ccard-num {
+  display: block;
+  font-family: var(--ff-mono);
+  font-size: 1.16rem; font-weight: 600; letter-spacing: .06em;
+  margin: 22px 0 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .18);
+}
+.ccard--lg .ccard-num { font-size: 1.42rem; letter-spacing: .08em; }
+.ccard--sm .ccard-num { font-size: .98rem; }
+.ccard--sm .ccard-issuer, .ccard--sm .ccard-net { font-size: .66rem; }
+.ccard--sm .ccard-cell b { font-size: .74rem; }
+.ccard--sm .ccard-cell small { font-size: .5rem; }
+.ccard--sm .ccard-mid { margin: 12px 0 0; }
+.ccard--sm .ccard-chip { width: 30px; height: 22px; border-radius: 5px; }
+.ccard--sm .ccard-chip .ic { width: 16px; height: 16px; }
+.ccard--sm .ccard-pills span { font-size: .52rem; padding: 2px 7px; }
+/* A tile card is only ~178px tall yet has to carry the same four fields as the
+   big detail card, so the vertical rhythm is tight and the fields share one
+   line. The name column is wider and ellipsises so a long holder name can
+   never push the row onto a second line and clip. */
+.ccard--sm .ccard-mid { margin-top: 7px; }
+.ccard--sm .ccard-num { margin-top: 9px; font-size: .88rem; letter-spacing: .04em; white-space: nowrap; }
+.ccard--sm .ccard-row--bottom {
+  display: grid;
+  grid-template-columns: 1.55fr 1.1fr .8fr .8fr;
+  gap: 0 8px;
+  /* the base row reserves 18px of top padding for the big card; at tile size
+     that padding alone pushed the field row past the bottom of the card */
+  margin-top: 8px; padding-top: 0;
+}
+.ccard--sm .ccard-cell b { font-size: .66rem; letter-spacing: .01em; }
+.ccard--sm .ccard-cell small { font-size: .44rem; letter-spacing: .06em; }
+/* min-width:0 plus nowrap/ellipsis is what keeps a long holder name or a
+   "VALID THRU" label from wrapping and forcing the row off the card */
+.ccard--sm .ccard-cell { min-width: 0; }
+.ccard--sm .ccard-cell b,
+.ccard--sm .ccard-cell small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.ccard-cell { display: flex; flex-direction: column; }
+.ccard-cell small { font-size: .58rem; letter-spacing: .13em; text-transform: uppercase; opacity: .68; font-weight: 600; }
+.ccard-cell b { font-family: var(--ff-mono); font-size: .92rem; font-weight: 600; letter-spacing: .04em; }
+
+/* The value pill used to sit on its own line under the issuer, which cost a
+   whole row of height on a small card. It now shares the top row, pushed to
+   the right in front of the network mark, so the card keeps more room for the
+   number and the four fields. */
+.ccard-topright {
+  display: flex; align-items: center; gap: 10px; min-width: 0;
+}
+.ccard-pills {
+  position: relative;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin-top: 0;
+}
+.ccard-value {
+  font-family: var(--ff-mono); font-size: .74rem; font-weight: 700;
+  background: rgba(255, 255, 255, .16); border: 1px solid rgba(255, 255, 255, .26);
+  padding: 3px 9px; border-radius: var(--r-full);
+  backdrop-filter: blur(6px);
+}
+
+/* ---------- realistic card finish ----------
+   Adds the things that make a card read as plastic rather than as a coloured
+   rectangle: a magnetic band, a hologram patch, an embossed number row and a
+   specular sweep. All driven by the --c1/--c2/--ink/--edge variables the
+   component sets, so a theme swap carries the finish with it. */
+.ccard { position: relative; overflow: hidden; }
+.ccard-band {
+  position: absolute; left: 0; right: 0; top: 0; height: 34%;
+  background: linear-gradient(180deg, rgba(0, 0, 0, .28), rgba(0, 0, 0, .06));
+  border-bottom: 1px solid rgba(255, 255, 255, .07);
+  pointer-events: none;
+}
+.ccard-holo {
+  position: absolute; right: -18px; bottom: -22px;
+  width: 120px; height: 120px; border-radius: 50%;
+  background:
+    conic-gradient(from 210deg,
+      rgba(255, 255, 255, .34), rgba(120, 220, 255, .22),
+      rgba(255, 190, 240, .22), rgba(180, 255, 210, .22),
+      rgba(255, 255, 255, .34));
+  filter: blur(14px);
+  opacity: .5;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.ccard-row--top { position: relative; padding-top: 2px; }
+.ccard-issuer {
+  font-size: .74rem; font-weight: 700;
+  letter-spacing: .16em; text-transform: uppercase;
+  opacity: .8;
+  max-width: 58%;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ccard-mid {
+  position: relative;
+  display: flex; align-items: center; gap: 10px;
+  margin-top: 16px;
+}
+.ccard-mid .ccard-chip { margin: 0; }
+.ccard-nfc { position: static; transform: none; opacity: .6; }
+
+.ccard-num {
+  position: relative;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .35), 0 0 1px rgba(255, 255, 255, .25);
+  letter-spacing: .1em;
+}
+.ccard-cell b { text-shadow: 0 1px 1px rgba(0, 0, 0, .3); }
+.ccard-cell--name { min-width: 0; flex: 1 1 auto; }
+.ccard-cell--name b {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  max-width: 100%;
+}
+
+.ccard-live {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: .62rem; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: var(--r-full);
+  background: rgba(16, 185, 129, .2);
+  border: 1px solid rgba(110, 240, 200, .45);
+  color: #dcfff4;
+}
+.ccard--sm .ccard-band { height: 30%; }
+
+/* ---------- sort control (product listing) ----------
+   The pills never wrap into rows. They stay on one line, left to right, inside
+   a box that scrolls sideways on a narrow screen, so the order is always read
+   the same way instead of re-flowing into two or three ragged rows.
+   Every pill keeps the same height and padding, so an icon pill sits exactly as
+   flush as a text-only one. */
+.srt {
+  display: flex;
+  flex-wrap: nowrap;            /* one line, always */
+  align-items: center;
+  gap: 8px;
+  /* grow into whatever room the row has, so a tablet shows the whole strip
+     instead of squeezing it and scrolling when it did not need to.
+     The basis is 0 rather than auto on purpose: with an auto basis the strip
+     claimed its full content width, which pushed the product count onto a
+     second line at 1280px. A zero basis makes it take only the space left over
+     and scroll within that. */
+  flex: 1 1 0%;
+  margin: 0;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;   /* stops the page taking over the swipe */
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;             /* a visible bar would break the row */
+  /* room for the hover lift and the focus ring without clipping them */
+  padding: 4px 4px 6px;
+  margin: -4px -4px -6px;
+}
+.srt::-webkit-scrollbar { display: none; }
+.srt-btn {
+  flex: none;
+  scroll-snap-align: start;
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 6px;
+  min-height: 38px; padding: 0 15px;
+  border: 1px solid var(--border-2); border-radius: var(--r-full);
+  background: var(--surface); color: var(--ink-600);
+  font: inherit; font-size: .85rem; font-weight: 600; line-height: 1;
+  white-space: nowrap; cursor: pointer;
+  transition: background .2s var(--ease), color .2s var(--ease),
+              border-color .2s var(--ease), transform .2s var(--ease);
+}
+.srt-btn .ic { flex: none; }
+.srt-btn:hover { border-color: var(--brand-300); color: var(--brand-700); transform: translateY(-1px); }
+.srt-btn:active { transform: translateY(0); }
+.srt-btn.is-on {
+  background: var(--grad-brand); border-color: transparent;
+  color: #fff; box-shadow: var(--sh-brand);
+}
+.srt-btn.is-on:hover { color: #fff; }
+.srt-btn:focus-visible { outline: 2px solid var(--brand-500); outline-offset: 2px; }
+
+/* On a phone the strip takes the full width so the product count and the
+   Filters button drop to their own line instead of squeezing the pills.
+   The right edge fades only while there is more to scroll to. */
+/* ---------- page-title action buttons ----------
+   The "Dashboard / Cart / Shop products" buttons beside a page title are desktop
+   shortcuts. On a phone the header already carries a cart icon and the profile
+   menu carries Dashboard, so they only duplicate that and push the title down. */
+@media (max-width: 760px) {
+  .hide-sm { display: none !important; }
+}
+
+@media (max-width: 760px) {
+  .srt { flex: 1 1 100%; }
+  .srt[data-more="1"] {
+    -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent 100%);
+    mask-image: linear-gradient(90deg, #000 88%, transparent 100%);
+  }
+}
+
+/* the count and the filter button must not squash the pills on a narrow phone */
+.srt + .flex { flex: none; }
+
+/* ---------- card tile (product grid item) ---------- */
+.ctile {
+  display: flex; flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  transition: transform .4s var(--ease), box-shadow .4s var(--ease), border-color .3s;
+}
+.ctile:hover { transform: translateY(-8px); box-shadow: var(--sh-xl); border-color: transparent; }
+
+/* The card artwork keeps a real payment-card proportion (85.6 / 53.98 = 1.586)
+   at every tile width, so it reads as a Visa card on a 150px phone tile and on
+   a 550px desktop tile alike. A fixed min-height made it near-square on phones. */
+.ctile-face {
+  display: block;
+  margin: 16px 16px 0;
+  /* the shared ".ccard, .ctile-face" rule pads the face too, which stole 48px
+     from the card. The card supplies its own padding, so the face gets none. */
+  padding: 0;
+  transition: transform .4s var(--ease);
+  /* a tile card is far smaller than a detail card yet carries the same four
+     fields, so its internals are sized in cqi and shrink with the card.
+     Without this the fixed type overflowed and the field row was cut off. */
+  container-type: inline-size;
+}
+.ctile:hover .ctile-face { transform: scale(1.02); }
+.ctile-face .ccard { min-height: 0; aspect-ratio: 1.586 / 1; }
+
+/* everything below is measured against the face width (1cqi = 1% of the card
+   width). At the 282px desktop tile these reproduce the px values above; at a
+   170px phone tile they scale down so the card keeps its 1.586 proportion and
+   nothing gets clipped. */
+.ctile-face .ccard--sm { padding: 5.7cqi 6.4cqi; border-radius: 5.7cqi; line-height: 1.15; }
+.ctile-face .ccard--sm .ccard-issuer,
+.ctile-face .ccard--sm .ccard-net { font-size: 4.3cqi; }
+.ctile-face .ccard--sm .ccard-pills { gap: 2.6cqi; }
+.ctile-face .ccard--sm .ccard-pills span { font-size: 3.1cqi; padding: .9cqi 2.6cqi; }
+.ctile-face .ccard--sm .ccard-topright { gap: 3.4cqi; }
+.ctile-face .ccard--sm .ccard-mid { margin-top: 4cqi; gap: 3.5cqi; }
+.ctile-face .ccard--sm .ccard-chip { width: 12.5cqi; height: 9.2cqi; border-radius: 2cqi; }
+.ctile-face .ccard--sm .ccard-chip .ic { width: 6.7cqi; height: 6.7cqi; }
+.ctile-face .ccard--sm .ccard-nfc .ic { width: 5.4cqi; height: 5.4cqi; }
+.ctile-face .ccard--sm .ccard-num { margin-top: 4.4cqi; font-size: 6.2cqi; letter-spacing: .03em; }
+.ctile-face .ccard--sm .ccard-row--bottom { margin-top: 4cqi; gap: 0 2.8cqi; }
+.ctile-face .ccard--sm .ccard-cell b { font-size: 4.4cqi; letter-spacing: 0; }
+.ctile-face .ccard--sm .ccard-cell small { font-size: 2.9cqi; letter-spacing: .05em; }
+
+.ctile-body { padding: 18px 20px 20px; display: flex; flex-direction: column; flex: 1; }
+.ctile-title { font-size: 1.02rem; font-weight: 600; margin: 10px 0 14px; }
+.ctile-title a { color: var(--ink-900); }
+.ctile-title a:hover { color: var(--brand-700); }
+.ctile-save {
+  font-family: var(--ff-mono); font-size: .7rem; font-weight: 700;
+  color: var(--gold-600); background: var(--gold-50);
+  border: 1px solid #f5e2b4;
+  padding: 3px 9px; border-radius: var(--r-full);
+}
+.ctile-nums {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--ink-50); border: 1px solid var(--border);
+  border-radius: var(--r-sm); padding: 12px 14px; margin-bottom: 14px;
+}
+.ctile-nums small { display: block; font-size: .68rem; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-400); font-weight: 600; }
+.ctile-nums b { font-size: 1.06rem; color: var(--ink-900); }
+.ctile-value { color: var(--ok-600) !important; }
+.ctile-arrow { color: var(--ink-300); display: flex; }
+.ctile-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+/* Add and Buy are separate actions with different outcomes, so they sit side by
+   side and keep the same size in every card. The Buy button is the filled one
+   because it completes the purchase, the Add button stays quiet. */
+.ctile-acts { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+.ctile-acts .btn { white-space: nowrap; }
+.ctile-acts .js-buy { min-width: 92px; justify-content: center; }
+
+/* ---------- QR / payment sheet ---------- */
+.qr-sheet { text-align: center; }
+.qr-frame {
+  position: relative;
+  display: inline-grid; place-items: center;
+  width: 244px; height: 244px;
+  padding: 16px;
+  background: #fff; border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--sh-lg);
+}
+.qr-frame::before, .qr-frame::after {
+  content: ""; position: absolute; width: 26px; height: 26px;
+  border: 3px solid var(--brand-500);
+}
+.qr-frame::before { top: 8px; left: 8px; border-right: 0; border-bottom: 0; border-radius: 8px 0 0 0; }
+.qr-frame::after { bottom: 8px; right: 8px; border-left: 0; border-top: 0; border-radius: 0 0 8px 0; }
+.qr-frame canvas, .qr-frame img { width: 100% !important; height: 100% !important; display: block; }
+.qr-fallback { font-family: var(--ff-mono); font-size: .6rem; color: var(--ink-500); word-break: break-all; padding: 8px; }
+
+.timer-box {
+  display: inline-flex; flex-direction: column; align-items: center;
+  padding: 14px 26px; border-radius: var(--r-md);
+  background: var(--ink-50); border: 1px solid var(--border);
+}
+.timer-label { font-size: .68rem; text-transform: uppercase; letter-spacing: .12em; color: var(--ink-400); font-weight: 700; }
+.timer-value { font-family: var(--ff-mono); font-size: 2rem; font-weight: 700; color: var(--ink-900); line-height: 1.1; }
+.timer-value.urgent { color: var(--danger-600); animation: pulse-soft 1s ease-in-out infinite alternate; }
+@keyframes pulse-soft { from { opacity: .55; } to { opacity: 1; } }
+
+.upi-apps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.upi-app {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 14px 8px; border-radius: var(--r-sm);
+  border: 1.5px solid var(--border-2); background: var(--surface);
+  font-size: .74rem; font-weight: 600; color: var(--ink-600);
+  transition: all .25s var(--ease);
+}
+.upi-app:hover { transform: translateY(-3px); border-color: var(--brand-300); box-shadow: var(--sh-md); }
+.upi-logo {
+  width: 34px; height: 34px; border-radius: 10px;
+  display: grid; place-items: center;
+  font-family: var(--ff-disp); font-size: .74rem; font-weight: 700; color: #fff;
+}
+.upi-pe   { background: #5f259f; }
+.upi-gpay { background: #4285f4; }
+.upi-paytm{ background: #00baf2; }
+.upi-fampay{ background: #e2574c; }
+
+.upi-id {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  font-family: var(--ff-mono); font-size: .92rem; font-weight: 600;
+  background: var(--ink-50); border: 1px dashed var(--border-2);
+  padding: 12px 16px; border-radius: var(--r-sm);
+}
+.upi-amount-pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--ff-mono); font-weight: 700; font-size: .9rem;
+  background: var(--ok-50); color: var(--ok-600);
+  border: 1px solid var(--ok-200);
+  padding: 7px 14px; border-radius: var(--r-full);
+}
+
+/* ---------- wallet ---------- */
+.wallet-hero {
+  position: relative; overflow: hidden;
+  border-radius: var(--r-xl);
+  background: var(--grad-ink);
+  color: #fff; padding: 34px;
+  box-shadow: var(--sh-lg);
+}
+.wallet-hero::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(500px 220px at 88% 0%, rgba(139, 92, 246, .5), transparent 70%),
+              radial-gradient(400px 200px at 6% 110%, rgba(6, 182, 212, .35), transparent 70%);
+}
+.wallet-hero > * { position: relative; z-index: 1; }
+.wallet-balance { font-family: var(--ff-mono); font-size: clamp(2.2rem, 5vw, 3rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.1; }
+.wallet-stats { display: flex; gap: 34px; margin-top: 22px; flex-wrap: wrap; }
+.wallet-stats b { display: block; font-family: var(--ff-mono); font-size: 1.15rem; }
+.wallet-stats small { font-size: .74rem; color: rgba(255, 255, 255, .6); }
+
+.nav-wallet {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 14px; border-radius: var(--r-full);
+  background: var(--gold-50); border: 1px solid #f2e0b6;
+  font-family: var(--ff-mono); font-size: .88rem; font-weight: 700;
+  color: var(--gold-600);
+}
+.nav-wallet:hover { box-shadow: var(--sh-gold); color: var(--gold-600); }
+.nav-wallet.pending { background: var(--warn-50); border-color: var(--warn-200); color: var(--warn-600); }
+
+.txn-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 15px 0; border-bottom: 1px solid var(--ink-100);
+}
+.txn-row:last-child { border-bottom: 0; }
+.txn-ic { width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; flex: 0 0 auto; }
+.txn-ic.in { background: var(--ok-50); color: var(--ok-500); }
+.txn-ic.out { background: var(--danger-50); color: var(--danger-500); }
+.txn-ic.hold { background: var(--warn-50); color: var(--warn-500); }
+.txn-amt { font-family: var(--ff-mono); font-weight: 700; font-size: 1.05rem; margin-left: auto; }
+.txn-amt.in { color: var(--ok-600); }
+.txn-amt.out { color: var(--ink-900); }
+
+/* ---------- reveal panel (card details after payment) ---------- */
+.reveal-panel {
+  border: 1px solid var(--ok-200);
+  background: var(--ok-50);
+  border-radius: var(--r-lg);
+  padding: 24px;
+}
+.copied-flash { animation: flash .6s var(--ease); }
+@keyframes flash { 0% { background: var(--brand-50); } 100% { background: transparent; } }
+
+/* ---------- 9. PRODUCT DETAIL ---------- */
+.pd-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+.pd-media {
+  border-radius: var(--r-xl); overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--grad-ink);
+  aspect-ratio: 4 / 3;
+  box-shadow: var(--sh-lg);
+}
+.pd-media img { width: 100%; height: 100%; object-fit: cover; }
+/* the detail page leads with the card itself; the product photo sits
+   underneath it rather than replacing it */
+.pd-media.pd-cardface {
+  aspect-ratio: auto;
+  height: auto;
+  padding: 22px;
+  display: grid;
+  gap: 16px;
+  align-content: start;
+  /* a soft mat so the card is the focus, rather than the heavy dark block the
+     generic .pd-media rule would put behind it */
+  background: var(--ink-50, #f7f7fc);
+  border-color: var(--border-2);
+}
+.pd-cardface .ccard { width: 100%; height: auto; }
+.pd-img-alt {
+  width: 100%;
+  border-radius: var(--r-md);
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  opacity: .92;
+}
+
+@media (max-width: 560px) {
+  /* the card has to show every field, so nothing is allowed to crop it:
+     drop the fixed proportions, let the content decide the height, and turn
+     the four footer cells into a tidy two-by-two block instead of letting
+     them wrap into an uneven pile */
+  .pd-media.pd-cardface { padding: 14px; gap: 12px; }
+  .pd-cardface .ccard { min-height: 0; padding: 18px 16px; border-radius: 18px; }
+  .pd-cardface .ccard--lg { min-height: 0; padding: 18px 16px; }
+  .pd-cardface .ccard-mid { margin-top: 10px; }
+  .pd-cardface .ccard-chip { width: 38px; height: 28px; }
+    .pd-cardface .ccard-num { font-size: .95rem; letter-spacing: .03em; margin-top: 12px; white-space: nowrap; }
+  .pd-cardface .ccard-row--bottom {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 10px;
+    margin-top: 12px;
+    padding-top: 0;
+  }
+  .pd-cardface .ccard-cell b { font-size: .78rem; }
+  .pd-cardface .ccard-cell--name b { white-space: normal; overflow: visible; }
+  .pd-cardface .ccard-issuer { font-size: .68rem; letter-spacing: .12em; }
+  .pd-cardface .ccard-net { font-size: .82rem; }
+}
+
+/* ---------- product detail: phone layout ----------
+   The action row is a single line on a desktop and a stack on a phone, where
+   two side-by-side long buttons either wrap unevenly or squeeze. */
+.pd-actions {
+  display: flex; align-items: center; gap: 14px;
+  margin-top: 26px;
+}
+.pd-actions .qty { flex: 0 0 auto; }
+.pd-actions .btn { flex: 1 1 0; min-width: 0; }
+
+@media (max-width: 560px) {
+  .pd-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 18px;
+    justify-items: stretch;
+  }
+  .pd-actions .qty { justify-self: center; }
+  .pd-actions .btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 48px;
+  }
+
+  /* price, saving badge and stock read as one tidy block */
+  .pd-price-row { gap: 8px !important; }
+  .pd-price-row .price { font-size: 1.7rem !important; }
+  .pd-stock-row { margin-bottom: 14px !important; }
+
+  .pd-crumb { font-size: .78rem; white-space: normal; overflow-wrap: anywhere; }
+}
+
+.pd-title { font-size: clamp(1.6rem, 3.2vw, 2.2rem); margin-bottom: .3em; }
+.qty { display: inline-flex; align-items: center; border: 1.5px solid var(--border-2); border-radius: var(--r-sm); overflow: hidden; background: var(--surface); }
+.qty button { width: 42px; height: 46px; border: 0; background: var(--ink-100); cursor: pointer; font-size: 1.1rem; color: var(--ink-700); font-weight: 700; transition: background .2s; }
+.qty button:hover { background: var(--brand-100); color: var(--brand-700); }
+.qty input { width: 58px; height: 46px; border: 0; text-align: center; font-family: var(--ff-mono); font-weight: 700; font-size: 1rem; color: var(--ink-900); }
+.qty input:focus { outline: none; }
+
+.spec-list { list-style: none; padding: 0; margin: 0; }
+.spec-list li { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px dashed var(--border-2); font-size: .93rem; }
+.spec-list li:last-child { border: 0; }
+.spec-list b { color: var(--ink-900); font-weight: 600; }
+.spec-list span { color: var(--ink-500); text-align: right; }
+
+/* ---------- 10. FORMS ---------- */
+.field { margin-bottom: 18px; }
+.field label, .label { display: block; font-size: .87rem; font-weight: 600; color: var(--ink-700); margin-bottom: 7px; }
+.label .req, .field label .req { color: var(--danger-500); }
+
+.input, .select, .textarea {
+  width: 100%; padding: 12px 15px;
+  font-family: var(--ff); font-size: .95rem; color: var(--ink-900);
+  background: var(--surface);
+  border: 1.5px solid var(--border-2);
+  border-radius: var(--r-sm);
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+.input::placeholder, .textarea::placeholder { color: var(--ink-400); }
+.input:focus, .select:focus, .textarea:focus {
+  outline: none; border-color: var(--brand-400); box-shadow: 0 0 0 4px var(--brand-50);
+  background: #fff;
+}
+.input:disabled, .select:disabled { background: var(--ink-100); color: var(--ink-500); cursor: not-allowed; }
+.textarea { min-height: 120px; resize: vertical; }
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7690' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px;
+}
+.input-group { position: relative; }
+.input-group .input { padding-left: 44px; }
+.input-group .ig-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--ink-400); pointer-events: none; display: flex; }
+.input-group .ig-action { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); background: none; border: 0; cursor: pointer; color: var(--ink-400); padding: 8px; border-radius: var(--r-xs); font-size: .8rem; font-weight: 600; }
+.input-group .ig-action:hover { color: var(--brand-600); background: var(--brand-50); }
+
+.field-error { color: var(--danger-600); font-size: .8rem; font-weight: 500; margin-top: 6px; display: none; }
+.input.invalid { border-color: var(--danger-500); }
+.input.invalid:focus { box-shadow: 0 0 0 4px var(--danger-50); }
+.field-hint { font-size: .8rem; color: var(--ink-500); margin-top: 6px; }
+.field-ok { color: var(--ok-600); font-size: .8rem; font-weight: 500; margin-top: 6px; display: none; }
+
+.check { display: flex; align-items: flex-start; gap: 10px; font-size: .9rem; cursor: pointer; font-weight: 400; }
+.check input { width: 18px; height: 18px; accent-color: var(--brand-600); cursor: pointer; margin-top: 3px; flex: 0 0 auto; }
+
+.radio-card { display: block; cursor: pointer; }
+.radio-card input { position: absolute; opacity: 0; pointer-events: none; }
+.radio-card .rc-inner {
+  border: 1.5px solid var(--border-2); border-radius: var(--r-md);
+  padding: 16px; transition: all .25s var(--ease); background: var(--surface);
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.radio-card input:checked + .rc-inner { border-color: var(--brand-500); background: var(--brand-50); box-shadow: 0 6px 20px rgba(92, 71, 232, .14); }
+.radio-card .f-icon { margin: 0; width: 46px; height: 46px; border-radius: 13px; }
+
+/* ---------- 11. TABLES ---------- */
+.table-wrap { overflow-x: auto; border-radius: var(--r-md); }
+table.table { width: 100%; border-collapse: collapse; font-size: .91rem; }
+table.table th {
+  text-align: left; padding: 14px 18px;
+  background: var(--ink-50); color: var(--ink-500);
+  font-size: .73rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+  white-space: nowrap; border-bottom: 1px solid var(--border);
+}
+table.table td { padding: 15px 18px; border-bottom: 1px solid var(--ink-100); vertical-align: middle; }
+table.table tbody tr { transition: background .18s; }
+table.table tbody tr:hover { background: var(--brand-50); }
+table.table tbody tr:last-child td { border-bottom: 0; }
+table.table .num { font-family: var(--ff-mono); font-variant-numeric: tabular-nums; }
+
+/* ---------- 12. BADGES / PILLS ---------- */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 11px; border-radius: var(--r-full);
+  font-size: .75rem; font-weight: 600; line-height: 1.5;
+  white-space: nowrap;
+  font-family: var(--ff);
+}
+.badge-brand { background: var(--brand-50); color: var(--brand-700); border: 1px solid var(--brand-100); }
+.badge-ok { background: var(--ok-50); color: var(--ok-600); border: 1px solid var(--ok-200); }
+.badge-warn { background: var(--warn-50); color: var(--warn-600); border: 1px solid var(--warn-200); }
+.badge-danger { background: var(--danger-50); color: var(--danger-600); border: 1px solid var(--danger-200); }
+.badge-info { background: var(--info-50); color: var(--info-600); border: 1px solid var(--info-200); }
+.badge-dark { background: var(--ink-900); color: #fff; }
+.badge-dot::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 16px; border-radius: var(--r-full);
+  background: var(--surface); border: 1.5px solid var(--border-2);
+  font-size: .85rem; font-weight: 500; color: var(--ink-600);
+  cursor: pointer; transition: all .25s var(--ease);
+}
+.chip:hover { border-color: var(--brand-300); color: var(--brand-700); transform: translateY(-1px); }
+.chip.active { background: var(--grad-brand); border-color: transparent; color: #fff; box-shadow: var(--sh-brand); }
+
+/* ---------- 13. STATS ---------- */
+.stat { display: flex; gap: 16px; align-items: center; }
+.stat-ic {
+  width: 52px; height: 52px; border-radius: 15px;
+  display: grid; place-items: center; font-size: 1.3rem;
+  flex: 0 0 auto;
+}
+.stat-v { font-family: var(--ff-mono); font-size: 1.65rem; font-weight: 700; line-height: 1.15; color: var(--ink-900); letter-spacing: -.03em; }
+.stat-l { font-size: .82rem; color: var(--ink-500); font-weight: 500; }
+
+/* ---------- 14. TABS ---------- */
+.tabs { display: flex; gap: 4px; border-bottom: 1.5px solid var(--border); overflow-x: auto; }
+.tab {
+  padding: 12px 20px; border: 0; background: none; cursor: pointer;
+  font-family: var(--ff); font-size: .92rem; font-weight: 600; color: var(--ink-500);
+  border-bottom: 2.5px solid transparent; margin-bottom: -2px; white-space: nowrap;
+  transition: all .2s var(--ease-2);
+}
+.tab:hover { color: var(--brand-600); }
+.tab.active { color: var(--brand-700); border-bottom-color: var(--brand-500); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: fadeUp .4s var(--ease); }
+
+/* ---------- 15. DASHBOARD / PANEL LAYOUT ---------- */
+/* minmax(0,1fr) not 1fr: a bare 1fr cannot shrink below its content's min-content`n   width, so a wide table inside .dash-main stretched the whole page and`n   .table-wrap's overflow-x:auto never engaged. */
+.dash { display: grid; grid-template-columns: 272px minmax(0,1fr); min-height: calc(100vh - var(--nav-h)); }
+
+/* Grid and block children must be allowed to shrink, so a wide table scrolls
+   inside .table-wrap instead of stretching the whole page. */
+.dash-main > *, .dash-main .grid > *, .card > * { min-width: 0; }
+.table-wrap { max-width: 100%; }
+.side {
+  position: sticky; top: var(--nav-h);
+  height: calc(100vh - var(--nav-h)); overflow-y: auto;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 24px 16px;
+}
+.side-title { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .13em; color: var(--ink-400); margin: 20px 12px 8px; }
+.side-link {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 14px; border-radius: var(--r-sm);
+  font-size: .93rem; font-weight: 500; color: var(--ink-600);
+  margin-bottom: 3px;
+  transition: all .22s var(--ease-2);
+}
+.side-link:hover { background: var(--ink-100); color: var(--brand-700); }
+.side-link.active { background: var(--grad-brand); color: #fff; box-shadow: var(--sh-brand); font-weight: 600; }
+.side-link .ic { display: flex; }
+.side-link .pill { margin-left: auto; background: rgba(255, 255, 255, .25); padding: 1px 8px; border-radius: var(--r-full); font-size: .68rem; font-family: var(--ff-mono); }
+.side-link:not(.active) .pill { background: var(--danger-500); color: #fff; }
+
+.dash-main { padding: 32px; background: transparent; min-width: 0; }
+.dash-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+.dash-head h1 { font-size: 1.7rem; margin: 0; }
+.dash-head p { margin: 2px 0 0; color: var(--ink-500); font-size: .92rem; }
+.dash-head .breadcrumb { margin-bottom: 0; }
+
+/* ---------- purchase receipt ---------- */
+.buy-back { padding: 16px; }
+.buy-modal { max-width: 620px; }
+.buy-modal .modal-body { max-height: min(64vh, 560px); overflow-y: auto; }
+
+.buy-hero {
+  display: flex; align-items: center; gap: 14px;
+  padding: 22px 24px;
+  background: var(--grad-brand);
+  color: #fff;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+}
+.buy-hero h3 { margin: 0; font-size: 1.22rem; color: #fff; }
+.buy-hero p { margin: 3px 0 0; font-size: .86rem; color: rgba(255, 255, 255, .84); }
+.buy-tick {
+  width: 46px; height: 46px; flex: 0 0 auto;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .18);
+  border: 1px solid rgba(255, 255, 255, .32);
+  display: grid; place-items: center;
+  color: #fff;
+}
+.buy-tick .ic { width: 1.5rem; height: 1.5rem; stroke-width: 2.6; }
+
+.buy-sum {
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  background: var(--ink-50, #fafaff);
+}
+.buy-sum-row {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  padding: 4px 0;
+  font-size: .87rem;
+  color: var(--ink-600);
+}
+.buy-sum-row b { color: var(--ink-900); text-align: right; }
+.buy-sum-row.big {
+  margin-top: 6px; padding-top: 10px;
+  border-top: 1px dashed var(--border-2);
+  font-size: .95rem;
+}
+.buy-sum-row.big b { font-family: var(--ff-mono); font-size: 1.1rem; color: var(--brand-700); }
+
+/* the card face the shopper actually keeps */
+.buy-card { margin-bottom: 14px; }
+.pcard-face {
+  position: relative;
+  border-radius: var(--r-lg);
+  padding: 18px 20px 16px;
+  background: var(--grad-brand);
+  color: #fff;
+  overflow: hidden;
+  box-shadow: var(--sh-brand);
+  min-height: 148px;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.pcard-glow {
+  position: absolute; inset: -40% -10% auto auto;
+  width: 240px; height: 240px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, .22), transparent 62%);
+  pointer-events: none;
+}
+.pcard-top {
+  position: relative;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: .78rem; letter-spacing: .12em; text-transform: uppercase;
+  opacity: .95;
+}
+.pcard-chip {
+  position: relative;
+  width: 40px; height: 29px; margin: 14px 0 10px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #f6d47a, #d9a53c);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .5);
+}
+.pcard-num {
+  position: relative;
+  font-family: var(--ff-mono);
+  font-size: 1.12rem; font-weight: 700;
+  letter-spacing: .1em;
+  word-break: break-all;
+}
+.pcard-bot {
+  position: relative;
+  display: flex; gap: 26px; flex-wrap: wrap;
+  margin-top: 12px;
+  font-size: .68rem;
+}
+.pcard-bot small {
+  display: block;
+  font-size: .58rem; letter-spacing: .14em;
+  opacity: .78; margin-bottom: 2px;
+}
+.pcard-bot b { font-weight: 600; letter-spacing: .04em; }
+
+.buy-card-rows {
+  border: 1px solid var(--border-2);
+  border-top: 0;
+  border-radius: 0 0 var(--r-md) var(--r-md);
+  padding: 4px 14px;
+  margin-top: -8px;
+  position: relative;
+  background: var(--surface);
+}
+.cred-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--border-2);
+}
+.cred-row:last-child { border-bottom: 0; }
+.cred-k { width: 92px; flex: 0 0 auto; font-size: .76rem; color: var(--ink-500); }
+.cred-v {
+  flex: 1 1 auto; min-width: 0;
+  font-family: var(--ff-mono); font-weight: 600; font-size: .92rem;
+  letter-spacing: .04em;
+  word-break: break-all;
+}
+.cred-copy {
+  flex: 0 0 auto;
+  width: 30px; height: 30px;
+  display: grid; place-items: center;
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-xs);
+  background: var(--surface);
+  color: var(--ink-600);
+  cursor: pointer;
+  transition: all .2s var(--ease);
+}
+.cred-copy:hover { border-color: var(--brand-300); color: var(--brand-700); background: var(--brand-50); }
+.cred-copy.ghost { border-color: transparent; background: none; cursor: default; }
+.buy-note {
+  margin: 10px 0 0;
+  font-size: .8rem;
+  color: var(--ink-500);
+  padding: 10px 12px;
+  background: var(--brand-50);
+  border-radius: var(--r-sm);
+}
+
+@media (max-width: 520px) {
+  .buy-back { padding: 0; align-items: flex-end; }
+  .buy-modal { max-width: none; border-radius: var(--r-lg) var(--r-lg) 0 0; }
+  .buy-hero { padding: 18px 18px; border-radius: 0; }
+  .pcard-num { font-size: 1rem; }
+  .cred-k { width: 74px; }
+  .cred-v { font-size: .86rem; }
+}
+
+/* ---------- 16. MODAL ---------- */
+.modal-back {
+  position: fixed; inset: 0; z-index: 400;
+  background: rgba(12, 18, 34, .42);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.modal-back.open { display: flex; animation: fadeIn .22s var(--ease); }
+.modal {
+  position: relative;
+  background: rgba(255, 255, 255, .98);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  width: 100%; max-width: 540px;
+  max-height: 90vh; overflow-y: auto;
+  box-shadow: var(--sh-xl);
+  animation: pop .32s var(--ease);
+}
+.modal-lg { max-width: 800px; }
+.modal-head { padding: 22px 26px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; position: sticky; top: 0; background: rgba(255, 255, 255, .97); backdrop-filter: blur(10px); border-radius: var(--r-lg) var(--r-lg) 0 0; z-index: 2; }
+.modal-head h3 { margin: 0; font-size: 1.16rem; }
+.modal-body { padding: 26px; }
+.modal-foot { padding: 18px 26px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+.x-btn { background: var(--ink-100); border: 0; width: 34px; height: 34px; border-radius: var(--r-xs); cursor: pointer; color: var(--ink-600); display: grid; place-items: center; transition: all .2s; }
+.x-btn:hover { background: var(--danger-50); color: var(--danger-600); }
+
+/* ---------- 17. TOAST ---------- */
+.toast-wrap { position: fixed; top: 20px; right: 20px; z-index: 500; display: flex; flex-direction: column; gap: 10px; max-width: min(380px, calc(100vw - 40px)); }
+.toast {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: rgba(255, 255, 255, .97);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--brand-500);
+  border-radius: var(--r-sm); padding: 14px 16px;
+  box-shadow: var(--sh-lg);
+  animation: slideIn .35s var(--ease);
+  font-size: .91rem;
+}
+.toast.out { animation: slideOut .3s var(--ease) forwards; }
+.toast .t-ic { display: flex; margin-top: 1px; }
+.toast b { display: block; color: var(--ink-900); margin-bottom: 1px; font-weight: 600; }
+.toast p { margin: 0; color: var(--ink-500); font-size: .85rem; }
+.toast.ok { border-left-color: var(--ok-500); } .toast.ok .t-ic { color: var(--ok-500); }
+.toast.err { border-left-color: var(--danger-500); } .toast.err .t-ic { color: var(--danger-500); }
+.toast.warn { border-left-color: var(--warn-500); } .toast.warn .t-ic { color: var(--warn-500); }
+.toast.info .t-ic { color: var(--brand-500); }
+
+/* ---------- 18. SKELETON / LOADING ---------- */
+.sk {
+  background: linear-gradient(90deg, var(--ink-100) 25%, var(--ink-200) 37%, var(--ink-100) 63%);
+  background-size: 400% 100%;
+  animation: sk 1.4s ease infinite;
+  border-radius: var(--r-xs);
+}
+@keyframes sk { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+.sk-line { height: 12px; margin-bottom: 9px; }
+.sk-title { height: 20px; width: 60%; margin-bottom: 14px; }
+.sk-media { aspect-ratio: 16/10; border-radius: 0; }
+
+/* ---------- product detail loading screen ----------
+   A bare centred spinner left a phone-sized block floating in a wide desktop
+   column. This skeleton reuses the real page structure (.pd-wrap is the same
+   two-column grid, .pd-actions the same full-width row), so on a wide screen it
+   holds the shape the finished page will take and on a phone it stacks exactly
+   like the real thing instead of collapsing into a different layout. */
+.pd-skel .sk-cardface {
+  aspect-ratio: 1.586 / 1;          /* real card proportion */
+  border-radius: var(--r-xl);
+}
+.pd-skel .sk-panel {
+  height: 78px; border-radius: var(--r-lg); margin: 18px 0 14px;
+}
+.pd-skel .sk-panel.sk-tall {
+  height: 210px; margin: 26px 0 0; border-radius: var(--r-lg);
+}
+.pd-skel .sk-bar {
+  width: 100%; height: 56px; border-radius: var(--r-md);
+}
+.pd-skel .pd-actions { margin-top: 0; }
+.pd-skel .pd-info { gap: 0; }
+.pd-skel .sk-line:last-child { margin-bottom: 0; }
+
+/* stack exactly where the real page stacks */
+@media (max-width: 1100px) {
+  .pd-wrap { grid-template-columns: 1fr; gap: 28px; }
+}
+@media (max-width: 560px) {
+  .pd-skel .sk-panel.sk-tall { height: 180px; }
+  .pd-skel .sk-bar { height: 50px; }
+}
+
+/* visible to screen readers only */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---------- product tile loading placeholders ----------
+   These exist so the grid keeps its real rhythm while the products load. They
+   deliberately copy the .ctile metrics instead of inventing new ones, otherwise
+   the row jumps when the real cards replace them. */
+.ctile--sk { pointer-events: none; }
+.ctile--sk .ctile-face { margin: 16px 16px 0; padding: 0; }
+.sk-tile-face {
+  aspect-ratio: 1.586 / 1;          /* the same proportion as a real card */
+  border-radius: var(--r-lg);
+}
+.sk-pill { width: 72px; height: 20px; border-radius: var(--r-full); }
+.sk-btn { width: 92px; height: 34px; border-radius: var(--r-md); }
+.ctile--sk .ctile-nums > div { min-width: 0; }
+.ctile--sk .ctile-nums .sk-line { margin-bottom: 0; }
+.ctile--sk .ctile-foot { align-items: center; }
+
+@media (max-width: 760px) {
+  .ctile--sk .ctile-face { margin: 10px 10px 0; }
+}
+@media (max-width: 600px) {
+  .ctile--sk .ctile-face { margin: 12px 12px 0; }
+}
+
+/* ---------- my orders ----------
+   Compact order-management layout. Everything the cards used to do with
+   inline styles lives here, so the spacing can be tuned in one place:
+   consistent stat boxes, a product row that does not reserve a square of
+   height per thumbnail, a payment panel padded to its own content, evenly
+   divided timeline, and a footer whose two sides stay on one line. */
+.ord-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px 20px; flex-wrap: wrap; margin-bottom: 16px;
+  min-width: 0;
+}
+/* The strip must never be wider than its column. A flex item's automatic
+   minimum size is its own content, so without an explicit basis of 0 the five
+   pills pushed the page sideways on a phone instead of scrolling inside.
+
+   0 1 auto rather than 1 1 0: the strip hugs its pills on a wide screen
+   instead of stretching into a long empty trough, and can still shrink and
+   scroll when the column gets too narrow for the full set. */
+.ord-bar > .ord-tabs { flex: 0 1 auto; min-width: 0; max-width: 100%; }
+/* ---- order tabs: a pill strip, not an underline row ----
+   The base .tabs class is an underlined row. On a phone the five labels plus
+   their counts do not fit in 320px, so the strip is turned into pills on one
+   line that scrolls left-right as a unit.
+
+   flex-wrap:nowrap is set explicitly rather than left to the default, because
+   that default is what let the strip break onto extra lines. */
+.ord-tabs {
+  margin-bottom: 0 !important; max-width: 100%;
+  display: flex; flex-wrap: nowrap; align-items: center; gap: 6px;
+  /* overflow-x:auto forces overflow-y to compute as auto too, so a pill that
+     is taller than the strip's content box gets clipped. Reserving the pill
+     height plus the padding keeps every pill whole. */
+  min-height: 46px;
+  padding: 4px; border-bottom: 0;
+  border-radius: var(--r-full);
+  background: var(--ink-50);
+  border: 1px solid var(--border-2);
+  overflow-x: auto; overflow-y: hidden;
+  scrollbar-width: none; -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+}
+.ord-tabs::-webkit-scrollbar { display: none; }
+
+.ord-tabs .tab {
+  flex: 0 0 auto; scroll-snap-align: start;
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  /* one height for every pill, whether or not it carries a count. Without
+     this the "Ready" pill, which has no .tab-n child, came out 2px shorter
+     and its label sat a pixel below the rest of the row. */
+  min-height: 38px;
+  margin-bottom: 0; padding: 9px 16px;
+  border: 0; border-radius: var(--r-full);
+  background: transparent; color: var(--ink-500);
+  font-size: .86rem; font-weight: 600; white-space: nowrap;
+  text-align: center; line-height: 1.3;
+  transition: background .2s var(--ease-2), color .2s var(--ease-2);
+}
+.ord-tabs .tab:hover { color: var(--ink-800); background: var(--ink-100); }
+.ord-tabs .tab.active {
+  color: #fff; background: var(--brand-600);
+  box-shadow: 0 2px 8px rgba(92, 71, 232, .28);
+}
+.ord-tabs .tab.active:hover { background: var(--brand-600); }
+
+.tab-n {
+  display: inline-grid; place-items: center;
+  min-width: 20px; height: 20px; padding: 0 6px;
+  border-radius: var(--r-full);
+  background: var(--ink-200); color: var(--ink-600);
+  font-size: .7rem; font-weight: 700; line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.ord-tabs .tab.active .tab-n { background: rgba(255, 255, 255, .26); color: #fff; }
+.ord-tabs .tab:not(.active) .tab-n:only-child { /* a tab with no label still lines up */ }
+
+.ord-search {
+  display: flex; align-items: center; gap: 10px;
+  flex: 0 1 380px; min-width: 0;
+}
+.ord-search .ic { color: var(--ink-400); flex: 0 0 auto; }
+.ord-search .input { flex: 1 1 auto; min-width: 0; height: 40px; }
+.ord-search #ordCount {
+  flex: 0 0 auto; white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+
+/* ---- statistics: one box model, so all five share a height and baseline ---- */
+.ord-stats {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+.ord-stat {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; min-width: 0; box-sizing: border-box;
+}
+.ord-stat-ic {
+  width: 40px; height: 40px; flex: 0 0 40px;
+  border-radius: var(--r-md);
+  display: grid; place-items: center;
+  background: var(--brand-50); color: var(--brand-600);
+}
+.ord-stat-txt { min-width: 0; }
+.ord-stat-v {
+  font-size: 1.2rem; font-weight: 700; line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ord-stat-l {
+  font-size: .74rem; color: var(--ink-500); line-height: 1.3; margin-top: 1px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.ord-card { overflow: hidden; }
+
+/* ---- header: order id and badges, vertically centred on one line ---- */
+.ord-head { align-items: center; padding: 14px 20px; }
+.ord-head-id {
+  display: flex; align-items: baseline; gap: 10px;
+  flex-wrap: wrap; min-width: 0;
+}
+.ord-head-when { font-size: .78rem; color: var(--ink-500); white-space: nowrap; }
+.ord-head-badges { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
+
+/* ---- body padding trimmed; the sections inside carry the rhythm ---- */
+.ord-card .card-body { padding: 16px 20px; }
+
+/* ---- product rows: image + name left, total right, no fixed height ---- */
+.ord-items {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 12px 20px; flex-wrap: wrap;
+}
+.ord-items-list {
+  display: flex; flex-wrap: wrap; gap: 8px 20px;
+  flex: 1 1 320px; min-width: 0;
+}
+.ord-item { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.ord-item-thumb {
+  width: 44px; height: 34px; flex: 0 0 44px;
+  border-radius: var(--r-sm); overflow: hidden;
+}
+.ord-item-txt { min-width: 0; }
+.ord-item-txt b {
+  display: block; font-size: .86rem; line-height: 1.3;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 220px;
+}
+.ord-item-txt small { font-size: .74rem; }
+.ord-item-more {
+  width: 44px; height: 34px; flex: 0 0 44px;
+  border-radius: var(--r-sm);
+  display: grid; place-items: center;
+  background: var(--ink-100); color: var(--ink-600);
+  font-size: .82rem; font-weight: 700;
+}
+.ord-total { flex: 0 0 auto; text-align: right; }
+.ord-total > b {
+  display: block; font-size: 1.3rem; font-weight: 700; line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+.ord-total .fs-xs { line-height: 1.35; }
+
+/* ---- payment verified: padded to its content, never a fixed height ---- */
+.ord-reveal { padding: 16px 18px; margin-top: 16px; }
+.ord-reveal-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; flex-wrap: wrap; margin-bottom: 14px;
+}
+.ord-reveal-head b { font-size: .88rem; }
+.ord-reveal-no { font-size: .75rem; color: var(--ink-500); white-space: nowrap; }
+
+.ord-cards { display: flex; flex-direction: column; gap: 16px; }
+.ord-card-row {
+  display: grid; grid-template-columns: minmax(190px, 250px) minmax(0, 1fr);
+  gap: 18px; align-items: start;
+}
+.ord-card-face { min-width: 0; }
+.ord-card-face > * { display: block; width: 100%; }
+.ord-card-creds { min-width: 0; }
+.ord-cred-idx { display: block; margin-bottom: 4px; }
+
+/* credential rows share one height, so the copy buttons line up in a column.
+   The divider is an inset shadow rather than a border: a border on the last
+   row is dropped by the .cred-row:last-child rule, which made that row one
+   pixel shorter than the rest. */
+.ord-card-creds .cred-row {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr) 30px;
+  align-items: center; gap: 12px;
+  padding: 7px 0; min-height: 46px;
+  border-bottom: 0;
+  box-shadow: inset 0 -1px 0 var(--border-2);
+}
+.ord-card-creds .cred-row:last-child { box-shadow: none; }
+.ord-card-creds .cred-k { width: auto; }
+.ord-card-creds .cred-v {
+  overflow-wrap: anywhere;
+  /* a 19-digit number is the one value that must never wrap to a second line */
+  font-size: .88rem; white-space: nowrap;
+}
+.ord-card-creds .cred-copy { width: 30px; height: 30px; justify-self: end; }
+
+/* ---- timeline: four equal columns ----
+   The connector used to be a full-width bar at the dot's vertical level while
+   the label sat in normal flow from the very top of the step, so the green line
+   ran straight through the text. Two changes fix that:
+     - the label is pushed below the line with padding-top
+     - the line spans from this dot's centre to the next dot's centre, so it
+       never sits under a label
+   Geometry, with a 16px dot at left:0: centre is (8, 8), so the 2px line sits
+   at top:7 and the label starts at 24. */
+.ord-track {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  list-style: none; margin: 16px 0 0; padding: 0;
+}
+.ord-step {
+  position: relative; min-width: 0;
+  display: flex; flex-direction: column; align-items: flex-start;
+  /* clears the dot and the line above the label */
+  padding-top: 24px;
+}
+.ord-step::before {
+  content: ""; position: absolute;
+  top: 7px; left: 8px; right: -8px; height: 2px;
+  background: var(--ink-200);
+}
+/* no connector past the final dot */
+.ord-step:last-child::before { display: none; }
+.ord-step.on::before { background: var(--ok-500); }
+.ord-dot {
+  position: absolute; top: 0; left: 0;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--surface); border: 2px solid var(--ink-300);
+  display: grid; place-items: center; color: #fff;
+  box-sizing: border-box;
+}
+.ord-dot .ic { width: 9px; height: 9px; }
+.ord-step.on .ord-dot { background: var(--ok-500); border-color: var(--ok-500); }
+.ord-step b {
+  font-size: .78rem; font-weight: 600; line-height: 1.3; color: var(--ink-500);
+  overflow-wrap: break-word;
+}
+.ord-step.on b { color: var(--ink-800); }
+.ord-step.now b { color: var(--ok-700); }
+
+/* ---- footer: note left, actions hard against the right edge on desktop ----
+   .card-foot is a plain flex row, so with only two children the pair drifts to
+   the middle when the note is short. margin-left:auto on the actions pins them
+   to the right at every desktop width, and the mobile block below drops it so
+   the buttons can share the full width instead. */
+.ord-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 12px 20px;
+}
+.ord-foot-note {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: .82rem; color: var(--ink-500); min-width: 0;
+}
+.ord-foot-acts {
+  display: flex; align-items: center; gap: 8px;
+  flex: 0 0 auto; margin-left: auto;
+}
+.ord-foot-acts .btn { height: 34px; }
+
+@media (max-width: 860px) {
+  .ord-card-row { grid-template-columns: 1fr; gap: 14px; }
+  .ord-card-face { max-width: 300px; }
+}
+
+@media (max-width: 760px) {
+  .ord-bar { flex-direction: column; align-items: stretch; }
+  /* The search box and the "N orders" count are desktop-only. On a phone the
+     strip is just the five tabs, which already scroll sideways, and the search
+     would push the tabs below the fold for a control most people never use
+     here. The element stays in the DOM so the desktop layout is untouched and
+     the count keeps updating for the desktop view. */
+  .ord-search { display: none; }
+  /* the pill strip already scrolls, so the phone block only tightens it and
+     lets it take the full width, since the search is hidden here anyway */
+  .ord-tabs { min-height: 44px; padding: 3px; gap: 4px; flex: 1 1 auto; }
+  .ord-tabs .tab { min-height: 36px; padding: 8px 13px; font-size: .82rem; }
+  .tab-n { min-width: 18px; height: 18px; font-size: .66rem; }
+  .ord-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .ord-stat { padding: 12px; gap: 10px; }
+  .ord-stat-ic { width: 34px; height: 34px; flex: 0 0 34px; }
+  .ord-stat-v { font-size: 1rem; }
+  .ord-stat-l { font-size: .7rem; }
+  .ord-item-txt b { max-width: 46vw; }
+  .ord-card .card-body { padding: 14px; }
+  .ord-reveal { padding: 14px; }
+  /* the label column shrinks before the number would ever have to wrap */
+  .ord-card-creds .cred-row { grid-template-columns: 68px minmax(0, 1fr) 30px; gap: 10px; }
+  .ord-card-creds .cred-v { font-size: .82rem; letter-spacing: .02em; }
+  .ord-foot {
+    flex-direction: column; align-items: stretch; gap: 10px;
+    padding: 12px 14px;
+  }
+  /* stacked, so the right-alignment from the desktop rule is undone */
+  .ord-foot-acts { width: 100%; margin-left: 0; }
+  .ord-foot-acts .btn { flex: 1 1 auto; }
+  /* four labels in one row would squeeze 320px, so the track becomes a rail
+     with the dot on the left and the label beside it */
+  .ord-track { grid-template-columns: 1fr; gap: 0; }
+  .ord-step {
+    flex-direction: row; align-items: center; gap: 12px;
+    padding: 7px 0 7px 24px;
+    min-height: 34px;
+  }
+  /* a vertical connector down the left edge, through the dot centres */
+  .ord-step::before {
+    top: 0; bottom: 0; left: 7px; right: auto;
+    width: 2px; height: auto;
+  }
+  .ord-step:first-child::before { top: 17px; }
+  .ord-step:last-child::before { display: none; }
+  .ord-step:first-child { padding-top: 0; }
+  .ord-step:last-child { padding-bottom: 0; }
+  .ord-dot { position: static; flex: 0 0 16px; }
+}
+
+/* ---------- home page loading screen ----------
+   The home grid used four flat 200px blocks, so the section was far shorter
+   while loading than the product tiles it was standing in for, and the whole
+   page jumped when the data arrived. The product side now reuses the shop
+   grid's own skTiles(), and these two rules hold the category tile's shape
+   (.f-icon 58/17, then a title and a count) so nothing reflows. */
+.sk-cat-icon {
+  width: 58px; height: 58px; border-radius: 17px;
+  margin: 0 auto 20px;
+}
+/* index.js is a module, so it runs a beat after the HTML is parsed. Reserve
+   roughly one row so the section never flashes flat and then shoves the
+   reviews and newsletter sections down. */
+#featured:empty { min-height: 470px; }
+#catGrid:empty { min-height: 186px; }
+@media (max-width: 760px) {
+  #featured:empty { min-height: 530px; }
+}
+
+.spinner {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2.5px solid currentColor; border-right-color: transparent;
+  animation: spin .7s linear infinite; display: inline-block; flex: 0 0 auto;
+}
+.spinner-lg { width: 42px; height: 42px; border-width: 4px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loader { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 60px 20px; color: var(--ink-500); font-weight: 500; }
+.loader.full-page { min-height: 70vh; }
+
+/* ---------- 19. EMPTY STATE ---------- */
+.empty { text-align: center; padding: 64px 24px; }
+.empty-ic {
+  width: 92px; height: 92px; border-radius: 28px;
+  background: var(--brand-50); color: var(--brand-500);
+  display: grid; place-items: center; margin: 0 auto 22px;
+  box-shadow: 0 12px 32px rgba(92, 71, 232, .16);
+  transform: rotate(-6deg);
+}
+.empty h3 { margin-bottom: .4em; }
+.empty p { color: var(--ink-500); max-width: 430px; margin: 0 auto 22px; }
+
+/* ---------- 20. ALERT ---------- */
+.alert { display: flex; gap: 13px; padding: 16px 18px; border-radius: var(--r-sm); font-size: .91rem; border: 1px solid; align-items: flex-start; }
+.alert > span:first-child { display: flex; margin-top: 1px; }
+.alert b { display: block; margin-bottom: 2px; }
+.alert-ok { background: var(--ok-50); border-color: var(--ok-200); color: #065f46; }
+.alert-warn { background: var(--warn-50); border-color: var(--warn-200); color: #92400e; }
+.alert-err { background: var(--danger-50); border-color: var(--danger-200); color: #991b1b; }
+.alert-info { background: var(--info-50); border-color: var(--info-200); color: #1e40af; }
+
+/* ---------- 21. CART ----------
+   The row used to be a 96x72 placeholder box with the product name, the raw
+   category key, price and stock stacked in loose text, which left each row
+   about 150px tall with dead space beside it. It is now a real card face on
+   the left, a tight name/tag/price block, and the quantity stepper with the
+   line total on the right. */
+.cart-layout {
+  display: grid; grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 24px; align-items: start;
+}
+/* the items card ends where its last row ends, instead of stretching to match
+   the taller summary column and leaving a large empty panel below */
+.cart-layout > .card { align-self: start; }
+.cart-sub { color: var(--ink-500); margin: 0; }
+
+.cart-row {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr) auto;
+  gap: 16px; align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--ink-100);
+}
+.cart-row:last-child { border-bottom: 0; }
+.cart-row:first-child { padding-top: 2px; }
+
+/* the thumbnail is the card itself, in its real proportions */
+.cart-thumb-card {
+  width: 132px; aspect-ratio: 1.586 / 1;
+  border-radius: var(--r-md); overflow: hidden;
+  display: block; background: var(--grad-ink);
+  transition: transform .25s var(--ease);
+}
+.cart-thumb-card:hover { transform: translateY(-2px); }
+.cart-thumb-card > * { display: block; width: 100%; height: 100%; }
+.cart-thumb-card .img-cover { width: 100%; height: 100%; object-fit: cover; }
+
+.cart-info { min-width: 0; }
+.cart-name {
+  display: block; font-size: .98rem; line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.cart-tags {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin: 5px 0 6px;
+}
+.cart-tags .badge-sm {
+  padding: 2px 8px; font-size: .68rem; font-weight: 600;
+  border-radius: var(--r-full);
+  background: var(--ink-100); color: var(--ink-600);
+}
+.cart-price { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.cart-price > b { font-size: 1.02rem; }
+.cart-off {
+  font-size: .7rem; font-weight: 700; color: var(--ok-600);
+  background: var(--ok-50); border-radius: var(--r-full); padding: 1px 7px;
+}
+
+.cart-actions { display: flex; align-items: center; gap: 12px; }
+.cart-line {
+  min-width: 88px; text-align: right;
+  font-size: 1.06rem; font-family: var(--ff-mono);
+  font-variant-numeric: tabular-nums;
+}
+.cart-del { width: 36px; height: 36px; flex: 0 0 36px; }
+
+.summary { position: sticky; top: calc(var(--nav-h) + 20px); }
+.summary-line { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; font-size: .93rem; color: var(--ink-600); }
+.summary-line b { font-family: var(--ff-mono); }
+.summary-line.total { border-top: 1.5px dashed var(--border-2); margin-top: 12px; padding-top: 16px; font-size: 1.22rem; font-weight: 700; color: var(--ink-900); font-family: var(--ff-mono); }
+
+/* ---------- 22. AUTH PAGES ---------- */
+/* The sign-in form shown inside the add-money dialog, for someone who pressed
+   "Add money" without being signed in. It is the same form as the sign-in page
+   and it is asked for the same reason, so it is built from the same pieces — but
+   it is narrower than the page version, because a dialog is narrower than a
+   screen, and it does not carry the marketing panel, which would be a wall of
+   words inside a box the size of a card. */
+.dep-signin { max-width: 420px; margin: 0 auto; padding: 6px 0 2px; }
+.dep-signin-lead { color: var(--ink-500); margin: 0 0 18px; text-align: center; }
+.dep-signin .field { margin-bottom: 14px; }
+.dep-signin .btn-block { margin-top: 4px; }
+.dep-signin-alt { display: block; text-align: center; margin-top: 14px; }
+.dep-signin .field-error:empty { display: none; }
+
+@media (max-width: 520px) {
+  .dep-signin { padding: 0; }
+}
+   "Keep me signed in" at one end, "Forgot password?" at the other, on one line
+   at every width. The two together are wider than a 320px form, so the row was
+   wrapping and the link fell to a line of its own — which reads as two separate
+   thoughts rather than one line with an escape on the right.
+
+   nowrap keeps them side by side; the checkbox label is the one that gives way,
+   letting its own words wrap onto two short lines if it must, because the link
+   beside it is short and reads better whole. */
+.auth-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; flex-wrap: nowrap; margin-bottom: 18px;
+}
+.auth-row .check { min-width: 0; }
+.auth-row .check span { min-width: 0; }
+.auth-row a { flex: 0 0 auto; white-space: nowrap; }
+
+.auth-wrap { display: grid; grid-template-columns: 1.05fr 1fr; min-height: 100vh; }
+.auth-side {
+  position: relative; overflow: hidden;
+  background: var(--grad-ink); color: #fff;
+  padding: 60px; display: flex; flex-direction: column; justify-content: center;
+}
+.auth-side::before {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(700px 300px at 20% 10%, rgba(139, 92, 246, .5), transparent 70%),
+              radial-gradient(600px 300px at 80% 90%, rgba(6, 182, 212, .3), transparent 70%);
+}
+.auth-side > * { position: relative; z-index: 1; }
+.auth-side h2 { color: #fff; }
+.auth-side p { color: rgba(255, 255, 255, .72); }
+.auth-feats { list-style: none; padding: 0; margin: 30px 0 0; }
+.auth-feats li { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px; font-size: .95rem; color: rgba(255, 255, 255, .84); }
+.auth-feats .ic-step {
+  width: 28px; height: 28px; border-radius: 9px;
+  background: rgba(255, 255, 255, .12); display: grid; place-items: center;
+  font-size: .85rem; flex: 0 0 auto; margin-top: 1px;
+}
+.auth-main { display: flex; align-items: center; justify-content: center; padding: 48px 24px; background: var(--surface); }
+.auth-card { width: 100%; max-width: 440px; }
+.pw-meter { display: flex; gap: 5px; margin-top: 9px; }
+.pw-meter i { height: 5px; flex: 1; border-radius: var(--r-full); background: var(--ink-200); transition: background .35s var(--ease); }
+.pw-meter i.on1 { background: var(--danger-500); }
+.pw-meter i.on2 { background: var(--warn-500); }
+.pw-meter i.on3 { background: var(--ok-500); }
+.divider-or { display: flex; align-items: center; gap: 14px; color: var(--ink-400); font-size: .84rem; margin: 24px 0; }
+.divider-or::before, .divider-or::after { content: ""; height: 1px; background: var(--border); flex: 1; }
+
+/* ---------- 23. MISC BLOCKS ---------- */
+.breadcrumb { display: flex; gap: 8px; font-size: .85rem; color: var(--ink-500); flex-wrap: wrap; margin-bottom: 14px; }
+.breadcrumb a { color: var(--ink-500); }
+.breadcrumb a:hover { color: var(--brand-600); }
+.breadcrumb span.sep { opacity: .5; }
+
+.rating { display: inline-flex; align-items: center; gap: 5px; font-size: .84rem; }
+.stars { color: var(--gold-400); letter-spacing: 1px; }
+
+.review { padding: 18px 0; border-bottom: 1px solid var(--ink-100); }
+.review:last-child { border: 0; }
+.quote {
+  position: relative; padding: 40px;
+  border-radius: var(--r-xl);
+  background: var(--grad-brand); color: #fff;
+  font-size: 1.12rem; font-weight: 500; line-height: 1.6;
+  box-shadow: var(--sh-brand-lg);
+  overflow: hidden;
+}
+.quote::before { content: "\201C"; position: absolute; top: -10px; left: 20px; font-size: 5rem; opacity: .25; font-family: Georgia, serif; }
+
+.timeline { list-style: none; padding: 0; margin: 0; }
+.timeline li { position: relative; padding: 0 0 26px 32px; border-left: 2px solid var(--border-2); }
+.timeline li:last-child { border-left-color: transparent; padding-bottom: 0; }
+.timeline li::before {
+  content: ""; position: absolute; left: -8px; top: 4px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: #fff; border: 3px solid var(--brand-400);
+  box-shadow: 0 0 0 4px var(--brand-50);
+}
+.timeline li.done::before { background: var(--ok-500); border-color: var(--ok-500); box-shadow: 0 0 0 4px var(--ok-50); }
+.timeline b { display: block; color: var(--ink-900); font-weight: 600; }
+.timeline small { color: var(--ink-500); }
+
+/* The strip under the card grid that the next cards arrive into. It carries
+   nothing — it is watched so that the list knows the reader has reached the end.
+   The numbered pager it replaced (Prev, 1, 2, ..., 6, Next) asked someone to
+   work out which of those numbers was the ellipsis; the button that replaced it
+   asked them to decide when to stop. Scrolling is how a shopfront is read. */
+#pager { min-height: 1px; }
+
+/* The credit.
+
+   A signature should be findable without being loud. It sits under the
+   copyright on its own line, in a pill with the name in the brand colour, so a
+   person scanning the footer sees it in one pass — and on the About page it is
+   given room to be read properly rather than glanced at.
+
+   The pill is a link nowhere. It is a name, not a call to action, and styling
+   it like a button would invite somebody to click it. */
+.f-credit {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 10px 0 0;
+  font-size: .82rem;
+  color: var(--ink-500);
+  flex-wrap: wrap;
+}
+.f-credit .f-credit-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 12px 4px 6px;
+  border: 1px solid var(--brand-200);
+  border-radius: 99px;
+  background: linear-gradient(180deg, #fff, var(--brand-50));
+  color: var(--ink-500);
+  font-size: .78rem;
+  line-height: 1.4;
+}
+.f-credit .f-credit-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 20px; height: 20px;
+  border-radius: 99px;
+  background: var(--grad-brand);
+  color: #fff;
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .02em;
+}
+.f-credit [data-dev] {
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--brand-700);
+}
+
+/* ---- the About page's signature block ---- */
+.built-by {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 26px 24px;
+  border: 1px solid var(--brand-200);
+  border-radius: var(--r-lg, 18px);
+  background:
+    radial-gradient(120% 130% at 0% 0%, rgba(108, 92, 240, .10), transparent 60%),
+    linear-gradient(180deg, #fff, var(--brand-50));
+  box-shadow: 0 10px 34px rgba(92, 71, 232, .10);
+  text-align: left;
+}
+.built-by-mark {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 62px; height: 62px;
+  border-radius: 20px;
+  background: var(--grad-brand);
+  color: #fff;
+  font-size: 1.28rem;
+  font-weight: 800;
+  letter-spacing: .02em;
+  box-shadow: 0 10px 24px rgba(92, 71, 232, .28);
+}
+.built-by-txt { min-width: 0; }
+.built-by-kicker {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--brand-600);
+}
+.built-by-name {
+  margin: 3px 0 2px;
+  font-size: 1.42rem;
+  font-weight: 800;
+  letter-spacing: .01em;
+  color: var(--ink-900);
+}
+.built-by-role { font-size: .88rem; color: var(--ink-600); }
+.built-by-mark {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 62px; height: 62px;
+  border-radius: 20px;
+  background: var(--grad-brand);
+  color: #fff;
+  font-size: 1.28rem;
+  font-weight: 800;
+  letter-spacing: .02em;
+  box-shadow: 0 10px 24px rgba(92, 71, 232, .28);
+  overflow: hidden;
+}
+/* the real picture, when there is one. object-fit keeps it from stretching if
+   the file is ever replaced with something that is not square */
+.built-by-mark img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.built-by-name [data-dev] { color: var(--brand-700); }
+
+/* ---- "work with the person who built it" ---- */
+.hire-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.hire-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md, 14px);
+  background: var(--surface);
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--sh-sm);
+  transition: border-color .2s var(--ease), box-shadow .2s var(--ease), transform .2s var(--ease);
+}
+.hire-card:hover {
+  border-color: var(--brand-300);
+  box-shadow: 0 12px 30px rgba(92, 71, 232, .14);
+  transform: translateY(-2px);
+}
+.hire-card:focus-visible { outline: 2px solid var(--brand-500); outline-offset: 2px; }
+.hire-ic {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 44px; height: 44px;
+  border-radius: 14px;
+  color: #fff;
+}
+.hire-ic-wa { background: #25d366; }
+.hire-ic-tg { background: #229ed9; }
+.hire-txt { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.hire-txt b { font-size: 1rem; color: var(--ink-900); }
+.hire-txt small { font-size: .84rem; color: var(--ink-600); line-height: 1.45; }
+.hire-txt em {
+  font-style: normal;
+  font-family: var(--ff-mono);
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--brand-700);
+  margin-top: 2px;
+}
+
+.hire-list {
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+  /* 320px rather than 260px so a wide screen gives three columns and the last
+     row carries two. At four columns the fifth item sat alone and looked like an
+     afterthought. */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 10px;
+}
+.hire-list li {
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--brand-400);
+  border-radius: 10px;
+  background: var(--brand-50);
+  font-size: .89rem;
+  color: var(--ink-600);
+  line-height: 1.5;
+}
+.hire-list b { color: var(--ink-900); }
+
+.hire-note {
+  max-width: 640px;
+  margin: 0;
+  font-size: .92rem;
+  color: var(--ink-600);
+  line-height: 1.6;
+}
+
+@media (max-width: 520px) {
+  .built-by { gap: 14px; padding: 20px 18px; }
+  .built-by-name { font-size: 1.2rem; }
+}
+
+.faq-item { border: 1.5px solid var(--border); border-radius: var(--r-md); margin-bottom: 12px; background: var(--surface); overflow: hidden; transition: border-color .3s, box-shadow .3s; }
+.faq-item.open { border-color: var(--brand-200); box-shadow: 0 8px 26px rgba(92, 71, 232, .1); }
+.faq-q {
+  width: 100%; text-align: left; padding: 18px 22px;
+  background: none; border: 0; cursor: pointer;
+  font-family: var(--ff); font-size: .98rem; font-weight: 600; color: var(--ink-900);
+  display: flex; justify-content: space-between; gap: 14px; align-items: center;
+}
+.faq-a { max-height: 0; overflow: hidden; transition: max-height .38s var(--ease); }
+.faq-a p { padding: 0 22px 20px; margin: 0; color: var(--ink-500); font-size: .92rem; }
+.faq-item.open .faq-a { max-height: 360px; }
+.faq-item.open .faq-q .arw { transform: rotate(180deg); color: var(--brand-500); }
+.faq-q .arw { transition: transform .35s var(--ease); flex: 0 0 auto; color: var(--ink-400); }
+
+.file-drop {
+  border: 2px dashed var(--border-2); border-radius: var(--r-md);
+  padding: 34px; text-align: center; cursor: pointer;
+  background: var(--ink-50); transition: all .25s var(--ease);
+}
+.file-drop:hover, .file-drop.over { border-color: var(--brand-400); background: var(--brand-50); }
+.file-drop .ic { margin-bottom: 10px; color: var(--brand-500); }
+.upload-pill { display: inline-flex; align-items: center; gap: 8px; background: var(--ink-100); padding: 6px 13px; border-radius: var(--r-full); font-size: .8rem; }
+
+/* trust strip */
+.trust { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+.trust-item { display: flex; gap: 14px; align-items: flex-start; }
+.trust-tick {
+  width: 42px; height: 42px; border-radius: 13px; flex: 0 0 auto;
+  background: var(--ok-50); color: var(--ok-500);
+  display: grid; place-items: center;
+  box-shadow: 0 6px 18px rgba(16, 185, 129, .14);
+}
+.trust-item h4 { margin-bottom: 2px; font-size: .98rem; }
+.trust-item p { margin: 0; font-size: .85rem; color: var(--ink-500); }
+
+/* ---------- 24. FOOTER ----------
+   The old footer was the tallest block on a phone: 68px of top padding, a
+   four-sentence brand paragraph, four link groups, a street address, opening
+   hours and a newsletter form. It is now one short line, two link groups, a
+   way to reach a human, and the payment marks. */
+.site-footer {
+  background: var(--ink-900); color: rgba(255, 255, 255, .62);
+  padding: 40px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, .07);
+}
+.site-footer h4 {
+  color: #fff; font-size: .78rem; margin-bottom: 12px;
+  letter-spacing: .05em; text-transform: uppercase;
+}
+.site-footer a { color: rgba(255, 255, 255, .62); font-size: .87rem; }
+.site-footer a:hover { color: #fff; }
+.site-footer ul { list-style: none; padding: 0; margin: 0; }
+.site-footer li { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.site-footer li > .ic { flex: 0 0 auto; color: rgba(255, 255, 255, .4); }
+.site-footer li > a { overflow-wrap: anywhere; }
+
+/* minmax(0,1fr) everywhere: a bare 1fr is minmax(auto,1fr), so a track can never
+   shrink below its content's min-content width. The footer's long email
+   addresses were pushing the last column off a 390px screen, which gave every
+   page a horizontal scrollbar. */
+.f-grid {
+  display: grid; gap: 32px;
+  grid-template-columns: minmax(0, 1.7fr) repeat(3, minmax(0, 1fr));
+}
+.f-grid > * { min-width: 0; }
+.f-grid a, .f-grid li, .f-grid p { overflow-wrap: anywhere; }
+.f-brand p { margin: 10px 0 0; max-width: 34ch; line-height: 1.5; }
+.f-brand .brand-text { font-size: 1rem; }
+
+.f-bottom {
+  border-top: 1px solid rgba(255, 255, 255, .1); margin-top: 30px; padding: 16px 0;
+  font-size: .8rem; display: flex; justify-content: space-between;
+  align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.socials { display: flex; gap: 7px; margin-top: 12px; }
+.socials a {
+  width: 32px; height: 32px; border-radius: var(--r-sm);
+  background: rgba(255, 255, 255, .07); display: grid; place-items: center;
+  transition: all .3s var(--ease); font-size: .82rem; font-weight: 600;
+}
+.socials a:hover { background: var(--grad-brand); color: #fff; transform: translateY(-3px); box-shadow: var(--sh-brand); }
+.payments { display: flex; gap: 6px; flex-wrap: wrap; }
+.payments i {
+  width: 38px; height: 24px; border-radius: 5px; background: rgba(255, 255, 255, .1);
+  display: grid; place-items: center; font-size: .58rem; font-weight: 700; color: #fff; font-style: normal;
+}
+
+/* two columns of links with the brand row across the top, on a phone */
+@media (max-width: 760px) {
+  .site-footer { padding: 30px 0 0; }
+  .f-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 18px; }
+  .f-brand { grid-column: 1 / -1; }
+  .f-brand p { max-width: none; }
+  .f-bottom { margin-top: 22px; padding: 14px 0; }
+}
+
+/* ---------- 24b. DEPOSIT METHODS ----------
+   One card per method in the admin payment settings, and the matching tabs in
+   the customer's "Add money" popup. Both are built from the same list in
+   js/deposits.js, so a method can never be described one way in the admin
+   panel and another way to the customer. */
+.gw-method { border: 1px solid var(--border-2); }
+.gw-method + .gw-method { margin-top: 16px; }
+/* a switched-off method keeps its saved values, it just stops being offered */
+.gw-method[data-off] { background: var(--ink-50); }
+.gw-method[data-off] .gw-method-ic { opacity: .45; }
+.gw-method[data-off] b { color: var(--ink-600); }
+.gw-method-fields[hidden] { display: none; }
+
+.gw-method-ic {
+  width: 34px; height: 34px; flex: 0 0 34px;
+  display: grid; place-items: center; border-radius: var(--r-md);
+  background: var(--brand-50); color: var(--brand-600);
+}
+
+/* the on/off switch. The checkbox is hidden but stays focusable, so the card
+   can still be reached and toggled with the keyboard. */
+.switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; flex: 0 0 auto; }
+.switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.switch > span {
+  width: 42px; height: 24px; border-radius: var(--r-full);
+  background: var(--ink-300); position: relative;
+  transition: background .25s var(--ease);
+}
+.switch > span::after {
+  content: ""; position: absolute; top: 3px; left: 3px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
+  transition: transform .25s var(--ease);
+}
+.switch input:checked + span { background: var(--ok-500); }
+.switch input:checked + span::after { transform: translateX(18px); }
+.switch input:focus-visible + span { outline: 2px solid var(--brand-500); outline-offset: 2px; }
+.switch em { font-style: normal; font-size: .8rem; font-weight: 700; color: var(--ink-600); min-width: 20px; }
+
+/* ---- the customer's Add money popup ---- */
+.dep-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.dep-tabs .chip { display: inline-flex; align-items: center; gap: 7px; }
+.dep-addr {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 13px; border-radius: var(--r-md);
+  background: var(--ink-50); border: 1px dashed var(--border-2);
+  margin-bottom: 14px;
+}
+.dep-addr code {
+  flex: 1 1 auto; min-width: 0;
+  font-family: var(--ff-mono); font-size: .82rem;
+  overflow-wrap: anywhere; line-height: 1.4;
+}
+.dep-addr .btn { flex: 0 0 auto; }
+.dep-auto-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.dep-auto-head > .ic {
+  width: 38px; height: 38px; flex: 0 0 38px;
+  display: grid; place-items: center; border-radius: 50%;
+  background: var(--brand-50); color: var(--brand-600);
+}
+.dep-auto-head b { display: block; font-size: 1.1rem; }
+.dep-auto-head small { color: var(--ink-500); font-size: .78rem; }
+.dep-wait {
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  margin-top: 14px; padding: 11px;
+  font-size: .85rem; color: var(--ink-600); text-align: center;
+}
+.dep-qr { display: grid; place-items: center; margin: 0 0 14px; }
+
+@media (max-width: 560px) {
+  .gw-method-fields { grid-template-columns: 1fr; }
+  .dep-addr { flex-direction: column; align-items: stretch; }
+  .dep-addr .btn { width: 100%; }
+}
+
+
+/* ---------- 25. ANIMATIONS ---------- */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes pop { from { opacity: 0; transform: scale(.95) translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(44px); } to { opacity: 1; transform: none; } }
+@keyframes slideOut { to { opacity: 0; transform: translateX(44px); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse-dot {
+  0%   { box-shadow: 0 0 0 0 rgba(16, 185, 129, .55); }
+  70%  { box-shadow: 0 0 0 9px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* scroll progress */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 2.5px; z-index: 400;
+  transform: scaleX(0); transform-origin: 0 50%;
+  background: linear-gradient(90deg, #6c5cf0, #8b5cf6, #06b6d4);
+  box-shadow: 0 0 14px rgba(108, 92, 240, .6);
+  will-change: transform;
+}
+
+/* reveal on scroll */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.reveal.in { opacity: 1; transform: none; }
+.reveal-d1 { transition-delay: .08s; } .reveal-d2 { transition-delay: .16s; }
+.reveal-d3 { transition-delay: .24s; } .reveal-d4 { transition-delay: .32s; }
+.reveal-d5 { transition-delay: .4s; }
+
+.anim-up { animation: fadeUp .6s var(--ease) both; }
+.anim-d1 { animation-delay: .08s; } .anim-d2 { animation-delay: .16s; }
+.anim-d3 { animation-delay: .24s; } .anim-d4 { animation-delay: .32s; } .anim-d5 { animation-delay: .4s; }
+
+/* ---------- 26. UTILITIES ---------- */
+.bg-white { background: var(--surface); }
+.bg-soft { background: var(--ink-100); }
+.text-muted { color: var(--ink-500); }
+.text-ok { color: var(--ok-600); }
+.text-danger { color: var(--danger-600); }
+.text-brand { color: var(--brand-600); }
+.text-accent { color: var(--gold-600); }
+.fw-5 { font-weight: 500; } .fw-6 { font-weight: 600; } .fw-7 { font-weight: 700; } .fw-8 { font-weight: 700; }
+.fs-sm { font-size: .84rem; } .fs-xs { font-size: .76rem; } .fs-lg { font-size: 1.15rem; }
+.mono { font-family: var(--ff-mono); letter-spacing: -.02em; }
+.tnum { font-variant-numeric: tabular-nums; }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.tc { text-align: center; } .tr { text-align: right; }
+.full { width: 100%; }
+.img-cover { width: 100%; height: 100%; object-fit: cover; }
+.no-card { border: 0; background: none; padding: 0; }
+.link-plain { color: var(--ink-800); }
+.link-plain:hover { color: var(--brand-600); }
+.divider { height: 1px; background: var(--border); margin: 20px 0; }
+.mt-auto { margin-top: auto; }
+.w-100 { width: 100%; }
+.cursor { cursor: pointer; }
+.rel { position: relative; }
+.zoom-in { transition: transform .35s var(--ease); }
+.zoom-in:hover { transform: scale(1.03); }
+
+/* ---------- 26. PAGE LAYOUT GRIDS ----------
+   These used to be inline `style="grid-template-columns:…"` on the page, which
+   a media query can never override — so on a phone the two-column split stayed
+   and crushed the content. They are real classes now, with breakpoints. */
+
+/* profile: summary card beside the tab panels */
+.prof-grid { grid-template-columns: 300px 1fr; gap: 26px; align-items: start; }
+/* the summary card follows you down the page on desktop */
+.prof-grid > .card { position: sticky; top: calc(var(--nav-h) + 20px); }
+
+/* shop: filter rail beside the product grid
+
+   The rail is declared hidden in the markup and only revealed by script, so a
+   plain "280px 1fr" reserved the narrow first column for the product grid while
+   the rail was still hidden. The grid then rendered in a phone-width column on
+   a desktop screen until the script caught up. The two-column track therefore
+   only exists while the rail is actually on screen, and a min-width keeps the
+   mobile rule below in charge. */
+/* shop: filter rail beside the product grid
+
+   The rail sits below the page title, on the left of the products, and only
+   takes a column while it is actually on screen. The two-column track used to
+   be declared unconditionally, so while the rail was still hidden the products
+   were laid out inside the narrow 240px first column and the desktop page
+   looked like a phone layout until the script caught up. */
+.shop-grid { grid-template-columns: 1fr; gap: 24px; align-items: start; }
+
+@media (min-width: 1200px) {
+  .shop-grid:has(> #filterBox:not(.hidden)) { grid-template-columns: 240px minmax(0, 1fr); }
+  /* The whole main column, not the centred .container. The shop section was
+     capped and auto-margined like a marketing page, which on a 1920px screen
+     pushed the rail 180px away from the sidebar and wasted the same amount on
+     the right edge too. Letting it fill the column puts the rail back beside
+     the sidebar and hands the recovered width to the three cards. */
+  .dash-main > .section-sm > .container { max-width: none; }
+  /* Pulling the whole grid back by the main padding on BOTH sides keeps the
+     right margin equal to the left one instead of leaving a gap, and gives the
+     24px it recovers to the cards. The page title above keeps its own place. */
+  .shop-grid { margin-left: -24px; margin-right: -24px; }
+}
+/* Three cards per row, but only once three of them still fit at a comfortable
+   width. minmax(0,1fr) keeps all three columns exactly equal instead of letting
+   one grow with its content. At 1280px three columns would leave 211px cards,
+   so the rail stays and the grid drops to two there. */
+@media (min-width: 1400px) {
+  .shop-grid #list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 561px) and (max-width: 1399px) {
+  .shop-grid #list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .shop-grid #list { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* dashboard: main stats beside the side column */
+.main-grid { grid-template-columns: 1.5fr 1fr; gap: 24px; align-items: start; }
+
+/* wallet: balance/list beside the top-up card */
+.wallet-grid { grid-template-columns: 1fr 380px; gap: 26px; align-items: start; }
+
+/* home: hero content beside the promo card */
+.home-split { grid-template-columns: 1.6fr 1fr; gap: 24px; align-items: start; }
+
+/* ---------- 27. RESPONSIVE ---------- */
+@media (max-width: 1100px) {
+  .g-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .trust { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hero-grid { grid-template-columns: 1fr; }
+  .card-stack { height: 340px; max-width: 420px; margin: 0 auto; }
+  .cart-layout { grid-template-columns: 1fr; }
+  .pd-wrap { grid-template-columns: 1fr; }
+  .main-grid, .wallet-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 940px) {
+  .auth-wrap { grid-template-columns: 1fr; }
+  .auth-side { display: none; }
+  .dash { grid-template-columns: minmax(0,1fr); }
+  .side {
+    position: fixed; top: 0; left: 0; bottom: 0; height: 100vh; z-index: 300;
+    width: 280px; box-shadow: var(--sh-xl);
+    transform: translateX(-100%); transition: transform .35s var(--ease);
+  }
+  .side.open { transform: none; }
+  .side-backdrop { position: fixed; inset: 0; background: rgba(12, 18, 34, .4); backdrop-filter: blur(3px); z-index: 290; display: none; }
+  .side-backdrop.open { display: block; }
+  .side-close { display: grid !important; }
+
+  /* the filter rail and the profile summary card become full width */
+  .prof-grid, .shop-grid, .home-split { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 860px) {
+  .nav-toggle { display: grid; place-items: center; }
+  .nav-links {
+    position: fixed; top: var(--nav-h); left: 0; right: 0;
+    background: #fff; flex-direction: column; align-items: stretch;
+    padding: 14px 20px 24px; gap: 2px;
+    border-bottom: 1px solid var(--border); box-shadow: var(--sh-lg);
+    transform: translateY(-140%); transition: transform .35s var(--ease);
+    max-height: 70vh; overflow-y: auto;
+  }
+  .nav-links.open { transform: none; }
+  .nav-links a { padding: 12px 14px; }
+  .nav-links a.active::after { display: none; }
+}
+
+@media (max-width: 760px) {
+  .g-2, .g-3, .g-4 { grid-template-columns: 1fr; }
+  .trust { grid-template-columns: 1fr; }
+
+  /* the profile summary card is a tall block on a phone — lay it out as a
+     compact header instead, so the forms are not pushed off the screen */
+  .prof-grid > .card { position: static; display: grid; grid-template-columns: auto 1fr; gap: 0 14px; align-items: center; text-align: left; }
+  .prof-grid > .card > * { min-width: 0; }
+  /* avatar beside the name, with the address tucked directly under the name */
+  .prof-grid > .card > .avatar { grid-row: span 2; margin: 0 !important; }
+  .prof-grid > .card > h3 { margin: 0 0 2px !important; }
+  /* a long address has no spaces to break on, so allow it to wrap under the name
+     instead of running past the card and widening the whole page */
+  .prof-grid > .card > p { margin: 0 0 6px !important; overflow-wrap: anywhere; }
+  .prof-grid > .card > .flex.gap-1 { grid-column: 1 / -1; }
+  .prof-grid > .card > .divider { grid-column: 1 / -1; margin: 14px 0 4px; }
+  .prof-grid > .card > .divider + .divider { display: none; }
+  /* each stat needs the full row: without this they drop into the two columns
+     above and sit side by side, which squeezed the labels at 320px */
+  .prof-grid > .card > .flex.between { grid-column: 1 / -1; padding: 5px 0; }
+  .prof-grid > .card > .flex.between > span { min-width: 0; }
+  .prof-grid > .card > .flex.between > b { white-space: nowrap; }
+
+  /* "Personal info / Password / Account" cannot share one line at phone
+     widths without the text dropping to ~10px, so give each tab a quarter of
+     the row and let the label wrap to two lines instead. Keeps the text
+     legible and the strip free of horizontal scrolling.
+
+     Scoped to :not(.ord-tabs) on purpose. A bare .tabs selector here also
+     caught the orders tab strip, forcing it into a 4-column grid, and the
+     five order pills then broke onto a second and third row instead of
+     scrolling sideways. The orders strip wants one scrolling line. */
+  .tabs:not(.ord-tabs) { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .tabs:not(.ord-tabs) .tab {
+    padding: 9px 4px;
+    font-size: .74rem;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.3;
+  }
+  .g-auto, .g-auto-lg { grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 14px; }
+  .section { padding: 58px 0; }
+  .hero { padding: 66px 0 80px; }
+  .hero-stats { gap: 26px; }
+  .hero-stats b { font-size: 1.45rem; }
+  .card-stack { display: none; }
+  .dash-main { padding: 20px 16px; }
+  .toast-wrap { top: 12px; right: 12px; left: 12px; max-width: none; }
+  .page-head { padding: 44px 0 48px; }
+  .summary { position: static; }
+  .quote { padding: 28px 22px; }
+}
+
+@media (max-width: 460px) {
+  .g-auto, .g-auto-lg { grid-template-columns: 1fr; }
+  .btn-lg { width: 100%; }
+/* .cart-thumb-card is sized by aspect-ratio, so the old fixed 72x54 override
+   (which aimed at .cart-thumb) would flatten the card face. The row keeps a
+   narrower card and the controls drop to their own line instead. */
+.cart-row { grid-template-columns: 96px minmax(0, 1fr); gap: 12px; }
+.cart-thumb-card { width: 96px; }
+.cart-row .cart-actions { grid-column: 1 / -1; }
+
+  /* product page: keep the spec list and actions comfortable */
+  .pd-media { height: 180px; }
+  .qty { height: 46px; }
+}
+
+@media print {
+  .site-header, .site-footer, .btn, .dash .side, .toast-wrap, .bg-orbs, .bg-grid { display: none !important; }
+  body { background: #fff; }
+  .card { box-shadow: none; border-color: #ddd; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+
+
+/* =========================================================
+   25. MOBILE APP LAYER  (native-app feel on phones)
+   ========================================================= */
+
+/* ---- app bar: only on phones ---- */
+.app-bar { display: none; }
+
+/* ---- app header (phone) ---- */
+.app-bar-in {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: 54px;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.app-bar-brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink-900); min-width: 0; }
+.app-bar-mark {
+  width: 34px; height: 34px; border-radius: 11px;
+  background: var(--grad-brand); color: #fff;
+  display: grid; place-items: center; flex: 0 0 auto;
+  box-shadow: 0 6px 16px rgba(92, 71, 232, .3);
+}
+.app-bar-mark .ic { width: 1.15rem; height: 1.15rem; }
+.app-bar-title {
+  font-family: var(--ff-disp); font-weight: 700; font-size: 1.08rem;
+  letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.app-bar-act { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
+.app-bar-btn {
+  position: relative;
+  width: 40px; height: 40px; border-radius: 12px;
+  display: grid; place-items: center;
+  background: var(--ink-100); color: var(--ink-700);
+  transition: all .22s var(--ease);
+}
+.app-bar-btn:active { background: var(--brand-100); color: var(--brand-700); transform: scale(.94); }
+.app-bar-btn .ic { width: 1.2rem; height: 1.2rem; }
+
+/* The wallet button carries the balance on a phone too, so it is wider than the
+   square cart button and holds the icon and the figure side by side. Without
+   this the amount had nowhere to sit and the balance was invisible on mobile. */
+.app-bar-wallet {
+  width: auto; min-width: 40px; height: 40px;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 0 10px 0 9px;
+  background: var(--gold-50); color: var(--gold-600);
+}
+.app-bar-wallet .ic { flex: 0 0 auto; }
+.app-bar-amt {
+  font-family: var(--ff-mono); font-size: .78rem; font-weight: 700;
+  line-height: 1; white-space: nowrap;
+}
+.app-bar-amt[hidden] { display: none; }
+.app-bar-dot {
+  position: absolute; top: 3px; right: 3px;
+  min-width: 17px; height: 17px; padding: 0 4px;
+  background: var(--grad-gold); color: #fff;
+  border: 2px solid #fff; border-radius: 99px;
+  font-family: var(--ff-mono); font-size: .58rem; font-weight: 700;
+  display: grid; place-items: center;
+}
+
+/* desktop-only helpers — force hidden on phones */
+.force-hide { display: none !important; }
+
+/* ---------- profile menu in the compact app bar ----------
+   Same .dropdown markup as the desktop header, so radius, shadow, spacing, icons
+   and menu structure are identical - only the trigger is narrower. */
+.app-profile { position: relative; }
+.app-profile-btn {
+  width: auto; min-width: 40px; height: 40px;
+  padding: 0 7px 0 5px; gap: 5px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.app-profile-btn .avatar-sm { width: 26px; height: 26px; font-size: .68rem; }
+.app-profile-btn .ic { width: .95rem; height: .95rem; color: var(--ink-400); }
+/* the name belongs to the desktop header; on a phone the avatar alone is the
+   affordance, and the full name + email sit right at the top of the menu.
+   Dropping the text here reclaims ~90px of the row for the logo. */
+.app-profile-name { display: none; }
+
+/* the panel hangs off the right edge like the desktop one, but is clamped so it
+   can never be cut off by a narrow screen, and scrolls on a short one */
+.app-profile-menu {
+  min-width: min(240px, calc(100vw - 24px));
+  max-width: calc(100vw - 24px);
+  max-height: min(64vh, 460px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 860px) {
+  .app-bar { display: block; }
+  .site-header .container { display: none; }
+  .site-header { padding: 0 18px; }
+}
+/* tight phones: shave the gaps rather than letting anything clip */
+@media (max-width: 420px) {
+  .app-profile-btn { padding: 0 6px; gap: 4px; }
+  .app-bar-in { gap: 8px; }
+  .app-bar-act { gap: 5px; }
+  .app-bar-brand { gap: 8px; }
+}
+@media (max-width: 360px) {
+  .app-bar-title { font-size: 1rem; }
+  .app-bar-mark { width: 32px; height: 32px; }
+}
+
+/* ---- bottom tab bar ----
+   Phone only. appbar.js adds the .on class while the viewport is narrow;
+   without it the bar stays parked below the fold. The reveal is keyed on
+   .on rather than on html.ready, because html.ready is set on every page and
+   was showing the bar on desktop too. */
+.tab-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 220;
+  display: flex;
+  background: rgba(255, 255, 255, .92);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-top: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-shadow: 0 -6px 24px rgba(12, 18, 34, .07);
+  transform: translateY(110%);
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform .4s var(--ease), visibility .4s var(--ease);
+}
+.tab-bar.on { transform: none; visibility: visible; pointer-events: auto; }
+
+/* ---------- the three screens before an account exists ----------
+   Signing in, signing up and resetting a password are not part of the account,
+   and the account's bottom bar is not part of them. Its five entries all lead
+   to places inside the account, so on a sign-in form it was offering five doors
+   to rooms that are still locked — and on a phone it also held a strip of the
+   screen open, which pushed the bottom of the form under it on the narrowest
+   phones.
+
+   The rule is written here as well as in the script that drops the class, so the
+   bar stays away even if that script is slow, is interrupted, or fails: nothing
+   about the signing-in screens should depend on JavaScript finishing. */
+body.no-tabs .tab-bar { display: none !important; }
+body.no-tabs { padding-bottom: 0 !important; }
+
+/* Scoped to .tab-bar on purpose: a bare .tab selector here also resized the
+   in-page .tabs component (profile, orders) down to 10px.
+
+   Each tab carries its name as well as its icon. Icons alone left the bar
+   unreadable to anyone who did not already know the five marks, and the active
+   page was a hairline that was easy to miss; the label makes the bar something
+   a first-time visitor can read and the pill makes the current page obvious at
+   a glance. */
+.tab-bar .tab {
+  flex: 1 1 0; min-width: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; padding: 7px 2px 6px;
+  min-height: 58px;
+  color: var(--ink-400);
+  font-size: .66rem; font-weight: 600; letter-spacing: .005em;
+  position: relative;
+  transition: color .22s var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+/* The icon is wrapped so the cart badge can hang off the mark rather than off
+   the whole tab, which would put it in the wrong place once the label is there. */
+.tab-bar .tab .tab-ic { position: relative; display: grid; place-items: center; }
+.tab-bar .tab .ic {
+  width: 1.4rem; height: 1.4rem; stroke-width: 1.85;
+  transition: transform .3s var(--ease);
+}
+.tab-bar .tab .tab-label {
+  line-height: 1; max-width: 100%; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap;
+}
+/* The pill sits behind the icon and the name together, so the pair moves as one
+   thing. A coloured mark on its own looked like a different kind of control. */
+.tab-bar .tab::before {
+  content: ""; position: absolute; top: 4px; left: 50%;
+  width: calc(100% - 14px); height: calc(100% - 8px);
+  transform: translate(-50%, 0) scale(.82);
+  border-radius: 13px;
+  background: var(--brand-50);
+  opacity: 0;
+  transition: opacity .24s var(--ease), transform .24s var(--ease);
+  pointer-events: none;
+}
+.tab-bar .tab.active { color: var(--brand-700); }
+.tab-bar .tab.active::before { opacity: 1; transform: translate(-50%, 0) scale(1); }
+.tab-bar .tab:active .ic { transform: scale(.9); }
+.tab-bar .tab.active .ic { transform: translateY(-1px); }
+/* a hairline across the top of the bar, showing which column is current */
+.tab-bar .tab.active::after {
+  content: ""; position: absolute; top: 0; left: 50%;
+  width: 22px; height: 3px; margin-left: -11px;
+  border-radius: 0 0 99px 99px;
+  background: var(--grad-brand);
+}
+.tab-badge {
+  position: absolute; top: 2px; left: 50%; margin-left: 6px;
+  min-width: 18px; height: 18px; padding: 0 5px;
+  background: var(--grad-gold); color: #fff;
+  border: 2px solid #fff; border-radius: 99px;
+  font-family: var(--ff-mono); font-size: .6rem; font-weight: 700;
+  display: grid; place-items: center;
+  animation: tabPop .32s var(--ease);
+}
+@keyframes tabPop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* ---- safe area helpers ---- */
+/* Sized to the bar that is actually on screen: 58px of tab, the top border, and
+   whatever the phone reserves for its own home indicator. */
+.pb-safe { padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px)); }
+/* the fixed tab bar's own height, so the end of a long page is never hidden
+   behind it. Toggled by appbar.js only while the bar is on screen. */
+.pb-dock { padding-bottom: calc(66px + env(safe-area-inset-bottom, 0px)); }
+.pt-safe { padding-top: calc(env(safe-area-inset-top, 0px)); }
+
+/* When a page builds its own .dock, the tab-bar padding is not needed —
+   the dock already holds the bottom safe area. */
+.no-dock, .has-dock { padding-bottom: 0 !important; }
+
+/* ---- sticky bottom action bar (product / cart / checkout) ---- */
+.dock {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 215;
+  display: none;
+  align-items: center; gap: 12px;
+  padding: 12px 18px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: rgba(255, 255, 255, .95);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -8px 30px rgba(12, 18, 34, .09);
+  animation: dockUp .4s var(--ease) both;
+}
+@keyframes dockUp { from { transform: translateY(100%); } to { transform: none; } }
+.dock-price { line-height: 1.25; }
+.dock-price small { display: block; font-size: .68rem; color: var(--ink-400); }
+.dock-price b { font-family: var(--ff-mono); font-size: 1.2rem; }
+.dock .btn { flex: 1; }
+
+/* ---- horizontal scroll rail ---- */
+.rail {
+  display: flex; gap: 12px;
+  overflow-x: auto; overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 6px;
+  margin-inline: -22px; padding-inline: 22px;
+  scrollbar-width: none;
+}
+.rail::-webkit-scrollbar { display: none; }
+.rail > * { scroll-snap-align: start; flex: 0 0 auto; }
+
+/* ---- bottom sheet (modals on phones) ---- */
+@media (max-width: 760px) {
+  .modal-back { align-items: flex-end; padding: 0; }
+  .modal {
+    max-width: 100% !important; width: 100%;
+    max-height: 92dvh;
+    border-radius: var(--r-xl) var(--r-xl) 0 0;
+    animation: sheetUp .38s var(--ease);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @keyframes sheetUp { from { transform: translateY(100%); } to { transform: none; } }
+  .modal::before {
+    content: ""; display: block;
+    width: 42px; height: 4px; border-radius: 99px;
+    background: var(--ink-200);
+    margin: 10px auto 0;
+  }
+  .modal-head { border-radius: 0; padding: 14px 20px 18px; }
+  .modal-body { padding: 0 20px 22px; }
+  .modal-foot { padding: 14px 20px calc(16px + env(safe-area-inset-bottom, 0px)); }
+  .modal-foot .btn { flex: 1; }
+}
+
+/* =========================================================
+   26. PHONE TYPOGRAPHY + SPACING
+   ========================================================= */
+@media (max-width: 760px) {
+  body { font-size: 15.5px; line-height: 1.62; }
+
+  h1 { font-size: 1.85rem; letter-spacing: -.028em; }
+  h2 { font-size: 1.42rem; }
+  h3 { font-size: 1.08rem; }
+  .pd-title { font-size: 1.5rem; }
+
+  .container { padding: 0 18px; }
+  .section { padding: 46px 0; }
+  .section-sm { padding: 34px 0; }
+  .section-head { margin-bottom: 34px; }
+
+  .card { border-radius: var(--r-md); }
+  .card-pad, .card-body { padding: 18px; }
+  .card-head { padding: 15px 18px; }
+  .card-foot { padding: 13px 18px; }
+
+  .btn { padding: 12px 18px; }
+  .btn-lg { padding: 14px 22px; font-size: .98rem; }
+  .btn-sm { padding: 9px 13px; }
+  .btn-xs { padding: 7px 11px; }
+
+  .grid { gap: 14px; }
+  .g-2, .g-3, .g-4 { gap: 12px; }
+  .gap-2 { gap: 12px; } .gap-3 { gap: 16px; }
+
+  /* product grid: 2 across on phones, like an app store */
+  .g-auto-lg { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .g-auto { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+
+  .price { font-size: 1.12rem; }
+  .ctile-body { padding: 14px; }
+  .ctile-title { font-size: .95rem; }
+  /* the artwork keeps its 1.586 card ratio — no min-height here, or the face
+     grows past the ratio and ends up looking like a square block */
+  .ctile-save { font-size: .62rem; padding: 2px 7px; }
+  .ctile-nums { padding: 9px 11px; gap: 8px; }
+  .ctile-nums small { font-size: .58rem; }
+  .ctile-nums b { font-size: .92rem; }
+  .ctile-foot { flex-direction: column; align-items: stretch; gap: 8px; }
+  .ctile-foot .btn { width: 100%; }
+  /* On a phone Add stays compact and Buy takes the rest of the row, so the
+     action that actually completes the purchase is the big one. Both stay on a
+     single line rather than stacking into two full-width bars. */
+  .ctile-acts { width: 100%; }
+  .ctile-acts .js-add { flex: 0 0 auto; width: auto; padding-inline: 14px; }
+  .ctile-acts .js-buy { flex: 1 1 auto; width: auto; }
+  .ccard { padding: 18px 20px; min-height: 178px; }
+  .ccard-num { font-size: 1.02rem; }
+  .ccard-row--bottom { gap: 16px; padding-top: 14px; }
+  .ccard-cell b { font-size: .84rem; }
+
+  .qr-frame { width: 208px; height: 208px; padding: 14px; }
+  .timer-value { font-size: 1.7rem; }
+  .upi-apps { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .upi-app { padding: 11px 4px; font-size: .66rem; }
+
+  .trust { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .trust-item { flex-direction: column; gap: 10px; text-align: center; }
+  .trust-tick { width: 38px; height: 38px; }
+
+  .stat { gap: 12px; }
+  .stat-ic { width: 44px; height: 44px; border-radius: 13px; }
+  .stat-v { font-size: 1.32rem; }
+  .stat-l { font-size: .76rem; }
+
+  .table-wrap { margin-inline: -18px; padding-inline: 18px; }
+  table.table th, table.table td { padding: 12px 14px; }
+
+  .toast-wrap { top: calc(10px + env(safe-area-inset-top, 0px)); left: 12px; right: 12px; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); max-width: none; }
+
+  .dash-main { padding: 18px 16px 100px; }
+  .dash-head { margin-bottom: 20px; }
+  .dash-head h1 { font-size: 1.42rem; }
+  .page-head { padding: 34px 0 38px; }
+  .hero { padding: 46px 0 54px; }
+
+.cart-row { grid-template-columns: 104px minmax(0, 1fr); gap: 12px; padding: 12px 0; }
+.cart-thumb-card { width: 104px; }
+.cart-row .cart-actions { grid-column: 1 / -1; justify-content: space-between; }
+.cart-actions .qty { height: 40px; }
+.cart-actions .qty button, .cart-actions .qty input { height: 40px; }
+.cart-actions .qty button { width: 40px; }
+.cart-actions .qty input { width: 48px; }
+.cart-line { min-width: 0; text-align: left; }
+.cart-layout { gap: 18px; }
+  .summary { position: static; }
+
+  .wallet-hero { padding: 24px 20px; border-radius: var(--r-lg); }
+  .wallet-balance { font-size: 2.2rem; }
+  .wallet-stats { gap: 20px; }
+
+  .empty { padding: 46px 18px; }
+  .empty-ic { width: 76px; height: 76px; border-radius: 24px; }
+  .auth-main { padding: 34px 20px 44px; }
+
+  /* the footer grid is set in the footer block above; the extra 90px of bottom
+     padding this used to add was for the fixed tab bar, which now reserves its
+     own room on <body> and was leaving a dead gap under the footer */
+}
+
+/* very small phones: five labelled tabs will not fit at full size, so the type
+   and the mark shrink together rather than the labels being dropped again */
+@media (max-width: 380px) {
+  .g-auto, .g-auto-lg { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .ctile-nums { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .ctile-arrow { display: none; }
+  .tab-bar .tab { font-size: .58rem; padding: 7px 1px 6px; }
+  .tab-bar .tab .ic { width: 1.26rem; height: 1.26rem; }
+  .tab-bar .tab::before { width: calc(100% - 8px); border-radius: 11px; }
+  .tab-badge { min-width: 16px; height: 16px; font-size: .55rem; margin-left: 3px; }
+}
+
+/* tablets: 3 across, roomier */
+@media (min-width: 640px) and (max-width: 980px) {
+  .g-auto, .g-auto-lg { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .g-3, .g-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .trust { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .trust-item { flex-direction: row; text-align: left; }
+}
+
+/* landscape phones */
+@media (max-height: 480px) and (orientation: landscape) {
+  .tab-bar { padding: 4px 0; }
+  .tab-bar .tab { padding: 4px 2px; flex-direction: row; gap: 6px; }
+  .tab-bar .tab .ic { width: 1.1rem; height: 1.1rem; }
+  .tab-bar .tab.active::before { display: none; }
+}
+
+/* ---- touch targets: never below 44px on phones ---- */
+@media (hover: none) and (pointer: coarse) {
+  a, button, .btn, .chip, .tab, .side-link, .dropdown-item,
+  .x-btn, .nav-toggle, .faq-q {
+    min-height: 44px;
+  }
+  .btn-xs, .chip, .side-link { min-height: 40px; }
+  .x-btn { width: 44px; height: 44px; }
+  .x-btn, .nav-toggle, .cart-btn, .btn-icon, .qty button, .upi-app,
+  .strip-logos span, .brand { touch-action: manipulation; }
+  .qty button { min-width: 44px; min-height: 44px; }
+  /* iOS zooms the whole page when a field's text is under 16px, so a plain
+     field is held at that floor. Held with !important, though, it also held
+     down the fields that are meant to be read large: the amount box on the
+     add-money dialog came out the same size as an ordinary box on every phone.
+     So the floor applies to ordinary fields, and a field that is deliberately
+     large says so with data-big and is left alone. The floor is a floor, not a
+     ceiling. */
+  input:not([data-big]), select, textarea { font-size: 16px !important; }
+  input[data-big] { /* sized by its own rule */ }
+  .ig-action { min-width: 44px; }
+}
+
+/* ---- no hover effects that stick on touch ---- */
+@media (hover: none) {
+  .product:hover, .ctile:hover, .card-hover:hover { transform: none !important; box-shadow: var(--sh-md); }
+  .product::after, .ctile::after, .card-hover::after { display: none; }
+  .btn:hover { transform: none; }
+  .btn::after { display: none; }
+}
+
+/* =========================================================
+   ONE CARD PER ROW ON A PHONE
+   g-auto / g-auto-lg are used only for the card-tile grids (shop, home
+   featured, dashboard suggestions, related products). The 760px blocks above
+   forced two columns, which squeezed the card artwork down to about 145px and
+   made the masked number and expiry tiny. One card per row keeps the real
+   1.586 card ratio at a readable size. This sits at the end of the file so it
+   wins over the 380px and 760px rules.
+   ========================================================= */
+@media (max-width: 600px) {
+  .g-auto, .g-auto-lg { grid-template-columns: 1fr; gap: 16px; }
+
+  /* the artwork is roughly twice as wide now, so the type scales back up */
+  .ctile-body { padding: 16px 18px 18px; }
+  .ctile-title { font-size: 1rem; margin: 9px 0 12px; }
+  .ctile-save { font-size: .7rem; padding: 3px 9px; }
+  .ctile-nums small { font-size: .66rem; }
+  .ctile-nums b { font-size: 1.04rem; }
+}
+/* =========================================================
+   DASHBOARD — layout & polish pass
+   ---------------------------------------------------------
+   Everything here is scoped to .dash-page (the <main> on dashboard.html) or to
+   selectors that only exist on that page: .stat-row, .main-grid, #recentOrders,
+   .coupon-list, .qa-list. The other account pages share .dash-main / .dash-head
+   / .card, so unscoped rules here would have changed them too.
+
+   Sits at the end of the file so it wins on source order without !important.
+
+   1. header + shell density      7. coupon pills
+   2. sidebar scrollbar + edge    8. quick actions
+   3. stat cards (last row fills) 9. type scale
+   4. vertical rhythm            10. subtler primary glow
+   5. main grid ratio            11. one radius / border / shadow set
+   6. centred empty state        12. tablet + phone
+   ========================================================= */
+
+/* ---------- 1. header + shell density ---------- */
+/* :has() keeps --nav-h local to this page, so the sticky header, the
+   scroll offset and the sidebar height all tighten together */
+body:has(.dash-page) { --nav-h: 70px; }
+
+.dash-page { padding: 24px 26px 28px; }
+.dash-page .dash-head { margin-bottom: 18px; gap: 14px; }
+.dash-page > .mb-3 { margin-bottom: 18px; }
+
+/* ---------- 2. sidebar ---------- */
+.dash .side {
+  padding: 20px 14px 28px;
+  /* the 1px edge was reading as a stray vertical line beside the cards */
+  border-right: 1px solid rgba(12, 18, 34, .055);
+  /* keep the column width steady whether or not it is scrolling */
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  overscroll-behavior: contain;
+}
+.dash .side:hover { scrollbar-color: rgba(12, 18, 34, .16) transparent; }
+.dash .side::-webkit-scrollbar { width: 9px; }
+.dash .side::-webkit-scrollbar-track { background: transparent; }
+.dash .side::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border: 3px solid transparent;
+  border-radius: 99px;
+  background-clip: content-box;
+}
+.dash .side:hover::-webkit-scrollbar-thumb { background-color: rgba(12, 18, 34, .16); }
+.dash .side::-webkit-scrollbar-thumb:hover { background-color: rgba(12, 18, 34, .26); }
+.dash .side .side-title { margin: 18px 12px 6px; }
+.dash .side .side-link { border-radius: var(--r-sm); }
+
+/* ---------- 3. stat cards ---------- */
+.stat-row { display: flex; flex-wrap: wrap; gap: 14px; }
+/* flex-grow is the point: a plain 4-column grid left the 5th card alone on its
+   own row with three empty columns beside it */
+.stat-row > * { flex: 1 1 168px; min-width: 0; }
+.stat-row .card {
+  border-radius: var(--r-md);
+  box-shadow: var(--sh-xs);
+  border-color: rgba(12, 18, 34, .06);
+}
+.stat-row .stat { gap: 14px; }
+.stat-row .stat-ic { width: 46px; height: 46px; border-radius: var(--r-sm); }
+.stat-row .stat-ic .ic { width: 1.25rem; height: 1.25rem; }
+
+/* ---------- 4 + 5. main grid and card density ---------- */
+.main-grid {
+  grid-template-columns: minmax(0, 1.75fr) minmax(288px, .85fr);
+  gap: 18px;
+  /* stretch, not start: the Recent Orders card then grows to the height of the
+     right rail, so the empty state centres in a full-height box instead of
+     leaving a void underneath it */
+  align-items: stretch;
+}
+.main-grid > .card { display: flex; flex-direction: column; }
+.main-grid > .card > #recentOrders { flex: 1; }
+.dash-page .card { border-radius: var(--r-md); box-shadow: var(--sh-xs); border-color: rgba(12, 18, 34, .06); }
+.dash-page .card-head { padding: 15px 20px; }
+.dash-page .card-body { padding: 18px 20px; }
+/* Only the stacked cards in the right rail. A broad `.card + .card` also
+   matched the siblings inside the flex .stat-row and pushed cards 2-5 down
+   by 18px, which left card 1 sitting higher than the rest. */
+.main-grid > div > .card + .card,
+.dash-page > .mt-3 { margin-top: 18px !important; }
+
+/* ---------- 6. empty state, centred in its card ---------- */
+#recentOrders {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 232px;
+}
+#recentOrders .empty { padding: 34px 24px; }
+#recentOrders .empty-ic { width: 72px; height: 72px; border-radius: 22px; margin-bottom: 16px; }
+#recentOrders .empty-ic .ic { width: 1.9rem; height: 1.9rem; }
+#recentOrders .empty p { margin-bottom: 18px; }
+
+/* ---------- 7. coupon pills ---------- */
+.coupon-list { display: flex; flex-direction: column; gap: 8px; }
+.coupon-list .upload-pill {
+  /* icon | code | terms as a fixed 3-column grid, so the code can never push the
+     terms onto a second line and leave the pills at different heights */
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 9px;
+  width: 100%;
+  min-height: 46px;
+  padding: 11px 14px;
+  border-radius: var(--r-sm);
+  font-size: .82rem;
+  line-height: 1.3;
+}
+.coupon-list .upload-pill + .upload-pill { margin-top: 0 !important; }
+.coupon-list .upload-pill .ic { width: 1.05rem; height: 1.05rem; }
+.coupon-list .upload-pill b {
+  font-family: var(--ff-mono);
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+.coupon-list .upload-pill span { min-width: 0; }
+.coupon-list .btn { margin-top: 4px; }
+
+/* ---------- 8. quick actions ---------- */
+.qa-list { display: flex; flex-direction: column; gap: 8px; }
+.qa-item {
+  justify-content: flex-start;
+  min-height: 44px;
+  padding: 11px 14px;
+  border-radius: var(--r-sm);
+  font-size: .88rem;
+  font-weight: 600;
+  border: 1px solid rgba(12, 18, 34, .07);
+  background: var(--surface);
+  transition: background .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease);
+}
+.qa-item .ic { flex: 0 0 auto; color: var(--ink-400); transition: color .2s var(--ease); }
+.qa-item:hover { background: var(--ink-50); border-color: rgba(12, 18, 34, .12); }
+.qa-item:hover .ic { color: var(--brand-600); }
+.qa-item:active { transform: translateY(1px); }
+
+/* ---------- 9. type scale ---------- */
+.dash-page .dash-head h1 { font-size: 1.5rem; letter-spacing: -.022em; }
+.dash-page .dash-head p { font-size: .875rem; margin-top: 3px; }
+.dash-page .card-head h3 { font-size: .95rem; font-weight: 650; letter-spacing: -.012em; }
+.stat-row .stat-v { font-size: 1.45rem; letter-spacing: -.028em; }
+.stat-row .stat-l { font-size: .78rem; letter-spacing: .005em; }
+
+/* ---------- 10. subtler primary glow ---------- */
+body:has(.dash-page) {
+  --sh-brand: 0 4px 12px rgba(92, 71, 232, .16);
+  --sh-brand-lg: 0 10px 24px rgba(92, 71, 232, .22);
+}
+.dash-page .btn-primary { box-shadow: var(--sh-brand); transition: transform .2s var(--ease), box-shadow .2s var(--ease); }
+.dash-page .btn-primary:hover { transform: translateY(-1px); box-shadow: var(--sh-brand-lg); }
+.dash-page .btn-primary:active { transform: none; }
+
+/* ---------- 12. tablet + phone ---------- */
+@media (max-width: 1100px) {
+  .main-grid { grid-template-columns: 1fr; }
+  .dash-page { padding: 22px 20px 26px; }
+}
+/* tablet band: three tiles per row so the five cards land as 3 + 2 with the last
+   pair sharing the width evenly, instead of 4 + 1 with one lonely full-width row */
+@media (min-width: 621px) and (max-width: 900px) {
+  .stat-row > * { flex: 1 1 calc(33.333% - 10px); }
+}
+@media (max-width: 620px) {
+  /* two tiles per row on a phone: five full-width cards pushed the real content
+     425px down the page. The odd one out spans the full width, which reads as
+     deliberate rather than as a gap. */
+  .stat-row { gap: 10px; }
+  .stat-row > * { flex: 1 1 calc(50% - 5px); }
+  .stat-row > *:last-child:nth-child(odd) { flex: 1 1 100%; }
+  .stat-row .card { padding: 14px; }
+  .stat-row .stat { gap: 11px; }
+  .stat-row .stat-ic { width: 38px; height: 38px; border-radius: 10px; }
+  .stat-row .stat-ic .ic { width: 1.05rem; height: 1.05rem; }
+  .stat-row .stat-v { font-size: 1.2rem; }
+  .stat-row .stat-l { font-size: .72rem; }
+  .dash-page { padding: 18px 16px 24px; }
+  .dash-page .card-head { padding: 14px 16px; }
+  .dash-page .card-body { padding: 16px; }
+  #recentOrders { min-height: 200px; }
+}
+
+@media (max-width: 460px) {
+  .dash-page .card-body { padding: 15px; }
+  .coupon-list .upload-pill { padding: 10px 12px; font-size: .8rem; }
+  #recentOrders .empty { padding: 26px 16px; }
+}
+/* =========================================================
+   HEADER — two balanced groups
+   ---------------------------------------------------------
+   Left group  : logo + wordmark + the small uppercase line
+   Right group : store, cart, wallet chip, profile
+   The .nav row is the flex container: the two groups sit at the far left and
+   far right and the space between them fills on its own.
+
+   Only alignment / sizing is touched here — colours, icons, radii, links and
+   behaviour are unchanged.
+   ========================================================= */
+.site-header .nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: var(--nav-h);
+}
+/* The header spans the full viewport. It used to inherit the page's centred
+   1240px max-width, which left 340px of dead space in front of the logo on a
+   1920px screen (and 100px at 1440px). Now the brand sits at the left padding
+   edge and the actions at the right one. The content column below is untouched. */
+.site-header > .container { max-width: none; }
+/* neither group may be squeezed or pushed by a long middle nav */
+.site-header .brand,
+.site-header .nav-actions { flex: 0 0 auto; }
+
+/* The four right-hand controls were 35 / 42 / 41 / 50px tall, so the row read
+   as ragged even though everything was centred. One height for all of them. */
+.site-header .nav-actions { display: flex; align-items: center; gap: 10px; }
+.site-header .nav-actions > .btn,
+.site-header .nav-actions > .nav-wallet,
+.site-header .nav-actions > .dropdown > .btn {
+  height: 42px;
+  min-height: 42px;
+  padding-top: 0;
+  padding-bottom: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+/* the cart badge sits on the 42px square, so pull it in a little */
+.site-header .nav-actions .cart-count { top: -3px; right: -3px; }
+
+/* the profile dropdown is the tallest item; keep its menu flush to the right so
+   it can never spill past the viewport */
+.site-header .dropdown-menu { right: 0; }
+
+/* On phones the whole .container is replaced by the compact app bar, so none of
+   the above applies there — this only guards the handover point. */
+@media (max-width: 860px) {
+  .site-header .nav-actions > .nav-wallet { display: none !important; }
+}
+
+
+/* ---------- product info column ----------
+   One clear vertical rhythm: badges, title, meta, copy, price, stock. The price
+   is the loudest thing on the page after the card, and stock is a status pill
+   rather than loose text. */
+.pd-info { display: flex; flex-direction: column; align-items: flex-start; }
+.pd-info > * { max-width: 100%; }
+
+.pd-off { font-weight: 700; letter-spacing: .02em; }
+
+.pd-title { margin-bottom: 6px; }
+
+.pd-meta {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.pd-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--ink-300, var(--border-2));
+  flex: 0 0 auto;
+}
+
+.pd-desc {
+  margin: 0 0 20px;
+  line-height: 1.6;
+  max-width: 46ch;
+}
+
+.pd-price-row {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+  width: 100%;
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-lg);
+  background: linear-gradient(135deg, var(--brand-50), var(--surface));
+}
+.pd-price { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.pd-was {
+  font-family: var(--ff-mono);
+  font-size: 1.02rem;
+  color: var(--ink-400);
+}
+.pd-now {
+  font-family: var(--ff-mono);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  color: var(--ink-900);
+  line-height: 1;
+}
+.pd-save, .pd-get {
+  display: inline-flex; align-items: center;
+  font-size: .82rem; font-weight: 600;
+  padding: 5px 11px;
+  border-radius: var(--r-full);
+  white-space: nowrap;
+}
+.pd-save { background: var(--ok-50, #e8faf3); color: var(--ok-700, #047857); border: 1px solid var(--ok-200, #a7f3d0); }
+.pd-get  { background: var(--brand-50); color: var(--brand-700); border: 1px solid var(--brand-200); }
+
+.pd-stock-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pd-stock {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: .88rem; font-weight: 600;
+  padding: 7px 13px;
+  border-radius: var(--r-full);
+}
+.pd-stock.in  { background: var(--ok-50, #e8faf3);   color: var(--ok-700, #047857); border: 1px solid var(--ok-200, #a7f3d0); }
+.pd-stock.low { background: var(--warn-50, #fff8ec); color: var(--warn-700, #b45309); border: 1px solid var(--warn-200, #fde3b0); }
+.pd-stock.out { background: var(--danger-50, #fdeeee); color: var(--danger-700, #b91c1c); border: 1px solid var(--danger-200, #fbc9c9); }
+.pd-stock-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: 0 0 auto; }
+.pd-stock.in  .pd-stock-dot { box-shadow: 0 0 0 3px rgba(16, 185, 129, .2); }
+.pd-stock.low .pd-stock-dot { box-shadow: 0 0 0 3px rgba(245, 158, 11, .22); }
+.pd-stock-note { font-size: .8rem; color: var(--warn-600, #d97706); font-weight: 600; }
+
+@media (max-width: 560px) {
+  .pd-desc { margin-bottom: 16px; }
+  .pd-price-row { padding: 14px; gap: 10px; }
+  .pd-now { font-size: 1.7rem; }
+  .pd-was { font-size: .95rem; }
+  .pd-save, .pd-get { font-size: .78rem; padding: 4px 10px; }
+}
+
+/* the spec table sits under the action row and uses the full width, so
+   the label / value pairs read as a proper table instead of a narrow column */
+.pd-specs {
+  margin-top: 22px;
+  padding: 4px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-xs);
+}
+.pd-specs li { padding: 13px 2px; }
+.pd-specs li b { min-width: 132px; }
+
+
+/* =========================================================
+   ADD MONEY TO WALLET
+
+   A wide dialog on a desktop, because the choice of method and the amount are
+   two separate decisions and putting them one above the other made the form
+   read as a long column of small inputs. On a narrow screen the same markup
+   becomes one column, in the same order, with nothing hidden.
+   ========================================================= */
+/* the dialog body hands its padding to the layout, so the two columns reach
+   the edges of the window and nothing has to be pulled out with a negative
+   margin that would then have to be undone at every width */
+.modal-body.dep2-host { padding: 0; }
+.dep2 { display: grid; grid-template-columns: 268px minmax(0, 1fr); gap: 0; }
+.dep2-side {
+  padding: 22px 18px; border-right: 1px solid var(--border);
+  background: var(--ink-50); border-radius: var(--r-lg) 0 0 var(--r-lg);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.dep2-side-title {
+  font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-500); margin: 0 0 2px;
+}
+.dep2-method {
+  display: flex; align-items: flex-start; gap: 11px; width: 100%; text-align: left;
+  padding: 12px 13px; border: 1px solid var(--border); border-radius: var(--r-md);
+  background: #fff; cursor: pointer; transition: border-color .16s, box-shadow .16s, background .16s;
+}
+.dep2-method:hover { border-color: var(--brand-300); }
+.dep2-method:focus-visible { outline: 2px solid var(--brand-500); outline-offset: 2px; }
+.dep2-method[aria-checked="true"] {
+  border-color: var(--brand-500); background: var(--brand-50);
+  box-shadow: 0 0 0 3px rgba(91, 71, 232, .10);
+}
+.dep2-method > .ic {
+  flex: 0 0 auto; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center;
+  background: var(--brand-100); color: var(--brand-700);
+}
+.dep2-method[aria-checked="true"] > .ic { background: var(--grad-brand); color: #fff; }
+.dep2-method b { display: block; font-size: .9rem; line-height: 1.25; }
+.dep2-method small { display: block; color: var(--ink-500); font-size: .74rem; line-height: 1.35; margin-top: 2px; }
+.dep2-method .dep2-flag {
+  display: inline-block; margin-top: 5px; font-size: .62rem; font-weight: 700;
+  letter-spacing: .04em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px;
+  background: var(--ink-100); color: var(--ink-600);
+}
+.dep2-method .dep2-flag.on { background: #dcfce7; color: #15803d; }
+.dep2-side-note {
+  margin-top: auto; font-size: .74rem; color: var(--ink-500); line-height: 1.5;
+  border-top: 1px solid var(--border); padding-top: 12px;
+}
+.dep2-side-note b { color: var(--ink-700); }
+
+.dep2-main { padding: 22px 26px; display: flex; flex-direction: column; min-width: 0; }
+.dep2-main > h4 { margin: 0 0 4px; font-size: 1.02rem; }
+.dep2-main > .dep2-sub { margin: 0 0 18px; color: var(--ink-500); font-size: .82rem; }
+
+.dep2-amount { display: flex; align-items: stretch; gap: 0; border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; background: #fff; }
+.dep2-amount:focus-within { border-color: var(--brand-500); box-shadow: 0 0 0 3px rgba(91, 71, 232, .10); }
+.dep2-amount > span {
+  display: grid; place-items: center; padding: 0 14px; font-weight: 700; font-size: 1.15rem;
+  color: var(--ink-500); background: var(--ink-50); border-right: 1px solid var(--border);
+}
+.dep2-amount input {
+  flex: 1; min-width: 0; border: 0; outline: 0; padding: 15px 16px;
+  font: 700 1.3rem/1.2 var(--ff-mono); background: transparent; color: var(--ink-900);
+}
+.dep2-amount input::placeholder { font-weight: 500; color: var(--ink-400); }
+.dep2-quick { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.dep2-quick .chip { font-family: var(--ff-mono); font-weight: 700; }
+.dep2-limits { display: flex; justify-content: space-between; gap: 12px; margin-top: 8px; font-size: .74rem; color: var(--ink-500); }
+
+.dep2-rows { margin-top: 20px; border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; }
+.dep2-row { display: flex; justify-content: space-between; gap: 16px; padding: 11px 14px; font-size: .84rem; }
+.dep2-row + .dep2-row { border-top: 1px solid var(--border); }
+.dep2-row dt { color: var(--ink-500); margin: 0; }
+.dep2-row dd { margin: 0; font-weight: 700; font-family: var(--ff-mono); text-align: right; word-break: break-all; }
+.dep2-row.total { background: var(--brand-50); }
+.dep2-row.total dt { color: var(--brand-700); font-weight: 700; }
+.dep2-row.total dd { color: var(--brand-800); font-size: 1rem; }
+.dep2-row code { font-family: var(--ff-mono); font-weight: 600; }
+
+.dep2-pay { margin-top: 18px; border: 1px dashed var(--border); border-radius: var(--r-md); padding: 14px; background: var(--ink-50); }
+.dep2-pay h5 { margin: 0 0 4px; font-size: .8rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-500); }
+.dep2-pay .dep-addr { margin-top: 8px; }
+
+/* The picture the shop supplied for a crypto method, sitting above the written
+   address. It keeps the QR frame's own size so a scanned code is as readable
+   here as it is on the payment sheet, and it is centred rather than left,
+   because a QR in the corner of a phone screen is harder to line up. */
+.dep2-qr { display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 10px 0 4px; }
+.dep2-qr .qr-frame { margin: 0; }
+
+
+.dep2-form { display: flex; flex-direction: column; flex: 1; }
+.dep2-form .field { margin-top: 18px; }
+
+.dep2-actions { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
+.dep2-actions .btn-block { flex: 1; }
+
+.dep2-hist { margin-top: 20px; }
+.dep2-hist h5 { margin: 0 0 8px; font-size: .8rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-500); }
+.dep2-hist-row {
+  display: flex; align-items: center; gap: 12px; padding: 9px 0; font-size: .82rem;
+  border-top: 1px solid var(--border);
+}
+.dep2-hist-row .dep2-hist-amt { margin-left: auto; font-family: var(--ff-mono); font-weight: 700; }
+.dep2-hist-row .dep2-hist-when { color: var(--ink-500); font-size: .74rem; }
+
+/* =====================================================================
+   THE ADD-MONEY DIALOG
+
+   The same purple as everywhere else, laid out so that the eye lands in the
+   same place every time: choose on the left, enter an amount on the right,
+   read the summary under it, and the button to continue sits at the bottom of
+   the right-hand column rather than somewhere below the fold.
+
+   Three structural choices carry most of it:
+
+     - the dialog is a column, not a scrolling box with a sticky lid. The whole
+       dialog is the height of its content up to a limit; past that limit the
+       BODY scrolls, under a header that stays put. One scrollbar, not two.
+     - the two columns are separated by a rule rather than by space, so the
+       split reads as a split on any width.
+     - on a phone the columns are stacked in the order the steps happen in:
+       method, then amount, then what it will cost, then what has been asked
+       for before, then the button.
+   ===================================================================== */
+.dep-modal {
+  /* comfortable on a desktop, and never wider than the space there is */
+  width: min(880px, 100%);
+  max-height: min(92vh, 900px);
+  display: flex; flex-direction: column;
+  overflow: hidden;                 /* the body scrolls, not the whole box */
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 60px -18px rgba(12, 18, 34, .32), 0 2px 8px rgba(12, 18, 34, .06);
+}
+
+/* a scrollbar you can see without being shouted at */
+.dep-modal .modal-body { scrollbar-width: thin; scrollbar-color: var(--ink-200) transparent; }
+.dep-modal .modal-body::-webkit-scrollbar { width: 10px; }
+.dep-modal .modal-body::-webkit-scrollbar-track { background: transparent; }
+.dep-modal .modal-body::-webkit-scrollbar-thumb {
+  background: var(--ink-200); border-radius: 99px;
+  border: 3px solid #fff; background-clip: content-box;
+}
+.dep-modal .modal-body::-webkit-scrollbar-thumb:hover { background: var(--ink-300); background-clip: content-box; }
+
+.dep-modal .modal-head {
+  /* it no longer has to stick: the body scrolls underneath it */
+  position: relative; top: auto;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  background: #fff;
+  flex: 0 0 auto;
+  z-index: auto;
+}
+.dep-modal .modal-head h3 {
+  display: flex; align-items: center; gap: 9px;
+  font-size: 1.08rem; letter-spacing: -.01em; color: var(--ink-900);
+}
+.dep-modal .modal-head h3 > .ic { color: var(--brand-600); }
+.dep-modal .modal-head .x-btn { flex: 0 0 auto; }
+
+.dep-modal .modal-body {
+  padding: 0; flex: 1 1 auto; min-height: 0; overflow-y: auto;
+}
+
+/* ---------- the two columns ---------- */
+.dep-modal .dep2 { grid-template-columns: 292px minmax(0, 1fr); }
+.dep-modal .dep2-side {
+  display: flex; flex-direction: column;
+  padding: 22px 20px 22px 24px;
+  border-right: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--brand-50) 0%, rgba(255, 255, 255, 0) 55%);
+  min-width: 0;
+}
+.dep-modal .dep2-side-title {
+  margin: 0 0 12px; font-size: .7rem; font-weight: 700;
+  letter-spacing: .09em; text-transform: uppercase; color: var(--ink-500);
+}
+.dep-modal .dep-tabs { display: grid; gap: 10px; margin: 0; }
+
+/* the method card: same size chosen or not, so nothing moves when choosing */
+.dep-modal .dep2-method {
+  position: relative;
+  display: flex; align-items: flex-start; gap: 12px; width: 100%;
+  padding: 13px 14px;
+  text-align: left;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color .18s var(--ease), background .18s var(--ease), box-shadow .18s var(--ease);
+}
+.dep-modal .dep2-method:hover { border-color: var(--brand-300); background: var(--brand-50); }
+.dep-modal .dep2-method[aria-checked="true"] {
+  border-color: var(--brand-500);
+  background: var(--brand-50);
+  box-shadow: 0 0 0 3px rgba(99, 91, 255, .10);
+}
+.dep-modal .dep2-method > .ic {
+  flex: 0 0 auto; width: 38px; height: 38px; border-radius: 11px;
+  display: grid; place-items: center;
+  background: var(--ink-100); color: var(--ink-700);
+  transition: background .18s var(--ease), color .18s var(--ease);
+}
+.dep-modal .dep2-method[aria-checked="true"] > .ic { background: var(--grad-brand); color: #fff; }
+.dep-modal .dep2-method > span:not(.dep2-tick) { min-width: 0; flex: 1 1 auto; }
+.dep-modal .dep2-method-top {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 2px; padding-right: 22px;
+}
+.dep-modal .dep2-method b { font-size: .92rem; line-height: 1.3; color: var(--ink-900); }
+.dep-modal .dep2-method small { color: var(--ink-500); font-size: .76rem; line-height: 1.35; }
+.dep-modal .dep2-method .dep2-flag {
+  margin: 0; flex: 0 0 auto;
+  font-size: .64rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  padding: 3px 7px; border-radius: 99px;
+  background: var(--ink-100); color: var(--ink-600);
+}
+.dep-modal .dep2-method .dep2-flag.on { background: #dcfce7; color: #15803d; }
+
+/* the tick: always present, only drawn when chosen */
+.dep-modal .dep2-tick {
+  position: absolute; top: 13px; right: 12px;
+  width: 19px; height: 19px; border-radius: 99px;
+  display: grid; place-items: center;
+  background: var(--brand-600); color: #fff;
+  opacity: 0; transform: scale(.7);
+  transition: opacity .18s var(--ease), transform .18s var(--ease);
+}
+.dep-modal .dep2-method[aria-checked="true"] .dep2-tick { opacity: 1; transform: none; }
+
+/* the left column's foot sits at the bottom without leaving a hole */
+.dep-modal .dep2-side-note {
+  margin-top: auto; padding-top: 18px;
+  font-size: .78rem; color: var(--ink-500);
+}
+.dep-modal .dep2-side-note b { color: var(--ink-800); font-family: var(--ff-mono); }
+
+/* ---------- the right column ---------- */
+.dep-modal .dep2-main { padding: 22px 24px 22px 26px; min-width: 0; }
+.dep-modal .dep2-main > h4 { font-size: 1.04rem; margin: 0 0 3px; }
+.dep-modal .dep2-main > .dep2-sub { margin: 0 0 16px; color: var(--ink-500); font-size: .82rem; }
+
+/* the amount: the one thing on this screen that is meant to be read */
+.dep-modal .dep2-amount {
+  display: flex; align-items: center;
+  border: 1.5px solid var(--border); border-radius: 14px;
+  background: #fff; overflow: hidden;
+  transition: border-color .18s var(--ease), box-shadow .18s var(--ease);
+}
+.dep-modal .dep2-amount:focus-within {
+  border-color: var(--brand-500);
+  box-shadow: 0 0 0 3px rgba(99, 91, 255, .12);
+}
+.dep-modal .dep2-amount > span {
+  padding: 0 2px 0 16px; font-size: 1.4rem; font-weight: 700;
+  color: var(--ink-400); font-family: var(--ff-mono);
+}
+.dep-modal .dep2-amount input {
+  flex: 1 1 auto; min-width: 0;
+  border: 0; background: transparent; outline: none;
+  padding: 15px 16px 15px 8px;
+  font-size: 1.55rem; font-weight: 700; letter-spacing: -.02em;
+  font-family: var(--ff-mono); color: var(--ink-900);
+  -moz-appearance: textfield;
+}
+.dep-modal .dep2-amount input::-webkit-outer-spin-button,
+.dep-modal .dep2-amount input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.dep-modal .dep2-amount input::placeholder { font-weight: 600; color: var(--ink-300); }
+.dep-modal .field.invalid .dep2-amount { border-color: var(--danger-500); box-shadow: 0 0 0 3px rgba(239, 68, 68, .10); }
+
+/* quick amounts */
+.dep-modal .dep2-quick { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.dep-modal .dep2-quick .chip {
+  height: 40px; min-width: 76px; padding: 0 14px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border); border-radius: 11px;
+  background: #fff; color: var(--ink-700);
+  font-family: var(--ff-mono); font-size: .86rem; font-weight: 700;
+  cursor: pointer;
+  transition: border-color .16s var(--ease), background .16s var(--ease), color .16s var(--ease);
+}
+.dep-modal .dep2-quick .chip:hover { border-color: var(--brand-300); background: var(--brand-50); }
+.dep-modal .dep2-quick .chip.active {
+  border-color: var(--brand-600); background: var(--brand-600); color: #fff;
+}
+
+/* minimum and fee */
+.dep-modal .dep2-limits {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  margin-top: 10px; font-size: .8rem; color: var(--ink-500);
+}
+.dep-modal .dep2-limits span { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+.dep-modal .dep2-limits b { color: var(--ink-800); font-family: var(--ff-mono); }
+
+/* the summary */
+.dep-modal .dep2-rows {
+  margin-top: 18px; border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden; background: #fff;
+}
+.dep-modal .dep2-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  min-height: 48px; padding: 11px 15px;
+  font-size: .87rem;
+}
+.dep-modal .dep2-row + .dep2-row { border-top: 1px solid var(--border); }
+.dep-modal .dep2-row dt { color: var(--ink-500); margin: 0; }
+.dep-modal .dep2-row dd {
+  margin: 0; font-weight: 700; font-family: var(--ff-mono);
+  line-height: 1.3;
+  text-align: right; word-break: break-word; min-width: 0;
+}
+/* the one row that answers "what will I have afterwards" — said plainly, with
+   colour rather than with a glow. Its number is a little larger, and kept small
+   enough that the row is no taller than the others: a summary whose rows are
+   not the same height reads as though something in them mattered differently,
+   and only the shading says so here. */
+.dep-modal .dep2-row.total { background: var(--brand-50); }
+.dep-modal .dep2-row.total dt { color: var(--brand-700); font-weight: 600; }
+.dep-modal .dep2-row.total dd { color: var(--brand-800); font-size: 1rem; font-weight: 800; }
+
+/* recent requests */
+.dep-modal .dep2-hist { margin-top: 18px; }
+.dep-modal .dep2-hist h5 {
+  margin: 0 0 8px; font-size: .7rem; font-weight: 700;
+  letter-spacing: .09em; text-transform: uppercase; color: var(--ink-500);
+}
+.dep-modal .dep2-hist-list { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: #fff; }
+.dep-modal .dep2-hist-row {
+  display: flex; align-items: center; gap: 10px;
+  min-height: 46px; padding: 10px 14px;
+  font-size: .84rem;
+}
+.dep-modal .dep2-hist-row + .dep2-hist-row { border-top: 1px solid var(--border); }
+.dep-modal .dep2-hist-row .pill { flex: 0 0 auto; }
+.dep-modal .dep2-hist-row > span:nth-child(2) { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dep-modal .dep2-hist-row .dep2-hist-when { color: var(--ink-500); font-size: .76rem; flex: 0 0 auto; }
+.dep-modal .dep2-hist-row .dep2-hist-amt {
+  margin-left: auto; flex: 0 0 auto;
+  font-family: var(--ff-mono); font-weight: 700; color: var(--ink-900);
+}
+
+/* where to pay, when there is somewhere to pay */
+.dep-modal .dep2-pay {
+  margin-top: 16px; padding: 14px;
+  border: 1px dashed var(--border-strong, var(--ink-200));
+  border-radius: 14px; background: var(--ink-50);
+}
+
+/* the button: at the bottom of the right column, and always in reach */
+.dep-modal .dep2-actions {
+  margin-top: auto; padding-top: 18px;
+  display: flex; gap: 10px; flex: 0 0 auto;
+}
+.dep-modal .dep2-go {
+  position: relative; width: 100%; min-height: 50px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 54px;
+  border-radius: 13px;
+  font-size: .95rem;
+}
+.dep-modal .dep2-go-txt { text-align: center; }
+.dep-modal .dep2-go-ic {
+  position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
+  display: grid; place-items: center;
+  transition: transform .2s var(--ease);
+}
+.dep-modal .dep2-go:hover:not(:disabled) .dep2-go-ic { transform: translateY(-50%) translateX(3px); }
+.dep-modal .dep2-go:disabled { opacity: .5; cursor: not-allowed; }
+.dep-modal .dep2-actions .btn-block { flex: 1; }
+
+/* ---------- one column, in the order the steps happen ----------
+   The two panels are stacked: which way to pay, how much, what it costs, what
+   has been asked for before, and then the button. Nothing is dropped and
+   nothing changes order, so the screen reads the same way a phone reads it. */
+@media (max-width: 860px) {
+  .dep-modal { width: 100%; max-width: 560px; max-height: 94vh; border-radius: 18px; }
+  /* a tablet is wide enough to keep the two columns, so only a real phone
+     stacks them — at 768px the right column would otherwise be 476px wide and
+     the quick amounts would sit three to a row for no reason */
+  .dep-modal .dep2 { grid-template-columns: 236px minmax(0, 1fr); }
+  .dep-modal .dep2-main { padding: 20px 22px; }
+  .dep-modal .dep2-quick .chip { flex: 1 1 28%; min-width: 0; }
+}
+
+@media (max-width: 720px) {
+  .dep-modal .dep2 { grid-template-columns: minmax(0, 1fr); }
+  .dep-modal .dep2-side {
+    border-right: 0; border-bottom: 1px solid var(--border);
+    padding: 18px 18px 14px;
+    background: var(--brand-50);
+  }
+  /* on a phone the note belongs under the list, not pinned to a bottom that
+     is now the bottom of the whole dialog */
+  .dep-modal .dep2-side-note { margin-top: 12px; padding-top: 0; }
+  .dep-modal .dep-tabs { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .dep-modal .dep2-main { padding: 18px; }
+  .dep-modal .dep2-actions {
+    position: sticky; bottom: 0; margin: 16px -18px -18px;
+    padding: 12px 18px calc(12px + env(safe-area-inset-bottom, 0px));
+    background: rgba(255, 255, 255, .96);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border);
+  }
+}
+
+/* the narrowest phones: two columns of quick amounts become one, and the date
+   on a recent request steps out of the way before it can collide */
+@media (max-width: 400px) {
+  .dep-modal .modal-head { padding: 15px 16px; }
+  .dep-modal .modal-head h3 { font-size: 1rem; }
+  .dep-modal .dep2-side { padding: 16px 14px 12px; }
+  .dep-modal .dep2-main { padding: 16px 14px; }
+  .dep-modal .dep2-amount input { font-size: 1.35rem; padding: 13px 12px 13px 6px; }
+  .dep-modal .dep2-amount > span { font-size: 1.2rem; padding-left: 13px; }
+  .dep-modal .dep2-quick .chip { height: 38px; min-width: 0; flex: 1 1 30%; padding: 0 8px; font-size: .8rem; }
+  .dep-modal .dep2-limits { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .dep-modal .dep2-hist-row { flex-wrap: wrap; row-gap: 4px; padding: 10px 12px; }
+  .dep-modal .dep2-hist-row > span:nth-child(2) { flex: 1 1 100%; order: 3; }
+  .dep-modal .dep2-hist-row .dep2-hist-amt { margin-left: auto; }
+  .dep-modal .dep2-actions { margin: 14px -14px -16px; padding-left: 14px; padding-right: 14px; }
+}
+
+/* the dialog becomes a sheet on a phone, the way the rest of the shop does */
+@media (max-width: 560px) {
+  .modal-back:has(.dep-modal) { padding: 0; align-items: flex-end; }
+  .dep-modal {
+    max-width: none; border-radius: 20px 20px 0 0;
+    max-height: 94vh;
+    border-bottom: 0;
+  }
+  .dep-modal .modal-head { border-radius: 20px 20px 0 0; }
+}
+
+/* one column on a phone, and the method list scrolls rather than pushing the
+   amount out of sight */
+@media (max-width: 760px) {
+  .dep2 { grid-template-columns: 1fr; }
+  .dep2-side { border-right: 0; border-bottom: 1px solid var(--border); border-radius: var(--r-lg) var(--r-lg) 0 0; }
+  .dep2-side-note { display: none; }
+  .dep2-main { padding: 18px; }
+  .dep2-actions { flex-direction: column-reverse; }
+  .dep2-actions .btn { width: 100%; }
+}
+@media (min-width: 761px) and (max-width: 1000px) {
+  .dep2 { grid-template-columns: 232px minmax(0, 1fr); }
+}

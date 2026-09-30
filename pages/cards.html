@@ -1,0 +1,239 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-page="Shop All Products">Shop All Products — Store</title>
+  <meta name="description" content="Browse every product at Store — mobile, electronics, fashion, home, beauty, sports, books, grocery and more. Best prices, 100% genuine.">
+  <meta name="author" content="PRINCE HACKS">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%236d3df5%22%2F%3E%3Cpath%20d%3D%22M11%2012c-1.6-3-1.4-6%20.2-6.6%201.4-.5%202.8%202%203.2%204.6%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M21%2012c1.6-3%201.4-6-.2-6.6-1.4-.5-2.8%202-3.2%204.6%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2219%22%20r%3D%227%22%20fill%3D%22%23fff%22%2F%3E%3Ccircle%20cx%3D%2213.4%22%20cy%3D%2218%22%20r%3D%221.15%22%20fill%3D%22%236d3df5%22%2F%3E%3Ccircle%20cx%3D%2218.6%22%20cy%3D%2218%22%20r%3D%221.15%22%20fill%3D%22%236d3df5%22%2F%3E%3Cpath%20d%3D%22M14.6%2021.4h2.8%22%20stroke%3D%22%236d3df5%22%20stroke-width%3D%221.3%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <nav class="nav">
+        <a class="brand" href="../index.html">
+          <span class="brand-mark"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
+          <span class="brand-text"><span data-brand>Store</span><small>Smart Shopping Store</small></span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="./cards.html" class="active">Shop</a></li>
+
+          <li><a href="./about.html">About</a></li>
+          <li><a href="./contact.html">Contact</a></li>
+        </ul>
+        <div class="nav-actions">
+          <a href="./cart.html" class="btn btn-ghost btn-icon cart-btn" aria-label="Cart">
+            <svg class="ic" aria-hidden="true"><use href="#i-cart"></use></svg><span class="cart-count" data-cart-count>0</span>
+          </a>
+          <a href="./wallet.html" class="nav-wallet" id="navWallet"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-wallet"></use></svg><span id="navWalletAmt" hidden></span></a>
+          <a href="./login.html" class="btn btn-ghost btn-sm" data-when-guest>Log in</a>
+          <a href="./register.html" class="btn btn-primary btn-sm" data-when-guest>Sign up</a>
+
+          <div class="dropdown hidden" data-when-login>
+            <button class="btn btn-ghost btn-sm">
+              <span class="avatar avatar-sm" data-auth-initial>U</span>
+              <span data-auth-name>User</span> <svg class="ic ic-sm" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+            </button>
+            <div class="dropdown-menu">
+              <div class="dropdown-head">
+                <b data-auth-name>User</b>
+                <div class="fs-xs text-muted" data-auth-email></div>
+              </div>
+              <a class="dropdown-item" href="./dashboard.html"><svg class="ic" aria-hidden="true"><use href="#i-chart"></use></svg> Dashboard</a>
+              <a class="dropdown-item" href="./orders.html"><svg class="ic" aria-hidden="true"><use href="#i-box"></use></svg> My orders</a>
+              <a class="dropdown-item" href="./profile.html"><svg class="ic" aria-hidden="true"><use href="#i-user"></use></svg> Profile</a>
+            <a class="dropdown-item" href="../index.html"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg> Store front</a>
+              <a class="dropdown-item" href="./contact.html"><svg class="ic" aria-hidden="true"><use href="#i-support"></use></svg> Help</a>
+              <a class="dropdown-item hidden" href="#" data-admin-link data-admin-only><svg class="ic" aria-hidden="true"><use href="#i-shield"></use></svg> Admin panel</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item danger" href="#" data-logout><svg class="ic" aria-hidden="true"><use href="#i-logout"></use></svg> Log out</a>
+            </div>
+          </div>
+          <button class="nav-toggle" aria-label="Menu"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+        </div>
+      </nav>
+    </div>
+  </header>
+  <div class="side-backdrop"></div>
+
+  <div class="dash">
+  <aside class="side">
+    <div class="flex between center mb-2">
+      <span class="badge badge-brand"><svg class="ic" aria-hidden="true"><use href="#i-user"></use></svg> My account</span>
+    </div>
+
+    <a class="side-link" href="./dashboard.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-chart"></use></svg></span> Dashboard</a>
+    <a class="side-link" href="./orders.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-box"></use></svg></span> My orders <span class="pill hidden" id="sideOrdCount">0</span></a>
+    <a class="side-link" href="./cart.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-cart"></use></svg></span> Cart <span class="pill hidden" id="sideCartCount">0</span></a>
+    <a class="side-link" href="./wallet.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-wallet"></use></svg></span> Wallet</a>
+    <a class="side-link" href="./profile.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-user"></use></svg></span> Profile</a>
+
+    <div class="side-title">Shop</div>
+    <a class="side-link" href="./cards.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-grid"></use></svg></span> All products</a>
+    <a class="side-link" href="./cards.html?category=mobile"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-mobile"></use></svg></span> Mobile</a>
+    <a class="side-link" href="./cards.html?category=fashion"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-shirt"></use></svg></span> Fashion</a>
+    <a class="side-link" href="./cards.html?category=home"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-sofa"></use></svg></span> Home</a>
+
+    <div class="side-title">Support</div>
+    <a class="side-link hidden" href="#" data-admin-link data-admin-only><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-shield"></use></svg></span> Admin panel</a>
+    <a class="side-link" href="./contact.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-support"></use></svg></span> Help</a>
+    <a class="side-link" href="#" data-logout><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-logout"></use></svg></span> Log out</a>
+
+    <div class="card card-pad mt-4" style="background:var(--grad-brand);color:#fff;border:0">
+      <b class="fs-sm"><svg class="ic" aria-hidden="true"><use href="#i-ticket"></use></svg> FIRST100</b>
+      <p class="fs-xs mt-1 mb-2" style="color:rgba(255,255,255,.85)">Get ₹100 off on your first order above ₹499</p>
+      <a href="./cards.html" class="btn btn-white btn-xs">Shop now</a>
+    </div>
+  </aside>
+
+  <main class="dash-main">
+
+      <div class="dash-head">
+        <div class="flex gap-2 center">
+          <div>
+            <div class="breadcrumb fs-sm text-muted" style="margin-bottom:4px">
+              <a href="../index.html">Home</a><span class="sep">/</span><a href="./dashboard.html">Account</a><span class="sep">/</span><span>All products</span>
+            </div>
+            <h1><svg class="ic" aria-hidden="true"><use href="#i-grid"></use></svg> All products</h1>
+            <p>Prepaid cards, gift cards, subscriptions and gaming credit.</p>
+          </div>
+        </div>
+        <div class="flex gap-2 hide-sm">
+          <a href="./dashboard.html" class="btn btn-ghost btn-sm"><svg class="ic" aria-hidden="true"><use href="#i-chart"></use></svg> Dashboard</a>
+          <a href="./cart.html" class="btn btn-ghost btn-sm"><svg class="ic" aria-hidden="true"><use href="#i-cart"></use></svg> Cart</a>
+        </div>
+      </div>
+
+      <section class="section-sm" style="padding:0">
+        <div class="container" style="padding:0">
+          <div class="grid shop-grid" id="shopGrid">
+        <aside class="card card-pad hidden" id="filterBox" style="position:sticky;top:calc(var(--nav-h) + 18px)">
+          <div class="flex between center mb-2">
+            <h3 class="mb-0 fs-lg">Filters</h3>
+            <button class="btn btn-xs btn-ghost" id="resetFilters"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-refresh"></use></svg> Reset</button>
+          </div>
+
+          <div class="field">
+            <label>Search</label>
+            <div class="input-group">
+              <span class="ig-icon"><svg class="ic" aria-hidden="true"><use href="#i-search"></use></svg></span>
+              <input class="input" id="q" type="search" placeholder="Product name&hellip;">
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Category</label>
+            <div class="flex col gap-1" id="catFilter">
+              <label class="check"><input type="radio" name="cat" value="all" checked> All products</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Brand</label>
+            <select class="select" id="brandFilter"><option value="">All brands</option></select>
+          </div>
+
+          <div class="field mb-0">
+            <label>Price range</label>
+            <input class="input" id="pMin" type="number" placeholder="Min ₹">
+            <div class="mt-1"><input class="input" id="pMax" type="number" placeholder="Max ₹"></div>
+            <button class="btn btn-primary btn-sm btn-block mt-2" id="priceBtn">Apply</button>
+          </div>
+        </aside>
+
+            <div>
+              <div class="flex between center wrap gap-2 mb-3">
+            <div class="srt" id="chips" role="group" aria-label="Sort products">
+              <button class="srt-btn is-on" data-quick="all">All</button>
+              <button class="srt-btn" data-quick="cheap"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-trending-down"></use></svg> Lowest price</button>
+              <button class="srt-btn" data-quick="high"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-trending-up"></use></svg> Highest price</button>
+              <button class="srt-btn" data-quick="popular"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-flame"></use></svg> Popular</button>
+              <button class="srt-btn" data-quick="new"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-sparkles"></use></svg> Newest</button>
+              <button class="srt-btn" data-quick="rating"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-star"></use></svg> Top rated</button>
+            </div>
+            <div class="flex gap-2 center">
+              <span class="fs-sm text-muted" id="count"></span>
+              <input type="hidden" id="sort">
+              <button class="btn btn-ghost btn-sm hidden" id="openFilters"><svg class="ic" aria-hidden="true"><use href="#i-sliders"></use></svg> Filters</button>
+            </div>
+          </div>
+
+          <div class="grid g-auto-lg" id="list"></div>
+          <div id="pager"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+  </main>
+  </div>
+
+<footer class="site-footer">
+    <div class="container">
+      <div class="f-grid">
+        <div class="f-brand">
+          <a class="brand" href="../index.html" style="color:#fff">
+            <span class="brand-mark" style="background:rgba(255,255,255,.14)"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
+            <span class="brand-text"><span data-brand>Store</span><small>Gift cards &amp; prepaid vouchers</small></span>
+          </a>
+          <p class="fs-sm">100% genuine cards, shown in your account the moment you pay.</p>
+          <div class="socials">
+            <a href="#" aria-label="Facebook" title="Facebook">f</a>
+            <a href="#" aria-label="Twitter" title="Twitter">t</a>
+            <a href="#" aria-label="YouTube" title="YouTube"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-play"></use></svg></a>
+            <a href="#" aria-label="LinkedIn" title="LinkedIn">in</a>
+          </div>
+        </div>
+
+        <div>
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="./cards.html">All products</a></li>
+            <li><a href="./cards.html?category=prepaid">Prepaid</a></li>
+            <li><a href="./cards.html?category=gift">Gift cards</a></li>
+            <li><a href="./cards.html?sort=popular">Bestsellers</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Account</h4>
+          <ul>
+            <li><a href="./orders.html">My orders</a></li>
+            <li><a href="./wallet.html">Wallet</a></li>
+            <li><a href="./profile.html">Profile</a></li>
+            <li><a href="./contact.html">Help</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Talk to us</h4>
+          <ul>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-mail"></use></svg><a href="mailto:support@bunnystore.in" data-site="store.email">support@bunnystore.in</a></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-phone"></use></svg><a href="tel:+91180123456" data-site="store.phone">1800-123-456</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="f-bottom">
+        <span>&copy; <span data-year></span> <span data-brand>Store</span>. All rights reserved.</span>
+          <p class="f-credit"><span class="f-credit-tag"><span class="f-credit-mark">PH</span>Developed by <span data-dev>PRINCE HACKS</span></span></p>
+        <span class="payments"><i>UPI</i><i>VISA</i><i>MC</i><i>RuPay</i></span>
+      </div>
+    </div>
+  </footer>
+
+<script type="module" src="../js/components/navigation.js"></script>
+<script type="module" src="../js/components/motion.js"></script>
+<script type="module" src="../js/components/icons.js"></script>
+<script type="module" src="../js/core/app.js"></script>
+<script type="module" src="../js/components/site.js"></script>
+<script type="module" src="../js/core/header.js"></script>
+<script type="module" src="../js/pages/cards.js"></script>
+</body>
+</html>

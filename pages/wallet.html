@@ -1,0 +1,200 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-page="My Wallet">My Wallet — Store</title>
+  <meta name="description" content="Wallet balance, deposits and transaction history at Store.">
+  <meta name="author" content="PRINCE HACKS">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <nav class="nav">
+      <a class="brand" href="../index.html">
+        <span class="brand-mark"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
+        <span class="brand-text"><span data-brand>Store</span><small>My Wallet</small></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="./cards.html">Shop</a></li>
+        <li><a href="./dashboard.html">Dashboard</a></li>
+        <li><a href="./orders.html">Orders</a></li>
+        <li><a href="./wallet.html" class="active">Wallet</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="./cart.html" class="btn btn-ghost btn-icon cart-btn" aria-label="Cart">
+          <svg class="ic" aria-hidden="true"><use href="#i-cart"></use></svg><span class="cart-count" data-cart-count>0</span>
+        </a>
+        <a href="./wallet.html" class="nav-wallet" id="navWallet">
+          <svg class="ic ic-sm" aria-hidden="true"><use href="#i-wallet"></use></svg>
+          <span id="navWalletAmt" hidden></span>
+        </a>
+        <div class="dropdown">
+          <button class="btn btn-ghost btn-sm">
+            <span class="avatar avatar-sm" data-auth-initial>U</span>
+            <span data-auth-name>User</span> <svg class="ic ic-sm" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+          </button>
+          <div class="dropdown-menu">
+            <div class="dropdown-head"><b data-auth-name>User</b><div class="fs-xs text-muted" data-auth-email></div></div>
+            <a class="dropdown-item" href="./dashboard.html"><svg class="ic" aria-hidden="true"><use href="#i-chart"></use></svg> Dashboard</a>
+            <a class="dropdown-item" href="./orders.html"><svg class="ic" aria-hidden="true"><use href="#i-box"></use></svg> My orders</a>
+            <a class="dropdown-item" href="./wallet.html"><svg class="ic" aria-hidden="true"><use href="#i-wallet"></use></svg> Wallet</a>
+            <a class="dropdown-item" href="./profile.html"><svg class="ic" aria-hidden="true"><use href="#i-user"></use></svg> Profile</a>
+            <a class="dropdown-item" href="../index.html"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg> Store front</a>
+            <a class="dropdown-item" href="./contact.html"><svg class="ic" aria-hidden="true"><use href="#i-support"></use></svg> Help</a>
+            <a class="dropdown-item hidden" href="#" data-admin-link data-admin-only><svg class="ic" aria-hidden="true"><use href="#i-shield"></use></svg> Admin panel</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item danger" href="#" data-logout><svg class="ic" aria-hidden="true"><use href="#i-logout"></use></svg> Log out</a>
+          </div>
+        </div>
+        <button class="nav-toggle" aria-label="Menu"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="side-backdrop"></div>
+
+<div class="dash">
+
+  <aside class="side">
+    <div class="flex between center mb-2">
+      <span class="badge badge-brand"><svg class="ic" aria-hidden="true"><use href="#i-user"></use></svg> My account</span>
+    </div>
+
+    <a class="side-link" href="./dashboard.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-chart"></use></svg></span> Dashboard</a>
+    <a class="side-link" href="./orders.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-box"></use></svg></span> My orders <span class="pill hidden" id="sideOrdCount">0</span></a>
+    <a class="side-link" href="./cart.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-cart"></use></svg></span> Cart <span class="pill hidden" id="sideCartCount">0</span></a>
+    <a class="side-link" href="./wallet.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-wallet"></use></svg></span> Wallet</a>
+    <a class="side-link" href="./profile.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-user"></use></svg></span> Profile</a>
+
+    <div class="side-title">Shop</div>
+    <a class="side-link" href="./cards.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-grid"></use></svg></span> All products</a>
+    <a class="side-link" href="./cards.html?category=mobile"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-mobile"></use></svg></span> Mobile</a>
+    <a class="side-link" href="./cards.html?category=fashion"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-shirt"></use></svg></span> Fashion</a>
+    <a class="side-link" href="./cards.html?category=home"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-sofa"></use></svg></span> Home</a>
+
+    <div class="side-title">Support</div>
+    <a class="side-link hidden" href="#" data-admin-link data-admin-only><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-shield"></use></svg></span> Admin panel</a>
+    <a class="side-link" href="./contact.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-support"></use></svg></span> Help</a>
+    <a class="side-link" href="#" data-logout><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-logout"></use></svg></span> Log out</a>
+
+    <div class="card card-pad mt-4" style="background:var(--grad-brand);color:#fff;border:0">
+      <b class="fs-sm"><svg class="ic" aria-hidden="true"><use href="#i-ticket"></use></svg> FIRST100</b>
+      <p class="fs-xs mt-1 mb-2" style="color:rgba(255,255,255,.85)">Get ₹100 off on your first order above ₹499</p>
+      <a href="./cards.html" class="btn btn-white btn-xs">Shop now</a>
+    </div>
+  </aside>
+
+  <main class="dash-main">
+
+    <div class="dash-head">
+      <div class="flex gap-2 center">
+        <div>
+          <h1><svg class="ic" aria-hidden="true"><use href="#i-wallet"></use></svg> My wallet</h1>
+          <p>Add money, track every movement and spend it on cards.</p>
+        </div>
+      </div>
+      <div class="flex gap-2 wrap">
+        <button class="btn btn-ghost btn-sm" id="txnBtn"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-history"></use></svg> All transactions</button>
+        <button class="btn btn-primary btn-sm" id="addBtn"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-plus-card"></use></svg> Add money</button>
+      </div>
+    </div>
+
+    <div class="grid wallet-grid" id="wGrid">
+
+      <div>
+        <div class="wallet-hero mb-3" id="wHero">
+          <div class="flex between center wrap gap-2">
+            <span class="badge" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)">
+              <span class="live-dot" style="background:#34d399"></span> Wallet ready
+            </span>
+            <span class="fs-xs" style="color:rgba(255,255,255,.6)" id="wSince"></span>
+          </div>
+          <p class="fs-sm mt-3 mb-1" style="color:rgba(255,255,255,.7)">Available balance</p>
+          <div class="wallet-balance" id="wBalance">0</div>
+          <div class="wallet-stats">
+            <div><b id="wCredit">0</b><small>Total added</small></div>
+            <div><b id="wSpent">0</b><small>Total spent</small></div>
+            <div><b id="wCount">0</b><small>Transactions</small></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3 class="mb-0"><svg class="ic" aria-hidden="true"><use href="#i-history"></use></svg> Recent activity</h3>
+            <span class="fs-sm text-muted" id="txnCount"></span>
+          </div>
+          <div class="card-body" id="txnList">
+            <div class="sk sk-line" style="width:70%"></div>
+            <div class="sk sk-line" style="width:55%"></div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="flex col gap-3">
+        <div class="card">
+          <div class="card-head"><h3 class="mb-0">How the wallet works</h3></div>
+          <div class="card-body">
+            <ul class="timeline">
+              <li class="done">
+                <b>Add money</b>
+                <small>Pay by UPI and submit the UTR. We credit your wallet after verification.</small>
+              </li>
+              <li>
+                <b>Buy a card</b>
+                <small>Every purchase is paid straight from your wallet balance &mdash; instant, no UTR needed.</small>
+              </li>
+              <li>
+                <b>Track everything</b>
+                <small>Every credit and debit appears in your transaction history.</small>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <h4 class="mb-1"><svg class="ic" aria-hidden="true"><use href="#i-shield"></use></svg> Safe and transparent</h4>
+          <p class="fs-sm text-muted mb-2">Wallet credits are only made after an admin verifies your
+            payment reference. Nothing is credited automatically, so every rupee is traceable.</p>
+          <a class="btn btn-outline btn-sm" href="./contact.html">Need help?</a>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+</div>
+
+<!-- deposit modal -->
+<div class="modal-back" id="depModal">
+    <div class="modal modal-lg dep-modal">
+<div class="modal-head">
+<h3><svg class="ic" aria-hidden="true"><use href="#i-coins"></use></svg> Add money to wallet</h3>
+<button class="x-btn" data-close><svg class="ic" aria-hidden="true"><use href="#i-x"></use></svg></button>
+</div>
+<div class="modal-body" id="depBody">
+        <div class="loader" style="padding:26px"><span class="spinner"></span>Loading payment methods&hellip;</div>
+      </div>
+  </div>
+</div>
+
+<footer style="padding:22px 0;font-size:.82rem;color:var(--ink-400);text-align:center">
+      <div class="container">&copy; <span data-year></span> <span data-brand>Store</span> &middot; Wallet</div>
+      <div class="container"><p class="f-credit"><span class="f-credit-tag"><span class="f-credit-mark">PH</span>Developed by <span data-dev>PRINCE HACKS</span></span></p></div>
+</footer>
+
+<script type="module" src="../js/components/navigation.js"></script>
+<script type="module" src="../js/components/motion.js"></script>
+<script type="module" src="../js/components/icons.js"></script>
+<script type="module" src="../js/core/app.js"></script>
+<script type="module" src="../js/components/site.js"></script>
+<script type="module" src="../js/core/header.js"></script>
+<script type="module" src="../js/pages/wallet.js"></script>
+</body>
+</html>

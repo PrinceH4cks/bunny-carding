@@ -1,0 +1,302 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-page="My Profile">My Profile — Store</title>
+  <meta name="description" content="Update your profile, password and account settings.">
+  <meta name="author" content="PRINCE HACKS">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%236d3df5%22%2F%3E%3Cpath%20d%3D%22M11%2012c-1.6-3-1.4-6%20.2-6.6%201.4-.5%202.8%202%203.2%204.6%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M21%2012c1.6-3%201.4-6-.2-6.6-1.4-.5-2.8%202-3.2%204.6%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2219%22%20r%3D%227%22%20fill%3D%22%23fff%22%2F%3E%3Ccircle%20cx%3D%2213.4%22%20cy%3D%2218%22%20r%3D%221.15%22%20fill%3D%22%236d3df5%22%2F%3E%3Ccircle%20cx%3D%2218.6%22%20cy%3D%2218%22%20r%3D%221.15%22%20fill%3D%22%236d3df5%22%2F%3E%3Cpath%20d%3D%22M14.6%2021.4h2.8%22%20stroke%3D%22%236d3df5%22%20stroke-width%3D%221.3%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <nav class="nav">
+        <a class="brand" href="../index.html">
+          <span class="brand-mark"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
+          <span class="brand-text"><span data-brand>Store</span><small>My Profile</small></span>
+        </a>
+        <div class="nav-actions">
+          <a href="../index.html" class="btn btn-ghost btn-sm"><svg class="ic" aria-hidden="true"><use href="#i-home"></use></svg> Store</a>
+          <a href="./cart.html" class="btn btn-ghost btn-icon cart-btn" aria-label="Cart">
+            <svg class="ic" aria-hidden="true"><use href="#i-cart"></use></svg><span class="cart-count" data-cart-count>0</span>
+          </a>
+          <a href="./wallet.html" class="nav-wallet" id="navWallet"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-wallet"></use></svg><span id="navWalletAmt" hidden></span></a>
+          <div class="dropdown">
+            <button class="btn btn-ghost btn-sm">
+              <span class="avatar avatar-sm" data-auth-initial>U</span>
+              <span data-auth-name>User</span> <svg class="ic ic-sm" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+            </button>
+            <div class="dropdown-menu">
+              <div class="dropdown-head"><b data-auth-name>User</b><div class="fs-xs text-muted" data-auth-email></div></div>
+              <a class="dropdown-item" href="./dashboard.html"><svg class="ic" aria-hidden="true"><use href="#i-chart"></use></svg> Dashboard</a>
+              <a class="dropdown-item" href="./orders.html"><svg class="ic" aria-hidden="true"><use href="#i-box"></use></svg> My orders</a>
+              <a class="dropdown-item" href="./profile.html"><svg class="ic" aria-hidden="true"><use href="#i-user"></use></svg> Profile</a>
+              <a class="dropdown-item" href="./contact.html"><svg class="ic" aria-hidden="true"><use href="#i-support"></use></svg> Help</a>
+              <a class="dropdown-item" href="../index.html"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg> Store front</a>
+              <a class="dropdown-item hidden" href="#" data-admin-link data-admin-only><svg class="ic" aria-hidden="true"><use href="#i-shield"></use></svg> Admin panel</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item danger" href="#" data-logout><svg class="ic" aria-hidden="true"><use href="#i-logout"></use></svg> Log out</a>
+            </div>
+          </div>
+          <button class="nav-toggle" aria-label="Menu"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-menu"></use></svg></button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="side-backdrop"></div>
+
+  <div class="dash">
+  <aside class="side">
+    <div class="flex between center mb-2">
+      <span class="badge badge-brand"><svg class="ic" aria-hidden="true"><use href="#i-user"></use></svg> My account</span>
+    </div>
+
+    <a class="side-link" href="./dashboard.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-chart"></use></svg></span> Dashboard</a>
+    <a class="side-link" href="./orders.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-box"></use></svg></span> My orders <span class="pill hidden" id="sideOrdCount">0</span></a>
+    <a class="side-link" href="./cart.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-cart"></use></svg></span> Cart <span class="pill hidden" id="sideCartCount">0</span></a>
+    <a class="side-link" href="./wallet.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-wallet"></use></svg></span> Wallet</a>
+    <a class="side-link" href="./profile.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-user"></use></svg></span> Profile</a>
+
+    <div class="side-title">Shop</div>
+    <a class="side-link" href="./cards.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-grid"></use></svg></span> All products</a>
+    <a class="side-link" href="./cards.html?category=mobile"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-mobile"></use></svg></span> Mobile</a>
+    <a class="side-link" href="./cards.html?category=fashion"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-shirt"></use></svg></span> Fashion</a>
+    <a class="side-link" href="./cards.html?category=home"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-sofa"></use></svg></span> Home</a>
+
+    <div class="side-title">Support</div>
+    <a class="side-link hidden" href="#" data-admin-link data-admin-only><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-shield"></use></svg></span> Admin panel</a>
+    <a class="side-link" href="./contact.html"><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-support"></use></svg></span> Help</a>
+    <a class="side-link" href="#" data-logout><span class="ic"><svg class="ic" aria-hidden="true"><use href="#i-logout"></use></svg></span> Log out</a>
+
+    <div class="card card-pad mt-4" style="background:var(--grad-brand);color:#fff;border:0">
+      <b class="fs-sm"><svg class="ic" aria-hidden="true"><use href="#i-ticket"></use></svg> FIRST100</b>
+      <p class="fs-xs mt-1 mb-2" style="color:rgba(255,255,255,.85)">Get ₹100 off on your first order above ₹499</p>
+      <a href="./cards.html" class="btn btn-white btn-xs">Shop now</a>
+    </div>
+  </aside>
+
+  <main class="dash-main">
+
+      <div class="dash-head">
+        <div class="flex gap-2 center">
+          <div>
+            <div class="breadcrumb fs-sm text-muted" style="margin-bottom:4px">
+              <a href="../index.html">Home</a><span class="sep">/</span><a href="./dashboard.html">Account</a><span class="sep">/</span><span>Profile</span>
+            </div>
+            <h1><svg class="ic" aria-hidden="true"><use href="#i-user"></use></svg> My profile</h1>
+            <p>Keep your details up to date so your orders go through without a hitch.</p>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <a href="./orders.html" class="btn btn-ghost btn-sm"><svg class="ic" aria-hidden="true"><use href="#i-box"></use></svg> My orders</a>
+          <a href="./cards.html" class="btn btn-primary btn-sm"><svg class="ic" aria-hidden="true"><use href="#i-cart"></use></svg> Shop products</a>
+        </div>
+      </div>
+
+      <section class="section-sm" style="padding:0">
+        <div class="container" style="padding:0">
+      <div class="grid prof-grid" id="pGrid">
+
+        <aside class="card card-pad tc">
+          <span class="avatar avatar-lg" data-auth-initial style="margin:0 auto 16px">U</span>
+          <h3 class="mb-1" data-auth-name>User</h3>
+          <p class="text-muted fs-sm mb-2" data-auth-email></p>
+          <div class="flex gap-1 justify-center wrap mb-2">
+            <span class="badge badge-brand" id="roleBadge">Member</span>
+            <span class="badge badge-warn" id="verifyBadge">
+              <svg class="ic ic-sm" aria-hidden="true"><use href="#i-alert"></use></svg> Not verified
+            </span>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="flex between center fs-sm" style="padding:6px 0">
+            <span class="text-muted">Member since</span><b id="since">&mdash;</b>
+          </div>
+          <div class="flex between center fs-sm" style="padding:6px 0">
+            <span class="text-muted">Total orders</span><b id="ordCount">&mdash;</b>
+          </div>
+          <div class="flex between center fs-sm" style="padding:6px 0">
+            <span class="text-muted">Total spent</span><b id="spent">&mdash;</b>
+          </div>
+
+          <div class="divider"></div>
+          <div class="flex gap-1 justify-center wrap">
+            <a href="./orders.html" class="btn btn-ghost btn-xs"><svg class="ic" aria-hidden="true"><use href="#i-box"></use></svg> Orders</a>
+            <a href="./cart.html" class="btn btn-ghost btn-xs"><svg class="ic" aria-hidden="true"><use href="#i-cart"></use></svg> Cart</a>
+            <a href="#" class="btn btn-accent btn-xs hidden" data-admin-link data-admin-only><svg class="ic" aria-hidden="true"><use href="#i-shield"></use></svg> Admin</a>
+          </div>
+        </aside>
+
+        <div>
+          <div data-tabs>
+            <div class="tabs mb-3">
+              <button class="tab active" data-tab="t1">Personal info</button>
+              
+              <button class="tab" data-tab="t3">Password</button>
+              <button class="tab" data-tab="t4">Account</button>
+            </div>
+          </div>
+
+          <div class="tab-panel active" id="t1">
+            <div class="card">
+              <div class="card-head"><h3 class="mb-0">Personal information</h3></div>
+              <div class="card-body">
+                <form id="pfForm" novalidate>
+                  <div class="grid g-2">
+                    <div class="field">
+                      <label>Full name <span class="req">*</span></label>
+                      <input class="input" name="name" required>
+                      <div class="field-error"></div>
+                    </div>
+                    <div class="field">
+                      <label>Phone number <span class="req">*</span></label>
+                      <input class="input" name="phone" type="tel" placeholder="98XXXXXXXX" required>
+                      <div class="field-error"></div>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>Email address <span class="req">*</span></label>
+                    <input class="input" name="email" type="email" required>
+                    <div class="field-hint">Changing your email triggers a verification message.</div>
+                    <div class="field-error"></div>
+                  </div>
+                  <button class="btn btn-primary" type="submit" id="pfBtn"><span class="btn-txt"><svg class="ic" aria-hidden="true"><use href="#i-save"></use></svg> Save changes</span></button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="tab-panel" id="t3">
+            <div class="card">
+              <div class="card-head"><h3 class="mb-0">Change password</h3></div>
+              <div class="card-body">
+                <form id="pwForm" novalidate>
+                  <div class="field">
+                    <label>Current password <span class="req">*</span></label>
+                    <input class="input" name="old" type="password" autocomplete="current-password" required>
+                    <div class="field-error"></div>
+                  </div>
+                  <div class="field">
+                    <label>New password <span class="req">*</span></label>
+                    <div class="input-group">
+                      <input class="input" name="new" type="password" placeholder="At least 6 characters" autocomplete="new-password" required>
+                      <button class="ig-action" type="button" data-peek aria-label="Show password"><svg class="ic" aria-hidden="true"><use href="#i-eye"></use></svg></button>
+                    </div>
+                    <div class="pw-meter" id="meter"><i></i><i></i><i></i></div>
+                    <div class="field-error"></div>
+                  </div>
+                  <div class="field">
+                    <label>Confirm new password <span class="req">*</span></label>
+                    <input class="input" name="confirm" type="password" autocomplete="new-password" required>
+                    <div class="field-error"></div>
+                  </div>
+                  <button class="btn btn-primary" type="submit" id="pwBtn"><span class="btn-txt"><svg class="ic" aria-hidden="true"><use href="#i-lock"></use></svg> Update password</span></button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="t4">
+            <div class="card">
+              <div class="card-head"><h3 class="mb-0">Account settings</h3></div>
+              <div class="card-body">
+                <div class="alert alert-warn mb-3">
+                  <svg class="ic" aria-hidden="true"><use href="#i-alert"></use></svg>
+                  <div><b>Permanent actions</b><br>Deleting your account removes your entire order history
+                    for good. This cannot be undone.</div>
+                </div>
+
+                <div class="flex gap-2 wrap">
+                  <button class="btn btn-ghost" id="reverify"><svg class="ic" aria-hidden="true"><use href="#i-mail"></use></svg> Send a verification email</button>
+                  <a class="btn btn-ghost" href="./contact.html"><svg class="ic" aria-hidden="true"><use href="#i-support"></use></svg> Contact support</a>
+                  <button class="btn btn-danger" id="delBtn"><svg class="ic" aria-hidden="true"><use href="#i-trash"></use></svg> Delete my account</button>
+                </div>
+
+                <div class="divider"></div>
+                <h4 class="mb-1">Need an admin role?</h4>
+                <p class="fs-sm text-muted">For admin access or a role change, get in touch with our team.</p>
+                <a class="btn btn-outline btn-sm" href="mailto:admin@bunnystore.in"><svg class="ic" aria-hidden="true"><use href="#i-mail"></use></svg> admin@bunnystore.in</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </main>
+</div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="f-grid">
+        <div class="f-brand">
+          <a class="brand" href="../index.html" style="color:#fff">
+            <span class="brand-mark" style="background:rgba(255,255,255,.14)"><svg class="ic" aria-hidden="true"><use href="#i-store"></use></svg></span>
+            <span class="brand-text"><span data-brand>Store</span><small>Gift cards &amp; prepaid vouchers</small></span>
+          </a>
+          <p class="fs-sm">100% genuine cards, shown in your account the moment you pay.</p>
+          <div class="socials">
+            <a href="#" aria-label="Facebook" title="Facebook">f</a>
+            <a href="#" aria-label="Twitter" title="Twitter">t</a>
+            <a href="#" aria-label="YouTube" title="YouTube"><svg class="ic ic-sm" aria-hidden="true"><use href="#i-play"></use></svg></a>
+            <a href="#" aria-label="LinkedIn" title="LinkedIn">in</a>
+          </div>
+        </div>
+
+        <div>
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="./cards.html">All products</a></li>
+            <li><a href="./cards.html?category=prepaid">Prepaid</a></li>
+            <li><a href="./cards.html?category=gift">Gift cards</a></li>
+            <li><a href="./cards.html?sort=popular">Bestsellers</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Account</h4>
+          <ul>
+            <li><a href="./orders.html">My orders</a></li>
+            <li><a href="./wallet.html">Wallet</a></li>
+            <li><a href="./profile.html">Profile</a></li>
+            <li><a href="./contact.html">Help</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Talk to us</h4>
+          <ul>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-mail"></use></svg><a href="mailto:support@bunnystore.in" data-site="store.email">support@bunnystore.in</a></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-phone"></use></svg><a href="tel:+91180123456" data-site="store.phone">1800-123-456</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="f-bottom">
+        <span>&copy; <span data-year></span> <span data-brand>Store</span>. All rights reserved.</span>
+          <p class="f-credit"><span class="f-credit-tag"><span class="f-credit-mark">PH</span>Developed by <span data-dev>PRINCE HACKS</span></span></p>
+        <span class="payments"><i>UPI</i><i>VISA</i><i>MC</i><i>RuPay</i></span>
+      </div>
+    </div>
+  </footer>
+
+
+
+<script type="module" src="../js/components/navigation.js"></script>
+<script type="module" src="../js/components/motion.js"></script>
+<script type="module" src="../js/components/icons.js"></script>
+<script type="module" src="../js/core/app.js"></script>
+<script type="module" src="../js/components/site.js"></script>
+<script type="module" src="../js/core/header.js"></script>
+<script type="module" src="../js/pages/profile.js"></script>
+</body>
+</html>
