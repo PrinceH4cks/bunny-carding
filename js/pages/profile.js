@@ -1,65 +1,17 @@
-import { db } from "../core/db.js";
+﻿import { db } from "../core/db.js";
 import { pageUrl } from "../core/app.js";
 
 /* /profile.js
    Personal info, password, email verification and account deletion. */
 import { $, $$, inr, field, formData, setError, isEmail, strength, fmtDate, initials } from "../core/app.js";
 import { toast } from "../components/toast.js";
-import { confirmBox } from "../components/modal.js";
 import { icon } from "../components/icons.js";
 import { requireLogin, PROFILE, CURRENT, saveProfile, changePassword, errText, isAdmin } from "../core/auth.js";
 import { getUserOrders } from "../services/order-service.js";
 import {
-  sendEmailVerification, reload, deleteUser, signInWithEmailAndPassword
+  sendEmailVerification, reload, signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { auth } from "../core/firebase-config.js";
-
-/* ---------- confirm-password prompt (needed to change an email) ----------
-   Resolves with the password string, or null if the user backs out. */
-function askPassword() {
-  return new Promise((resolve) => {
-    const back = document.createElement("div");
-    back.className = "modal-back open";
-    back.innerHTML =
-      '<div class="modal">' +
-        '<div class="modal-head"><h3>Confirm your password</h3>' +
-          '<button class="x-btn" data-no>' + icon("x") + "</button></div>" +
-        '<div class="modal-body">' +
-          '<div class="field">' +
-            "<label>Current password</label>" +
-            '<input class="input" type="password" id="reauthPw" autocomplete="current-password">' +
-            '<div class="field-hint">Firebase asks for your password again before it lets you ' +
-              "change the email address on an account.</div>" +
-          "</div>" +
-        "</div>" +
-        '<div class="modal-foot">' +
-          '<button class="btn btn-ghost" data-no>Cancel</button>' +
-          '<button class="btn btn-primary" data-yes>Confirm</button>' +
-        "</div>" +
-      "</div>";
-    document.body.appendChild(back);
-    document.body.classList.add("no-scroll");
-
-    const input = back.querySelector("#reauthPw");
-    const done = (v) => {
-      back.remove();
-      document.body.classList.remove("no-scroll");
-      resolve(v);
-    };
-    back.querySelectorAll("[data-no]").forEach((b) => b.addEventListener("click", () => done(null)));
-    back.querySelector("[data-yes]").addEventListener("click", () => {
-      const v = input.value;
-      if (!v) { toast("Please enter your password.", "warn"); input.focus(); return; }
-      done(v);
-    });
-    back.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") back.querySelector("[data-yes]").click();
-      if (e.key === "Escape") done(null);
-    });
-    back.addEventListener("click", (e) => { if (e.target === back) done(null); });
-    setTimeout(() => input.focus(), 60);
-  });
-}
 
 /* ---------- button spinner ----------
    Reads and writes the inner .btn-txt span, but never assumes it exists —
@@ -88,7 +40,11 @@ function fill() {
 
   const pf = $("#pfForm");
   field(pf, "name").value  = p.name  || u.displayName || "";
-  field(pf, "email").value = p.email || u.email || "";
+  /* Auth first, then the document. They normally agree; when the email has just
+     been changed it is Auth that knows for certain, because the change is made
+     there and the document only catches up. Reading the other way round is what
+     put the previous address back in the box straight after it was saved. */
+  field(pf, "email").value = u.email || p.email || "";
   field(pf, "phone").value = p.phone || "";
 
   const admin = isAdmin();
@@ -160,11 +116,12 @@ function bind() {
   np?.addEventListener("input", paintMeter);
   paintMeter();
 
-  /* track a real email change */
+  /* track a real email change — against Auth's copy, for the same reason the
+     box is filled from it: that is the address the account actually has */
   const pf = $("#pfForm");
   field(pf, "email")?.addEventListener("input", () => {
     dirtyEmail = field(pf, "email").value.trim().toLowerCase() !==
-                 (PROFILE?.email || CURRENT.email || "").toLowerCase();
+                 (CURRENT?.email || PROFILE?.email || "").toLowerCase();
   });
 
   /* ---------- personal info ---------- */
@@ -180,26 +137,17 @@ function bind() {
     if (!ok) { toast("Please fix the highlighted fields.", "warn"); return; }
 
     const btn = $("#pfBtn");
-    const current = (PROFILE?.email || CURRENT.email || "");
-    const emailChanged = d.email.toLowerCase() !== current.toLowerCase();
-
     busy(btn, true);
     try {
-      let reauth = null;
-      if (emailChanged) {
-        const typed = await askPassword();
-        if (typed === null) { toast("Email address was not changed.", "info"); return; }
-        reauth = typed;
-      }
-      await saveProfile({ name: d.name, phone: d.phone, email: d.email }, { reauth });
+      /* Name and phone only. The email box is readonly and the address on an
+         account does not change, so there is nothing to ask a password about —
+         the prompt that used to appear here, and the re-authentication behind
+         it, were answering a question the form can no longer ask. */
+      await saveProfile({ name: d.name, phone: d.phone });
       fill();
-      toast(emailChanged
-        ? "Profile updated. We sent a verification link to your new email."
-        : "Profile updated.", "ok");
+      toast("Profile updated.", "ok");
     } catch (err) {
-      toast(err?.code === "auth/wrong-password" || err?.code === "auth/invalid-credential"
-        ? "That password is not correct, so the email was not changed."
-        : errText(err), "err");
+      toast(errText(err), "err");
     }
     finally { busy(btn, false); }
   });
@@ -245,30 +193,7 @@ function bind() {
     finally { busy(btn, false, ""); paintVerify(CURRENT); }
   });
 
-  /* ---------- delete account ---------- */
-  $("#delBtn")?.addEventListener("click", async () => {
-    const ok = await confirmBox({
-      title: "Delete your account?",
-      text: "Your sign-in will stop working straight away and your saved profile will be " +
-            "removed. Past orders are kept for our records so we can settle any refunds. " +
-            "This cannot be undone.",
-      ok: "Yes, delete it"
-    });
-    if (!ok) return;
-    const sure = await confirmBox({
-      title: "Are you certain?",
-      text: "Confirm once more and your account will be deleted immediately.",
-      ok: "Delete my account"
-    });
-    if (!sure) return;
-    try {
-      await deleteUser(CURRENT);
-      toast("Your account has been deleted.", "info");
-      setTimeout(() => (location.href = pageUrl("index.html")), 900);
-    } catch {
-      toast("Could not delete the account. Please sign out, sign back in and try again.", "err");
-    }
-  });
+;
 }
 
 document.addEventListener("DOMContentLoaded", async () => {

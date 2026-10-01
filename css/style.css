@@ -1004,11 +1004,21 @@ summary:focus:not(:focus-visible),
 .ctile-acts .js-buy { min-width: 92px; justify-content: center; }
 
 /* ---------- QR / payment sheet ---------- */
-.qr-sheet { text-align: center; }
+/* Everything inside the sheet is capped at the width of the sheet, so no single
+   long string can push the dialog sideways. */
+.qr-sheet { text-align: center; width: 100%; min-width: 0; max-width: 100%; }
+.qr-sheet > * { max-width: 100%; }
+
+/* The width for the payment sheet is set further down, next to the dialog's own
+   size, so the two can be read together. */
 .qr-frame {
   position: relative;
   display: inline-grid; place-items: center;
-  width: 244px; height: 244px;
+  /* min() rather than a fixed size: on a narrow screen the padding inside the
+     dialog comes out of the same budget as the code itself, and a 244px box
+     either overflows or has to be clipped. */
+  width: min(244px, 64vw); height: min(244px, 64vw);
+  max-width: 100%;
   padding: 16px;
   background: #fff; border-radius: var(--r-lg);
   border: 1px solid var(--border);
@@ -1040,7 +1050,11 @@ summary:focus:not(:focus-visible),
   border: 1.5px solid var(--border-2); background: var(--surface);
   font-size: .74rem; font-weight: 600; color: var(--ink-600);
   transition: all .25s var(--ease);
+  /* equal boxes whatever the names are: the grid column sets the width, and
+     min-width:0 lets a long name ellipsis instead of widening the track */
+  min-width: 0; text-align: center;
 }
+.upi-app > span:last-child { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .upi-app:hover { transform: translateY(-3px); border-color: var(--brand-300); box-shadow: var(--sh-md); }
 .upi-logo {
   width: 34px; height: 34px; border-radius: 10px;
@@ -1057,7 +1071,19 @@ summary:focus:not(:focus-visible),
   font-family: var(--ff-mono); font-size: .92rem; font-weight: 600;
   background: var(--ink-50); border: 1px dashed var(--border-2);
   padding: 12px 16px; border-radius: var(--r-sm);
+  /* A UPI id is longer than a phone is wide. Without this the row refuses to
+     shrink, the dialog grows a horizontal scrollbar, and the whole page shifts
+     sideways when the dialog opens. The text gives way instead: min-width:0
+     lets the flex child shrink, and the ellipsis gives it somewhere to go. */
+  min-width: 0; max-width: 100%;
 }
+.upi-id > span {
+  min-width: 0; display: flex; align-items: baseline; gap: 6px;
+}
+.upi-id b {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.upi-id .btn { flex: 0 0 auto; }
 .upi-amount-pill {
   display: inline-flex; align-items: center; gap: 7px;
   font-family: var(--ff-mono); font-weight: 700; font-size: .9rem;
@@ -1240,6 +1266,34 @@ summary:focus:not(:focus-visible),
   background: #fff;
 }
 .input:disabled, .select:disabled { background: var(--ink-100); color: var(--ink-500); cursor: not-allowed; }
+
+/* A field that shows a value but does not accept one. The email address on the
+   profile is one: the customer signed up with it and it cannot be swapped.
+
+   readonly rather than disabled, on purpose. A disabled box is left out of the
+   form when it is submitted, so the address would be missing from the save
+   without anyone noticing, and browsers grey it out so hard it reads as broken.
+   readonly keeps the value in the form, keeps it selectable so somebody can
+   still copy it, and tells a screen reader what it is — which is the honest
+   version of "you may look at this, you may not type in it". The dimmed fill
+   and the flat border are what say so at a glance; the caret is taken away so a
+   click does not land in a box that will not respond. */
+.input[readonly] {
+  background: var(--ink-50);
+  color: var(--ink-500);
+  border-color: var(--border);
+  box-shadow: none;
+  cursor: default;
+}
+.input[readonly]:focus {
+  outline: none;
+  border-color: var(--border);
+  box-shadow: none;
+  background: var(--ink-50);
+}
+.input[readonly]::-webkit-input-cursor { display: none; cursor: default; }
+.input[readonly] { caret-color: transparent; }
+.field-hint .ic { vertical-align: -2px; margin-right: 4px; }
 .textarea { min-height: 120px; resize: vertical; }
 .select {
   appearance: none;
@@ -1546,27 +1600,110 @@ table.table .num { font-family: var(--ff-mono); font-variant-numeric: tabular-nu
 .x-btn { background: var(--ink-100); border: 0; width: 34px; height: 34px; border-radius: var(--r-xs); cursor: pointer; color: var(--ink-600); display: grid; place-items: center; transition: all .2s; }
 .x-btn:hover { background: var(--danger-50); color: var(--danger-600); }
 
-/* ---------- 17. TOAST ---------- */
-.toast-wrap { position: fixed; top: 20px; right: 20px; z-index: 500; display: flex; flex-direction: column; gap: 10px; max-width: min(380px, calc(100vw - 40px)); }
-.toast {
-  display: flex; gap: 12px; align-items: flex-start;
-  background: rgba(255, 255, 255, .97);
-  backdrop-filter: blur(14px);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--brand-500);
-  border-radius: var(--r-sm); padding: 14px 16px;
-  box-shadow: var(--sh-lg);
-  animation: slideIn .35s var(--ease);
-  font-size: .91rem;
+/* ---------- 17. TOAST ----------
+   A small card that slides in from the top corner, holds, and slides out.
+
+   The old one led with a heading — "Success" above "Card added to your cart" —
+   which spent the most prominent line on something the reader already knew. The
+   message itself is the point now, so it is the large text and the label has
+   become a quiet uppercase kicker above it, shown only when it adds something
+   (a warning, an error). The mark moved into a tinted tile so the meaning
+   survives at a glance, and there is a dismiss button and a bar that runs out
+   over the message's life, so waiting for it is something you can see rather
+   than something you sit through. */
+.toast-wrap {
+  position: fixed; top: 20px; right: 20px; z-index: 500;
+  display: flex; flex-direction: column; gap: 10px;
+  max-width: min(380px, calc(100vw - 40px));
+  /* newest nearest the edge it comes from, so the one just raised sits where the
+     eye already is */
+  align-items: flex-end;
+  pointer-events: none;
 }
-.toast.out { animation: slideOut .3s var(--ease) forwards; }
-.toast .t-ic { display: flex; margin-top: 1px; }
-.toast b { display: block; color: var(--ink-900); margin-bottom: 1px; font-weight: 600; }
-.toast p { margin: 0; color: var(--ink-500); font-size: .85rem; }
-.toast.ok { border-left-color: var(--ok-500); } .toast.ok .t-ic { color: var(--ok-500); }
-.toast.err { border-left-color: var(--danger-500); } .toast.err .t-ic { color: var(--danger-500); }
-.toast.warn { border-left-color: var(--warn-500); } .toast.warn .t-ic { color: var(--warn-500); }
-.toast.info .t-ic { color: var(--brand-500); }
+.toast {
+  position: relative; overflow: hidden;
+  display: flex; gap: 12px; align-items: flex-start;
+  width: 100%;
+  background: rgba(255, 255, 255, .96);
+  backdrop-filter: saturate(180%) blur(18px);
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 13px 14px 14px 13px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .9),
+    0 1px 2px rgba(12, 18, 34, .05),
+    0 10px 26px -8px rgba(12, 18, 34, .22);
+  animation: toastIn .34s var(--ease) both;
+  font-size: .9rem;
+  pointer-events: auto;
+}
+.toast.out { animation: toastOut .24s var(--ease) forwards; }
+
+/* the tile: a rounded square in the message's own colour, which is what makes a
+   green and a red message different before a word is read */
+.toast .t-mark {
+  flex: 0 0 auto;
+  width: 30px; height: 30px; border-radius: 10px;
+  display: grid; place-items: center;
+}
+.toast .t-mark .ic { width: 1.05rem; height: 1.05rem; stroke-width: 2.2; }
+.toast .t-body { min-width: 0; flex: 1 1 auto; }
+.toast .t-kicker {
+  display: block; margin-bottom: 2px;
+  font-size: .64rem; font-weight: 700; letter-spacing: .085em; text-transform: uppercase;
+}
+.toast p { margin: 0; color: var(--ink-800); line-height: 1.42; overflow-wrap: anywhere; }
+
+/* the dismiss button: quiet until wanted, and never the first thing the eye
+   lands on */
+.toast .t-x {
+  flex: 0 0 auto; width: 24px; height: 24px; margin: -2px -2px 0 0;
+  display: grid; place-items: center;
+  background: none; border: 0; border-radius: 7px; cursor: pointer;
+  color: var(--ink-300); opacity: 0;
+  transition: all .2s var(--ease);
+}
+.toast:hover .t-x, .t-x:focus-visible { opacity: 1; color: var(--ink-600); }
+.toast .t-x:hover { background: var(--ink-100); color: var(--ink-800); }
+.toast .t-x .ic { width: .9rem; height: .9rem; stroke-width: 2.2; }
+/* on a phone there is no hover, so the button cannot depend on one */
+@media (hover: none) { .toast .t-x { opacity: .55; } }
+
+/* the bar: how long is left, and the only thing on screen that moves */
+.toast .t-life {
+  position: absolute; left: 0; bottom: 0; height: 2.5px; width: 100%;
+  transform-origin: 0 50%;
+  background: currentColor; opacity: .5;
+  animation: toastLife var(--life, 3200ms) linear forwards;
+}
+.toast.held .t-life { animation-play-state: paused; }
+
+.toast.ok   { color: var(--ok-600); }
+.toast.err  { color: var(--danger-600); }
+.toast.warn { color: var(--warn-600); }
+.toast.info { color: var(--brand-600); }
+.toast.ok   .t-mark { background: var(--ok-50); }
+.toast.err  .t-mark { background: var(--danger-50); }
+.toast.warn .t-mark { background: var(--warn-50); }
+.toast.info .t-mark { background: var(--brand-50); }
+.toast.ok   .t-kicker { color: var(--ok-600); }
+.toast.err  .t-kicker { color: var(--danger-600); }
+.toast.warn .t-kicker { color: var(--warn-600); }
+.toast.info .t-kicker { color: var(--brand-600); }
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(-10px) scale(.97); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes toastOut {
+  from { opacity: 1; transform: none; max-height: 200px; }
+  to   { opacity: 0; transform: translateX(14px) scale(.97); max-height: 0; }
+}
+@keyframes toastLife {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
 
 /* ---------- 18. SKELETON / LOADING ---------- */
 .sk {
@@ -2923,21 +3060,54 @@ table.table .num { font-family: var(--ff-mono); font-variant-numeric: tabular-nu
    without it the bar stays parked below the fold. The reveal is keyed on
    .on rather than on html.ready, because html.ready is set on every page and
    was showing the bar on desktop too. */
+/* A floating bar, the way the iOS tab bar has been drawn since iOS 26 and the
+   way the shop's own dialogs are already drawn here: rounded at every corner,
+   inset from both sides, and lifted off the bottom edge rather than flush with
+   it, so the page shows through around it.
+
+   That last part is the reason for the insets — a bar that runs the full width
+   of the screen is a band, and a band reads as a footer on a web page. Inset and
+   rounded, it reads as a control floating over the content, which is what it is.
+   The strips either side are the home-indicator area and the content behind, and
+   the safe-area inset is kept inside the bar's own padding so the buttons never
+   sit on the gesture strip.
+
+   Three shadows rather than one, which is how a glass panel sitting above a page
+   actually looks: a tight one for the edge, a wide soft one for the light it
+   throws, and a hint of colour from the brand. One shadow reads as a border drawn
+   in grey. The inset highlight along the top is the surface catching the light;
+   without it the bar has a hard upper edge and looks cut out rather than laid on
+   top. */
 .tab-bar {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 220;
+  position: fixed;
+  left: 12px; right: 12px;
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  z-index: 220;
   display: flex;
-  background: rgba(255, 255, 255, .92);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-top: 1px solid var(--border);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-  box-shadow: 0 -6px 24px rgba(12, 18, 34, .07);
-  transform: translateY(110%);
+  background: rgba(255, 255, 255, .84);
+  backdrop-filter: saturate(180%) blur(24px);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  border: 1px solid rgba(60, 60, 67, .12);
+  border-radius: 22px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .9),
+    0 1px 2px rgba(12, 18, 34, .06),
+    0 12px 28px -12px rgba(12, 18, 34, .28),
+    0 22px 44px -28px rgba(76, 52, 212, .28);
+  padding: 4px 5px 5px;
+  transform: translateY(calc(100% + 24px)) scale(.96);
+  transform-origin: 50% 100%;
   visibility: hidden;
   pointer-events: none;
-  transition: transform .4s var(--ease), visibility .4s var(--ease);
+  will-change: transform;
+  transition: transform .44s var(--ease), visibility .44s var(--ease);
 }
 .tab-bar.on { transform: none; visibility: visible; pointer-events: auto; }
+/* on a phone with a home indicator the safe area adds height, so the glass has
+   to reach it — otherwise there is a strip of bare page under the bar */
+@supports (padding: max(0px)) {
+  .tab-bar { padding-bottom: max(5px, env(safe-area-inset-bottom, 0px)); }
+}
 
 /* ---------- the three screens before an account exists ----------
    Signing in, signing up and resetting a password are not part of the account,
@@ -2957,73 +3127,122 @@ body.no-tabs { padding-bottom: 0 !important; }
    in-page .tabs component (profile, orders) down to 10px.
 
    Each tab carries its name as well as its icon. Icons alone left the bar
-   unreadable to anyone who did not already know the five marks, and the active
-   page was a hairline that was easy to miss; the label makes the bar something
-   a first-time visitor can read and the pill makes the current page obvious at
-   a glance. */
+   unreadable to anyone who did not already know the five marks, and the current
+   page was a hairline that was easy to miss. The name is real text, so a screen
+   reader reads it too, and the link keeps its aria-label for the same reason.
+
+   The whole tab is the target, not just the icon — a phone is used with one hand
+   and the five are squeezed into a strip about 60px wide each. The icon and the
+   name are pulled closer together than they were (2px rather than 3px) because
+   at this size that gap was reading as a space between two controls, and the
+   name is set at 10px with a hair of weight, which is what fits a five-item bar
+   without truncating. */
 .tab-bar .tab {
   flex: 1 1 0; min-width: 0;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 3px; padding: 7px 2px 6px;
-  min-height: 58px;
-  color: var(--ink-400);
-  font-size: .66rem; font-weight: 600; letter-spacing: .005em;
+  gap: 2px; padding: 7px 2px 4px;
+  min-height: 50px;
+  /* The in-page tab strips underline the current one with a coloured
+     border-bottom. That rule is `.tab`, not `.tab-bar .tab`, so it reached these
+     links too and the active tab came out with a purple line under it — drawn
+     with this element's own 16px radius, which is what turned the line into a
+     purple arc sitting in the glass. The border is cleared here for that reason,
+     not as tidying: the bar says where you are by the colour of the mark. */
+  border: 0;
+  border-radius: 16px;
+  color: #8a8a8e;                          /* the iOS grey for an inactive tab */
+  font-size: .625rem; font-weight: 500; letter-spacing: 0;
   position: relative;
-  transition: color .22s var(--ease);
+  transition: color .2s var(--ease), background-color .2s var(--ease);
   -webkit-tap-highlight-color: transparent;
 }
 /* The icon is wrapped so the cart badge can hang off the mark rather than off
    the whole tab, which would put it in the wrong place once the label is there. */
 .tab-bar .tab .tab-ic { position: relative; display: grid; place-items: center; }
+/* The marks are 24px rather than the 21px they were: at five across a 320px
+   screen each column is about 59px, and a 21px mark in that left the bar looking
+   half empty. The name stays 10px under it. */
 .tab-bar .tab .ic {
-  width: 1.4rem; height: 1.4rem; stroke-width: 1.85;
+  width: 1.5rem; height: 1.5rem; stroke-width: 1.75;
   transition: transform .3s var(--ease);
 }
 .tab-bar .tab .tab-label {
   line-height: 1; max-width: 100%; overflow: hidden;
   text-overflow: ellipsis; white-space: nowrap;
 }
-/* The pill sits behind the icon and the name together, so the pair moves as one
-   thing. A coloured mark on its own looked like a different kind of control. */
-.tab-bar .tab::before {
-  content: ""; position: absolute; top: 4px; left: 50%;
-  width: calc(100% - 14px); height: calc(100% - 8px);
-  transform: translate(-50%, 0) scale(.82);
-  border-radius: 13px;
-  background: var(--brand-50);
-  opacity: 0;
-  transition: opacity .24s var(--ease), transform .24s var(--ease);
-  pointer-events: none;
-}
-.tab-bar .tab.active { color: var(--brand-700); }
-.tab-bar .tab.active::before { opacity: 1; transform: translate(-50%, 0) scale(1); }
-.tab-bar .tab:active .ic { transform: scale(.9); }
-.tab-bar .tab.active .ic { transform: translateY(-1px); }
-/* a hairline across the top of the bar, showing which column is current */
-.tab-bar .tab.active::after {
-  content: ""; position: absolute; top: 0; left: 50%;
-  width: 22px; height: 3px; margin-left: -11px;
-  border-radius: 0 0 99px 99px;
-  background: var(--grad-brand);
-}
+/* iOS says which page you are on by tinting the icon and the name, and by
+   nothing else — no pill, no bar across the top. Both of those were here and
+   both are gone: two extra ways of marking the same thing is what made this look
+   like neither an iPhone nor an Android phone. The press is a dim rather than a
+   squashed icon, which is what a tap does on iOS.
+
+   The current tab's icon is given a touch more weight rather than being filled
+   in: these marks are all strokes, and filling one would need a second drawing
+   of every icon. The active icon lifts a pixel, which is enough to separate the
+   two states in peripheral vision — the way you actually read a tab bar. */
+.tab-bar .tab.active { color: var(--brand-600); }
+.tab-bar .tab.active .ic { transform: translateY(-1px); stroke-width: 2.05; }
+.tab-bar .tab:active .ic { transform: scale(.88); }
+.tab-bar .tab:active { opacity: .5; }
+/* the badge sits on the mark, so it needs the bar behind it to match */
 .tab-badge {
-  position: absolute; top: 2px; left: 50%; margin-left: 6px;
-  min-width: 18px; height: 18px; padding: 0 5px;
+  position: absolute; top: 1px; left: 50%; margin-left: 7px;
+  min-width: 17px; height: 17px; padding: 0 4px;
   background: var(--grad-gold); color: #fff;
-  border: 2px solid #fff; border-radius: 99px;
-  font-family: var(--ff-mono); font-size: .6rem; font-weight: 700;
+  border: 2px solid rgba(255, 255, 255, .95); border-radius: 99px;
+  font-family: var(--ff-mono); font-size: .58rem; font-weight: 700;
   display: grid; place-items: center;
   animation: tabPop .32s var(--ease);
 }
 @keyframes tabPop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
+/* ---- the middle button: the shop, raised ----
+   Four of the five are places you check something. The shop is the one you go to
+   in order to do something, so it is lifted out of the row: a circle, in the
+   brand colour, sitting proud of the bar's top edge.
+
+   It is drawn as a disc rather than as a pill because a pill in the middle of a
+   row of five reads as a label that has been stretched, and a square reads as
+   another tab that got bigger. The mark inside is a shop, drawn as a shop — it
+   was a grid, which is the mark for a category list and made it look like one
+   more option rather than the main one.
+
+   The name goes with the button but not under it: the disc is already the
+   clearest thing in the bar, and a caption under it would either sit on the
+   glass or push the row off its baseline. It stays in the markup, and the link
+   keeps its aria-label, so a screen reader still says "Shop". */
+.tab-bar .tab[data-tab-id="shop"] { justify-content: center; }
+.tab-bar .tab[data-tab-id="shop"] .tab-ic {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--grad-brand);
+  color: #fff;
+  z-index: 2;
+  transform: translateY(-20px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .32),
+    0 10px 20px -4px rgba(76, 52, 212, .5),
+    0 3px 6px -1px rgba(12, 18, 34, .22);
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+}
+.tab-bar .tab[data-tab-id="shop"] .ic { width: 1.45rem; height: 1.45rem; stroke-width: 1.85; }
+.tab-bar .tab[data-tab-id="shop"] .tab-label { display: none; }
+/* pressed, the disc sinks rather than shrinking: a circle that changes size
+   looks like a mistake, one that moves down looks like being pressed */
+.tab-bar .tab[data-tab-id="shop"]:active .tab-ic {   transform: translateY(-12px) scale(.94); }
+.tab-bar .tab[data-tab-id="shop"]:active { opacity: 1; }
+.tab-bar .tab[data-tab-id="shop"].active .ic { transform: none; stroke-width: 1.9; }
+
 /* ---- safe area helpers ---- */
-/* Sized to the bar that is actually on screen: 58px of tab, the top border, and
-   whatever the phone reserves for its own home indicator. */
-.pb-safe { padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px)); }
-/* the fixed tab bar's own height, so the end of a long page is never hidden
-   behind it. Toggled by appbar.js only while the bar is on screen. */
-.pb-dock { padding-bottom: calc(66px + env(safe-area-inset-bottom, 0px)); }
+/* Sized to the bar that is actually on screen, plus the margin it floats in, plus
+   whatever the phone reserves for its own home indicator. The extra is for the
+   shop's disc, which stands proud of the bar's top edge and would otherwise sit
+   on top of the last row of the page. */
+.pb-safe { padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
+  /* the floating bar's own height plus the margin it floats in, plus the shop's
+     disc standing above it, so the end of a long page is never hidden behind the
+     bar. Toggled by navigation.js only while the bar is on screen. */
+.pb-dock { padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
 .pt-safe { padding-top: calc(env(safe-area-inset-top, 0px)); }
 
 /* When a page builds its own .dock, the tab-bar padding is not needed —
@@ -3141,10 +3360,16 @@ body.no-tabs { padding-bottom: 0 !important; }
   .ccard-row--bottom { gap: 16px; padding-top: 14px; }
   .ccard-cell b { font-size: .84rem; }
 
-  .qr-frame { width: 208px; height: 208px; padding: 14px; }
+  /* The payment sheet has to be usable in a hand, on a phone, while standing
+     up. Four app buttons in one row leave about 70px each on a 320px screen,
+     which is below the comfortable target for a tap, so they go two by two. */
+  .qr-frame { width: min(208px, 62vw); height: min(208px, 62vw); padding: 14px; }
+  .qr-frame::before, .qr-frame::after { width: 20px; height: 20px; border-width: 2.5px; }
+  .qr-frame::before { top: 6px; left: 6px; }
+  .qr-frame::after { bottom: 6px; right: 6px; }
   .timer-value { font-size: 1.7rem; }
-  .upi-apps { grid-template-columns: repeat(4, 1fr); gap: 8px; }
-  .upi-app { padding: 11px 4px; font-size: .66rem; }
+  .upi-apps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .upi-app { padding: 11px 4px; font-size: .7rem; }
 
   .trust { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .trust-item { flex-direction: column; gap: 10px; text-align: center; }
@@ -3197,8 +3422,7 @@ body.no-tabs { padding-bottom: 0 !important; }
   .ctile-nums { flex-direction: column; align-items: flex-start; gap: 4px; }
   .ctile-arrow { display: none; }
   .tab-bar .tab { font-size: .58rem; padding: 7px 1px 6px; }
-  .tab-bar .tab .ic { width: 1.26rem; height: 1.26rem; }
-  .tab-bar .tab::before { width: calc(100% - 8px); border-radius: 11px; }
+  .tab-bar .tab .ic { width: 1.24rem; height: 1.24rem; }
   .tab-badge { min-width: 16px; height: 16px; font-size: .55rem; margin-left: 3px; }
 }
 
@@ -3210,12 +3434,12 @@ body.no-tabs { padding-bottom: 0 !important; }
   .trust-item { flex-direction: row; text-align: left; }
 }
 
-/* landscape phones */
+/* landscape phones: a phone on its side has almost no height to give away, so
+   the bar keeps its floating shape and only loses its own padding */
 @media (max-height: 480px) and (orientation: landscape) {
-  .tab-bar { padding: 4px 0; }
-  .tab-bar .tab { padding: 4px 2px; flex-direction: row; gap: 6px; }
+  .tab-bar { left: 16px; right: 16px; bottom: 8px; padding: 2px 4px; }
+  .tab-bar .tab { padding: 3px 2px; flex-direction: row; gap: 6px; min-height: 40px; }
   .tab-bar .tab .ic { width: 1.1rem; height: 1.1rem; }
-  .tab-bar .tab.active::before { display: none; }
 }
 
 /* ---- touch targets: never below 44px on phones ---- */
@@ -3752,6 +3976,14 @@ body:has(.dash-page) {
   box-shadow: 0 24px 60px -18px rgba(12, 18, 34, .32), 0 2px 8px rgba(12, 18, 34, .06);
 }
 
+/* The payment sheet is one narrow column — a QR, a timer, four buttons and a
+   form. It is shown in this same dialog as the method picker, which is two
+   columns and genuinely wants the room, so left at the picker's width the sheet
+   sat in the middle of a box twice as wide as anything in it and the dialog read
+   as mostly empty. 560px is the width the four app buttons ask for plus the
+   sheet's own side padding. */
+.dep-modal.dep-modal--sheet { width: min(560px, 100%); }
+
 /* a scrollbar you can see without being shouted at */
 .dep-modal .modal-body { scrollbar-width: thin; scrollbar-color: var(--ink-200) transparent; }
 .dep-modal .modal-body::-webkit-scrollbar { width: 10px; }
@@ -3779,8 +4011,23 @@ body:has(.dash-page) {
 .dep-modal .modal-head h3 > .ic { color: var(--brand-600); }
 .dep-modal .modal-head .x-btn { flex: 0 0 auto; }
 
+/* The method picker draws its own padding on each column, so the body itself
+   carries none. The payment sheet is a different thing put in the same body and
+   it has no inner padding of its own, so it was sitting against the edges and
+   spilling out past the box. Given the padding the picker never asked for, and
+   capped so a long UPI id or a long app name can never widen the dialog. */
 .dep-modal .modal-body {
   padding: 0; flex: 1 1 auto; min-height: 0; overflow-y: auto;
+}
+.dep-modal .modal-body > #depSheet {
+  display: flex; flex-direction: column; align-items: center;
+  width: 100%; min-width: 0;
+  margin-inline: auto;
+  padding: 26px 26px 24px;
+  box-sizing: border-box;
+}
+@media (max-width: 560px) {
+  .dep-modal .modal-body > #depSheet { padding: 18px 16px 20px; max-width: none; }
 }
 
 /* ---------- the two columns ---------- */
@@ -3968,9 +4215,25 @@ body:has(.dash-page) {
 }
 
 /* the button: at the bottom of the right column, and always in reach */
+/* The button is the way out of this dialog, so it stays on screen. The form is
+   taller than the dialog on anything but a large window — the quick amounts, the
+   running summary and the recent requests all add up — and the button used to sit
+   at the end of it, so on a desktop it had to be scrolled to. Made sticky against
+   the bottom of the body, which is what scrolls, so it stays put while the rest
+   moves. Its own background and a top border keep the rows passing under it from
+   showing through, and it is pulled to the column's own padding so it lines up
+   with the field above rather than floating in from the edge. */
 .dep-modal .dep2-actions {
-  margin-top: auto; padding-top: 18px;
+  position: sticky; bottom: 0; z-index: 3;
+  /* The space below the button is what the earlier rule used to add with
+     margin-top:auto — in a flex column that pushes the bar away from whatever
+     is above it, so a form that happens to fit got a gap between the last row
+     and the button. A plain margin does the same job with a known size. The
+     padding at the top is only there for the fade to happen in. */
+  margin-top: 18px; padding: 10px 0 0;
   display: flex; gap: 10px; flex: 0 0 auto;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #fff 12px);
+  box-shadow: 0 -1px 0 var(--border), 0 -12px 16px -14px rgba(12, 18, 34, .16);
 }
 .dep-modal .dep2-go {
   position: relative; width: 100%; min-height: 50px;
@@ -4016,8 +4279,8 @@ body:has(.dash-page) {
   .dep-modal .dep-tabs { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
   .dep-modal .dep2-main { padding: 18px; }
   .dep-modal .dep2-actions {
-    position: sticky; bottom: 0; margin: 16px -18px -18px;
-    padding: 12px 18px calc(12px + env(safe-area-inset-bottom, 0px));
+    position: sticky; bottom: 0; margin: 14px -18px -18px;
+    padding: 10px 18px calc(10px + env(safe-area-inset-bottom, 0px));
     background: rgba(255, 255, 255, .96);
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     border-top: 1px solid var(--border);
@@ -4038,7 +4301,14 @@ body:has(.dash-page) {
   .dep-modal .dep2-hist-row { flex-wrap: wrap; row-gap: 4px; padding: 10px 12px; }
   .dep-modal .dep2-hist-row > span:nth-child(2) { flex: 1 1 100%; order: 3; }
   .dep-modal .dep2-hist-row .dep2-hist-amt { margin-left: auto; }
-  .dep-modal .dep2-actions { margin: 14px -14px -16px; padding-left: 14px; padding-right: 14px; }
+  /* the quick amounts, the summary and the recent requests push the button
+     below the fold, so it holds to the bottom of the dialog and the sheet scrolls
+     under it — the negative margins are what let it reach the edges and cover
+     the last row rather than leave a gap */
+  .dep-modal .dep2-actions {
+    margin: 14px -14px -16px;
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 /* the dialog becomes a sheet on a phone, the way the rest of the shop does */
@@ -4065,3 +4335,36 @@ body:has(.dash-page) {
 @media (min-width: 761px) and (max-width: 1000px) {
   .dep2 { grid-template-columns: 232px minmax(0, 1fr); }
 }
+
+/* =====================================================================
+   Numbers that have outgrown their box
+
+   A balance and a lifetime total are the two figures on these pages with no
+   upper bound, and they are written in a column that was sized for four digits.
+   When they outgrow it they do not stop — they push over the column beside them
+   and off the card, and whatever was in the next column is left sitting under
+   the wrong heading.
+
+   So any element holding a figure of eight digits or more is measured, and if it
+   is out of its box the type is stepped down until it fits. The measurement is
+   in app.js; this is the part that makes it measurable, and it has to be here
+   rather than there: an element that grows to match its own text reports no
+   overflow, so nothing would ever be shrunk.
+
+   min-width:0 is the other half. Inside a flex row the default is min-width:auto,
+   which refuses to go below the content, so the box would be pushed wide instead
+   of the type being made smaller. That is the difference between the number
+   fitting and the number shrinking.
+   ===================================================================== */
+[data-fit] {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* an inline element has no width to report until it is told to have one, and
+   without this the measurement reads 0 and concludes everything fits */
+[data-fit] { display: inline-block; }
+/* a figure sitting next to an icon keeps the icon and gives up its own width */
+[data-fit] > .ic, [data-fit] > svg { flex: 0 0 auto; }

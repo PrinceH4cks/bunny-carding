@@ -1,4 +1,4 @@
-import { $ } from "./app.js";
+﻿import { $ } from "./app.js";
 import { toast } from "../components/toast.js";
 
 /* =========================================================
@@ -62,5 +62,7 @@ export const COL = {
   walletTxns: "wallet_txns",
   deposits:   "deposits",
     faqs:       "faqs",
-    coupons:    "coupons"
+    coupons:    "coupons",
+    /* A customer asking to be removed. Read by the owner, written by the
+       customer against their own account, and that is all either side can do. */
 };

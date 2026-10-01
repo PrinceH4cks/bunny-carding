@@ -51,9 +51,16 @@ export async function purchase({ items, user, coupon = "", note = "" }) {
   if (!items.length) return { ok: false, reason: "empty" };
   if (!user) return { ok: false, reason: "login" };
 
-  /* every line needs stock before any money moves */
+  /* Every line needs stock before any money moves.
+
+     A product whose stock has never been set is not treated as sold out: the
+     check is "counted and short", not "no number". Reading a blank stock as zero
+     is what refused a whole order as out of stock when a line reached checkout
+     without the field — the cart could not have produced one since, but the
+     check itself was wrong to assume the worst. */
   for (const i of items) {
-    if (i.stock !== undefined && Number(i.stock) < i.qty) {
+    const counted = i.stock !== undefined && i.stock !== null && i.stock !== "";
+    if (counted && Number(i.stock) < i.qty) {
       return { ok: false, reason: "stock", name: i.name, left: Number(i.stock) };
     }
   }

@@ -139,31 +139,80 @@ export function totals() {
    and no network printed "CARD" in both of its top corners. */
 const CART_FIELDS = ["id", "name", "price", "mrp", "stock", "image", "category", "brand", "network"];
 
+/* Adds a product, or more of one already in the cart.
+
+   Two different products are two lines; the same product twice is one line with
+   a bigger quantity. That is what the find-by-id below is for, and it only works
+   if the id is real — which is why this refuses a line without one rather than
+   storing a blank. A blank id made every such line match every other blank one,
+   so two different cards collapsed into a single row, and the stock field came
+   out as an empty string, which checkout then read as zero and refused the order
+   as out of stock.
+
+   `stock` is a number here and a number is expected. The old `|| 1` fallback
+   turned a missing stock into 1 and a stock of 0 into 1 as well, so a sold-out
+   product went into the cart instead of being refused. An unknown stock — a
+   product that has never had the field set — is treated as unlimited, because
+   refusing to sell something the shop has not counted yet is the worse mistake. */
 export function addToCart(item, qty = 1) {
+  const want = Math.max(1, Number(qty) || 1);
+
+  if (!item || typeof item !== "object" || !item.id) {
+    console.error("addToCart was given something that is not a product", item);
+    toast("That card could not be added.", "err");
+    return { ok: false, reason: "bad-item" };
+  }
+
+  /* absent means the shop has not counted it, which is not the same as none */
+  const hasStock = item.stock !== undefined && item.stock !== null && item.stock !== "";
+  const stock = hasStock ? Math.max(0, Number(item.stock) || 0) : Infinity;
+
   const items = read();
   const found = items.find((i) => i.id === item.id);
+
+  if (stock === 0) {
+    toast(item.name + " is out of stock.", "warn");
+    /* a line already in the cart must not be left looking buyable either */
+    if (found && found.qty > 0) write(items.filter((i) => i.id !== item.id));
+    return { ok: false, reason: "stock", name: item.name, left: 0 };
+  }
+
   if (found) {
-    if (found.qty + qty > item.stock) {
-      toast("Only " + item.stock + " left in stock.", "warn");
-      found.qty = item.stock;
-    } else found.qty += qty;
-    /* an older line may predate the brand/network fields, so refresh them */
+    const room = hasStock ? stock - found.qty : Infinity;
+    if (want > room) {
+      if (room <= 0) {
+        toast("All " + item.name + " in stock is already in your cart.", "warn");
+        return { ok: false, reason: "stock", name: item.name, left: 0 };
+      }
+      toast("Only " + room + " more of " + item.name + " in stock.", "warn");
+      found.qty = stock;
+    } else found.qty += want;
+    /* an older line may predate the brand/network fields, so refresh them —
+       and the stock, so a cart opened before a restock does not stay capped */
     CART_FIELDS.forEach((k) => { if (item[k] !== undefined) found[k] = item[k]; });
   } else {
-    const line = { qty: Math.min(qty, item.stock || 1) };
+    const line = { qty: hasStock ? Math.min(want, stock) : want };
     CART_FIELDS.forEach((k) => { line[k] = item[k] ?? ""; });
     items.push(line);
   }
   write(items);
   toast(item.name + " was added to your cart.", "ok");
   bump();
+  return { ok: true, id: item.id, qty: (items.find((i) => i.id === item.id) || {}).qty };
 }
 
 export function setQty(id, qty) {
   const items = read();
   const it = items.find((i) => i.id === id);
   if (!it) return;
-  it.qty = Math.max(1, Math.min(qty, it.stock || 99));
+  /* an uncounted product is not capped; a sold-out one cannot be raised above
+     zero, and asking for zero takes the line out rather than leaving a 0 qty row */
+  const stock = it.stock === undefined || it.stock === null || it.stock === "" ? Infinity : Math.max(0, Number(it.stock) || 0);
+  const n = Math.floor(Number(qty) || 0);
+  if (n <= 0) { write(items.filter((i) => i.id !== id)); return; }
+  const capped = Math.min(n, stock === Infinity ? n : stock);
+  if (capped !== n) toast("Only " + capped + " of " + it.name + " in stock.", "warn");
+  it.qty = capped;
   write(items);
 }
 

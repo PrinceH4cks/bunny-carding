@@ -15,7 +15,7 @@ import { getWallet, getWalletTxns } from "../services/wallet-service.js";
 import { getPaymentSettings, enabledMethods } from "../services/payment-service.js";
 import { createDeposit, submitDepositUTR, getUserDeposits, markDepositPaid, attachGatewayOrder } from "../services/user-service.js";
 import { CURRENT, PROFILE, whenReady, login, errText } from "../core/auth.js";
-import { paymentSheet, renderQR } from "../services/payment-service.js";
+import { paymentSheet } from "../services/payment-service.js";
 import { METHODS, methodByKey, isUsable } from "../services/payment-service.js";
 import { loadZapSdk, zapStatus, rememberGatewayOrder, forgetGatewayOrder, readGatewayOrder } from "../services/zap-service.js";
 
@@ -135,59 +135,16 @@ function amountField(min) {
     '<div class="field-error"></div>';
 }
 
-/* Fills in the picture the shop supplied, for the method that shows it here.
-
-   The markup carries only the link and the picture is put in afterwards,
-   because an <img> whose file is missing shows a broken-image mark — and beside
-   a wallet address that reads as though the shop cannot be paid. renderQR draws
-   the address itself as a code when the picture does not arrive, so there is
-   always something to scan. */
-function paintDepQR() {
-  const box = $("[data-dep-qr]");
-  if (!box) return;
-  /* the address is passed as the text as well, so that a picture which does not
-     load leaves a code of the address behind it rather than a note saying there
-     is nothing configured */
-  renderQR(box, box.dataset.depText || "", box.dataset.src || "");
-}
-
 function methodForm(key, m) {
   const min = methodMin(m);
   const amtLabel = key === "crypto" ? "Amount (" + esc(m.currency || "") + ")" : "Amount";
 
-  /* UPI gets no code here: this step is for choosing an amount and a way to pay,
-     and the code to scan belongs to the next screen, where the amount is already
-     on it and the timer is already running. Crypto is the other way round — the
-     customer sends the money from their own wallet before they paste the hash,
-     so the address block here is the last place the picture can do any good. */
-  const shot = key === "crypto" ? String(m.qrImage || "").trim() : "";
-  const qr = shot
-    ? '<div class="dep2-qr"><div class="qr-frame" data-dep-qr data-src="' + esc(shot) +
-      '" data-dep-text="' + esc(m.address || "") + '"></div></div>'
-    : "";
-
-  let pay = "";
-  if (key === "upi" && (m.vpa || m.upiId)) {
-    const vpa = m.vpa || m.upiId;
-    pay = '<div class="dep2-pay"><h5>Pay to</h5>' +
-      '<div class="dep-addr"><code>' + esc(vpa) + "</code>" +
-      '<button class="btn btn-ghost btn-xs" type="button" data-copy="' + esc(vpa) + '">' +
-      icon("copy", "ic ic-sm") + "</button></div></div>";
-  } else if (key === "crypto" && m.address) {
-    pay = '<div class="dep2-pay"><h5>Send to</h5>' + qr +
-      '<div class="dep2-row"><dt>Network</dt><dd>' + esc(m.network || "") + "</dd></div>" +
-      '<div class="dep2-row"><dt>Address</dt><dd><code>' + esc(m.address) + "</code></dd></div>" +
-      '<div class="dep-addr"><code>' + esc(m.address) + "</code>" +
-      '<button class="btn btn-ghost btn-xs" type="button" data-copy="' + esc(m.address) + '">' +
-      icon("copy", "ic ic-sm") + "</button></div></div>";
-  }
-
-  const hash = key === "crypto"
-    ? '<div class="field"><label>Transaction hash <span class="req">*</span></label>' +
-      '<input class="input mono" id="depHash" placeholder="Paste the hash from your wallet">' +
-      '<div class="field-error"></div></div>'
-    : "";
-
+  /* This step is only for choosing an amount and a way to pay. Where to send the
+     money belongs to the next screen: the code to scan, the address to copy and
+     the reference to paste only mean something once the amount is on them, and a
+     UPI id printed here with no amount beside it is a QR nobody can use. It used
+     to be shown on both steps, which meant the customer saw the address twice
+     and had a hash box to fill in before they had sent anything. */
   return '<div class="dep2-form">' +
     '<div class="field"><label for="depAmt">' + amtLabel + "</label>" +
       '<div class="dep2-amount"><span>&#8377;</span>' +
@@ -198,7 +155,6 @@ function methodForm(key, m) {
       '<div class="dep2-quick">' + amountField(min) + "</div>" +
       '<div class="dep2-limits"><span>Minimum ' + inr(min) + "</span>" +
       '<span data-dep-count>No fee is added</span></div></div>' +
-    pay + hash +
     /* the summary comes before the button, because the number the customer
        confirms should be one they have already read */
     '<dl class="dep2-rows" id="depSummary"></dl>' +
@@ -267,6 +223,9 @@ let currentMethod = null;
    there afterwards.
    ------------------------------------------------------------------ */
 function openDeposit() {
+  /* the dialog is shared by the picker and the payment sheet, so each entry
+     point sets the width it needs rather than whichever opened last leaving it */
+  $("#depModal").classList.remove("dep-modal--sheet");
   openModal("depModal");
   if (!CURRENT) { signInStep(); return; }
   paintDeposit();
@@ -412,7 +371,6 @@ async function paintDeposit() {
     for (const c of $$(".dep-tabs [data-m]")) c.setAttribute("aria-checked", String(c === t));
     const amount = $("#depAmt")?.value;
     $("#depForm").innerHTML = methodForm(m.key, m);
-    paintDepQR();
     /* the amount is a decision the customer already made, so switching method
        keeps it rather than quietly throwing it away */
     if (amount) $("#depAmt").value = amount;
@@ -495,7 +453,7 @@ function wireMethod(m, settings) {
   go.id = "depGo";
   go.type = "button";
   go.innerHTML = '<span class="dep2-go-txt">' +
-    (m.key === "crypto" ? "Submit for confirmation" : "Continue to payment") + "</span>" +
+    (m.key === "crypto" ? "Continue to payment" : "Continue to payment") + "</span>" +
     '<span class="dep2-go-ic">' + icon("arrow-right", "ic") + "</span>";
   go.addEventListener("click", () => startDeposit(m, settings));
   actions.appendChild(go);
@@ -571,18 +529,10 @@ async function startDeposit(m, settings) {
   if (!amt || !Number.isFinite(amt) || amt < min) { amtError("Enter an amount of at least " + min + "."); return; }
   $("#depAmt")?.closest(".field")?.classList.remove("invalid");
 
-  let hash = "";
-  if (m.key === "crypto") {
-    const box = $("#depHash").closest(".field");
-    hash = String($("#depHash")?.value || "").trim();
-    if (!hash) {
-      box.classList.add("invalid");
-      const err = box.querySelector(".field-error");
-      if (err) { err.textContent = "Paste the transaction hash from your wallet."; err.style.display = "block"; }
-      return;
-    }
-    box.classList.remove("invalid");
-  }
+  /* No hash is collected here any more. The reference is asked for on the crypto
+     payment sheet, after the address has been shown, because that is the point
+     at which the customer has actually sent something and can look it up. */
+  const hash = "";
 
   try {
     const ref = await createDeposit({
@@ -601,7 +551,7 @@ async function startDeposit(m, settings) {
     activeDep = { id: ref.id, amount: amt, method: m.key, ref: "DEP" + ref.id.slice(-6).toUpperCase() };
 
     if (m.key === "upi") showManualUpi(activeDep, m);
-    else if (m.key === "crypto") submitCrypto(activeDep, hash);
+    else if (m.key === "crypto") showCryptoSheet(activeDep, m);
     else startGateway(activeDep, m);
   } catch (e) {
     console.error(e);
@@ -611,6 +561,12 @@ async function startDeposit(m, settings) {
 
 /* ---------- method: manual UPI ---------- */
 async function showManualUpi(dep, m) {
+  /* The dialog is sized for the method picker, which is two columns and wants
+     the room. The payment sheet is one narrow column: a QR, a timer, four
+     buttons and a form. Left at the picker's width it sat in the middle of a
+     wide empty box, so the dialog is marked for the sheet and the stylesheet
+     brings it down to the width the content actually needs. */
+  $("#depModal").classList.add("dep-modal--sheet");
   $("#depBody").innerHTML = '<div id="depSheet"><div class="loader" style="padding:30px">' +
     '<span class="spinner"></span>Preparing payment&hellip;</div></div>';
 
@@ -625,7 +581,6 @@ async function showManualUpi(dep, m) {
     note: "Wallet deposit " + dep.ref,
     ref: dep.ref,
     minutes: m.expiryMinutes || 10,
-    requireUtr: m.requireUtr !== "no",
     /* the picture the shop uploaded, if there is one. It is what the customer
        scans; the code drawn from the link is only the fallback. */
     qrImage: m.qrImage || "",
@@ -649,20 +604,62 @@ async function showManualUpi(dep, m) {
   stopTimer = sheet.stop;
 }
 
-/* ---------- method: crypto ---------- */
-async function submitCrypto(dep, hash) {
-  try {
-    await submitDepositUTR(dep.id, hash);
-    stopTimer?.();
-    done("Transfer submitted",
-      "An admin will confirm this once the network has confirmed your transfer.",
-      dep, hash);
-    toast("Submitted for confirmation.", "ok");
-    await load();
-  } catch (e) {
-    console.error(e);
-    toast("Could not submit the transaction hash.", "err");
-  }
+/* ---------- method: crypto ----------
+   Crypto used to be a form in the same step as the amount: the address, the
+   network and an empty transaction-hash box were all sitting there before the
+   customer had chosen what to pay. That put the whole job on screen too early —
+   an address with no amount on it makes a QR nobody can use, and a hash box
+   invites a paste when there is nothing yet to have sent.
+
+   Now it works the way manual UPI works: this step asks only for the amount,
+   and pressing the button brings up a payment sheet with the QR, the address to
+   copy, the countdown, and the hash box for afterwards. The sheet is the same
+   one, only with the UPI app row left out and the wording changed, because a
+   crypto transfer has no UPI apps to open and no 12-digit reference — it has a
+   transaction hash, which is a long hex string and is not 12 digits. */
+async function showCryptoSheet(dep, m) {
+  $("#depModal").classList.add("dep-modal--sheet");
+  $("#depBody").innerHTML = '<div id="depSheet"><div class="loader" style="padding:30px">' +
+    '<span class="spinner"></span>Preparing payment&hellip;</div></div>';
+
+  const sheet = await paymentSheet($("#depSheet"), {
+    /* there is no UPI link to build for a chain, so the QR is drawn from the
+       address itself and the picture the shop supplied is preferred over it */
+    upiId: m.address || "",
+    payee: m.payeeName || brandName(),
+    amount: dep.amount,
+    note: "Wallet deposit " + dep.ref,
+    ref: dep.ref,
+    minutes: 10,
+    qrImage: m.qrImage || "",
+    apps: false,
+    refLabel: "I have sent it — paste the transaction hash",
+    refPlaceholder: "Paste the hash from your wallet",
+    refHint: "Your wallet is credited once the network confirms the transfer.",
+    /* a transaction hash is hex and far longer than a UTR; what matters is that
+       something was pasted and it is not the amount or the address again */
+    refTest: /^[0-9a-fA-F]{16,128}$/,
+    refTooShort: "Paste the full transaction hash from your wallet.",
+    refWrong: "That does not look like a transaction hash. Check it in your wallet and try again.",
+    submitText: "I have sent it — submit",
+    copyToast: "Address copied.",
+    expiredText: "Start a new request if this one expires.",
+    onSubmit: async (hash) => {
+      try {
+        await submitDepositUTR(dep.id, hash);
+        stopTimer?.();
+        done("Transfer submitted",
+          "An admin will confirm this once the network has confirmed your transfer.",
+          dep, hash);
+        toast("Submitted for confirmation.", "ok");
+        await load();
+      } catch (e) {
+        console.error(e);
+        toast("Could not submit the transaction hash.", "err");
+      }
+    }
+  });
+  stopTimer = sheet.stop;
 }
 
 /* ---------- method: ZapUPI AutoPay ----------
@@ -672,6 +669,8 @@ async function submitCrypto(dep, hash) {
    `orderStatus` alongside it, because a customer can close the tab while the
    UPI app is in front of them and still have paid. */
 async function startGateway(dep, m) {
+  /* same one-column sheet as manual UPI, so the same dialog width */
+  $("#depModal").classList.add("dep-modal--sheet");
   $("#depBody").innerHTML = '<div id="depSheet"><div class="loader" style="padding:30px">' +
     '<span class="spinner"></span>Opening your UPI screen&hellip;</div></div>';
 

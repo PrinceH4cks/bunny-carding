@@ -34,7 +34,9 @@ export async function removeReview(id) {
    ========================================================= */
 export async function getFaqs() {
   try {
-    const snap = await getDocs(query(collection(db, COL.faqs), orderBy("sort", "asc")));
+    /* limit ke bina rules ise chahne hi nahi dege — public read, bina limit wala
+       query free plan ka read quota kha sakta hai */
+    const snap = await getDocs(query(collection(db, COL.faqs), orderBy("sort", "asc"), limit(200)));
     return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
   } catch {
     return [];

@@ -478,14 +478,21 @@ async function reOrder(id) {
   if (!o) return;
   const { addToCart } = await import("../services/cart-service.js");
   let added = 0;
+  let gone = 0;
   for (const it of o.items || []) {
     const p = await getProduct(it.id).catch(() => null);
-    if (p && p.stock > 0) { addToCart(p, it.qty); added++; }
+    /* a product with no stock counted yet is not sold out — the same reading of
+       the field that addToCart uses, so a re-order is not refused over a number
+       the shop never typed */
+    const counted = p && p.stock !== undefined && p.stock !== null && p.stock !== "";
+    if (!p || (counted && Number(p.stock) <= 0)) { gone++; continue; }
+    addToCart(p, it.qty);
+    added++;
   }
   if (added) {
-    toast(added + " item(s) were added to your cart.", "ok");
+    toast(added + " item(s) were added to your cart." + (gone ? " " + gone + " no longer available." : ""), "ok");
     setTimeout(() => (location.href = pageUrl("pages/cart.html")), 900);
-  } else toast("None of those products are in stock right now.", "warn");
+  } else toast(gone ? "Those products are no longer available." : "None of those products are in stock right now.", "warn");
 }
 
 async function cancelOrder(id) {

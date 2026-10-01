@@ -19,6 +19,7 @@ import { getSiteContent } from "../services/user-service.js";
 import { getReviews } from "../services/content-service.js";
 import { setCardThemeOverrides } from "./card-visual.js";
 import { initBrand, setBrand } from "../core/brand.js";
+import { toast } from "./toast.js";
 
 /* ---------- tiny path helpers over the site object ---------- */
 const dig = (obj, path) => path.split(".").reduce((o, k) => (o == null ? o : o[k]), obj);
@@ -212,7 +213,29 @@ document.addEventListener("click", (e) => {
   const add = e.target.closest(".js-add");
   if (add) {
     e.preventDefault();
-    import("../services/cart-service.js").then((m) => m.addToCart(add.dataset.id));
+    if (add.disabled) return;
+    const id = add.dataset.id;
+    const label = add.innerHTML;
+    add.disabled = true;
+    add.innerHTML = '<span class="spinner"></span>';
+    /* The product is re-read rather than taken off the button, for the same
+       reason "Buy" does it two lines down: the grid was rendered a while ago
+       and the price, the stock and the card face may all have moved since. It
+       also used to pass nothing but the id here, so addToCart was handed a
+       string where it expected a product. Every quick add went in as a blank
+       line — no name, no price, stock an empty string — and all of them shared
+       an empty id, so two different cards merged into one and checkout then
+       read the empty stock as zero and refused the order as out of stock. */
+    Promise.all([import("../core/db.js"), import("../services/cart-service.js")])
+      .then(([db, cart]) => db.getProduct(id).then((p) => {
+        if (!p) throw new Error("That card is no longer available.");
+        cart.addToCart(p, 1);
+      }))
+      .catch((err) => {
+        console.error(err);
+        toast(err.message || "Could not add that to your cart.", "err", "Not added");
+      })
+      .finally(() => { add.disabled = false; add.innerHTML = label; });
     return;
   }
 

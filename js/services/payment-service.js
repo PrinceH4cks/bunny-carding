@@ -78,12 +78,16 @@ export async function getPaymentSettings() {
       upi: { ...methodDefaults("upi"), ...(saved.upi || {}) },
       crypto: { ...methodDefaults("crypto"), ...(saved.crypto || {}) }
     };
+    /* Always ask for the UTR. The panel used to offer a switch to skip it, which
+       meant a manual deposit could be credited on the amount alone, with nothing
+       tying it to a payment that actually happened. An admin still has to approve
+       every request; this only removes the option of approving it blind. */
+    methods.upi.requireUtr = true;
     /* an install saved before methods existed still has its manual UPI settings
        at the top level, so lift them into the method rather than losing them */
     if (!saved.upi && d.upiId) {
       methods.upi.vpa = d.upiId;
       methods.upi.payeeName = d.payeeName || methods.upi.payeeName;
-      methods.upi.requireUtr = d.requireUtr !== false;
       if (d.qrMinutes) methods.upi.expiryMinutes = Number(d.qrMinutes) || 10;
       if (d.notes) methods.upi.notes = d.notes;
     }
@@ -250,13 +254,27 @@ export function startCountdown(el, minutes, onEnd) {
 /* ---------- the whole payment sheet ---------- */
 /**
  * Renders QR + timer + app buttons + UTR form into a container.
+ *
+ * Crypto reuses this: it has no UPI apps to offer and no 12-digit reference, so
+ * `apps: false` drops the app row and `refLabel` / `refPlaceholder` / `refTest`
+ * say what the field is instead. Everything else is identical, which is the
+ * point — the QR, the countdown and the submit are the same job in both cases,
+ * and a customer moving between them should not find the screen has changed
+ * rules under them.
  * @returns {{ stop:Function, link:string }}
  */
 export async function paymentSheet(mount, opts) {
   const {
     upiId = "", payee = "", amount = 0,
-    note = "", ref = "", minutes = 10, requireUtr = true,
-    qrImage = "",
+    note = "", ref = "", minutes = 10,
+    qrImage = "", apps = true,
+    refLabel = "I have paid — enter the UTR / reference number",
+    refPlaceholder = "12-digit UTR",
+    refHint = "You will get the card details as soon as the payment is verified.",
+    refTest = /^\d{12}$/,
+    refTooShort = "Please enter the full UTR from your payment app.",
+    refWrong = "A UTR is 12 digits. Check it in your UPI app and try again.",
+    submitText = "I have paid — submit",
     onSubmit = null, expiredText = "This payment window has expired."
   } = opts || {};
 
@@ -265,8 +283,8 @@ export async function paymentSheet(mount, opts) {
   mount.innerHTML = `
   <div class="qr-sheet">
     <div class="flex between center wrap gap-2 mb-2">
-      <span class="label mb-0">Scan the QR or use an app below</span>
-      <span class="upi-amount-pill">${icon("banknote", "ic ic-sm")} ${esc(inr(amount))} auto filled</span>
+      <span class="label mb-0">${esc(apps ? "Scan the QR or use an app below" : "Scan the QR or send to the address below")}</span>
+      <span class="upi-amount-pill">${icon("banknote", "ic ic-sm")} ${esc(inr(amount))}</span>
     </div>
 
     <div class="qr-frame" id="qrBox"></div>
@@ -279,24 +297,23 @@ export async function paymentSheet(mount, opts) {
     </div>
 
     <div class="upi-id mb-2">
-      <span>UPI: <b id="upiText">${esc(upiId || "not configured")}</b></span>
+      <span>${esc(apps ? "UPI: " : "Address: ")}<b id="upiText">${esc(upiId || "not configured")}</b></span>
       <button class="btn btn-xs btn-ghost" data-copy="${esc(upiId)}" ${upiId ? "" : "disabled"}>${icon("copy", "ic ic-sm")} Copy</button>
     </div>
 
-    ${appButtons()}
+    ${apps ? appButtons() : ""}
 
-    ${requireUtr ? `
     <form class="mt-3" id="utrForm" novalidate>
       <div class="field" style="text-align:left;margin-bottom:12px">
-        <label>I have paid &mdash; enter the UTR / reference number</label>
-        <input class="input" name="utr" placeholder="12-digit UTR" inputmode="numeric" maxlength="24" required>
-        <div class="field-hint">You will get the card details as soon as the payment is verified.</div>
+        <label>${esc(refLabel)}</label>
+        <input class="input" name="utr" placeholder="${esc(refPlaceholder)}" inputmode="numeric" maxlength="128" required>
+        <div class="field-hint">${esc(refHint)}</div>
         <div class="field-error"></div>
       </div>
       <button class="btn btn-ok btn-block" type="submit" id="utrBtn">
-        ${icon("check")} I have paid &mdash; submit
+        ${icon("check")} ${esc(submitText)}
       </button>
-    </form>` : ""}
+    </form>
 
     <p class="fs-xs text-muted mt-2 mb-0" id="payNote">
       ${esc(opts.notes || "Pay the exact amount shown. This page refreshes automatically.")}
@@ -321,23 +338,24 @@ export async function paymentSheet(mount, opts) {
     const cp = e.target.closest("[data-copy]");
     if (cp) {
       navigator.clipboard?.writeText(cp.dataset.copy);
-      toast("UPI id copied.", "ok");
+      /* the row is the customer's own copy of the address, whatever the method
+         is called — saying "UPI id" on a crypto screen would be wrong */
+      toast(opts.copyToast || "UPI id copied.", "ok");
     }
   });
 
-  /* UTR submit */
+  /* reference submit */
   const form = $("#utrForm", mount);
   form?.addEventListener("submit", async (ev) => {
     ev.preventDefault();
     const input = form.utr;
     const val = input.value.trim();
     /* A UPI reference is 12 digits. Anything shorter is a half-typed or a
-       copied-in amount, and an admin would only end up chasing it. */
-    if (!/^\d{12}$/.test(val)) {
+       copied-in amount, and an admin would only end up chasing it. A crypto
+       transaction hash is a long hex string, so it brings its own test. */
+    if (!refTest.test(val)) {
       input.classList.add("invalid");
-      toast(val.length < 12
-        ? "Please enter the full UTR from your payment app."
-        : "A UTR is 12 digits. Check it in your UPI app and try again.", "err");
+      toast(val.length < 12 ? refTooShort : refWrong, "err");
       return;
     }
     const btn = $("#utrBtn", mount);
@@ -347,7 +365,7 @@ export async function paymentSheet(mount, opts) {
       await onSubmit?.(val);
     } finally {
       btn.disabled = false;
-      btn.innerHTML = icon("check") + " I have paid &mdash; submit";
+      btn.innerHTML = icon("check") + " " + esc(submitText);
     }
   });
 
@@ -397,8 +415,6 @@ export const METHODS = [
       { name: "vpa", label: "UPI ID", type: "text", mono: true, required: true },
       { name: "payeeName", label: "Payee name", type: "text" },
       { name: "expiryMinutes", label: "QR valid for (minutes)", type: "number", min: 1, max: 120 },
-      { name: "requireUtr", label: "Ask the customer for a UTR", type: "select",
-        options: [["yes", "Yes — admin verifies it"], ["no", "No — only the amount is checked"]] },
       { name: "notes", label: "Note for customers", type: "area" }
     ],
     required: ["vpa"]

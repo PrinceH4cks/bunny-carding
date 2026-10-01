@@ -29,7 +29,11 @@ export const catLabel = (k) => CATEGORIES.find((c) => c.key === k)?.label || k;
 /* ============ PRODUCTS ============ */
 export async function getProducts({ category = "", search = "", sort = "shop", limitN = 60, onlyActive = true } = {}) {
   const where_ = onlyActive ? where("active", "!=", false) : null;
-  const q = query(collection(db, COL.products), ...(where_ ? [where_] : []));
+  /* The limit is not a nicety: the Firestore rules now refuse any public
+     collection read that does not carry one, because on the free plan a single
+     un-limited query is what drains the day's reads. 200 is the same ceiling the
+     rules allow, so this asks for exactly as much as it is allowed to. */
+  const q = query(collection(db, COL.products), ...(where_ ? [where_] : []), limit(200));
   const snap = await getDocs(q);
 
   let list = snap.docs.map((d) => normalizeProduct(d.id, d.data()));
@@ -251,7 +255,8 @@ const DEMO = [
    ========================================================= */
 export async function getCoupons() {
   try {
-    const snap = await getDocs(collection(db, COL.coupons));
+    /* bina limit ke rules ise chahenge nahi — see getProducts */
+    const snap = await getDocs(query(collection(db, COL.coupons), limit(200)));
     return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
   } catch {
     return [];

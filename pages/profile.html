@@ -165,8 +165,12 @@
                   </div>
                   <div class="field">
                     <label>Email address <span class="req">*</span></label>
-                    <input class="input" name="email" type="email" required>
-                    <div class="field-hint">Changing your email triggers a verification message.</div>
+                    <input class="input input-fixed" name="email" type="email" readonly aria-readonly="true"
+                      title="The email address on an account cannot be changed.">
+                    <div class="field-hint">
+                      <svg class="ic ic-sm" aria-hidden="true"><use href="#i-lock"></use></svg>
+                      This is the address you signed up with and it cannot be changed here.
+                    </div>
                     <div class="field-error"></div>
                   </div>
                   <button class="btn btn-primary" type="submit" id="pfBtn"><span class="btn-txt"><svg class="ic" aria-hidden="true"><use href="#i-save"></use></svg> Save changes</span></button>
@@ -210,16 +214,9 @@
             <div class="card">
               <div class="card-head"><h3 class="mb-0">Account settings</h3></div>
               <div class="card-body">
-                <div class="alert alert-warn mb-3">
-                  <svg class="ic" aria-hidden="true"><use href="#i-alert"></use></svg>
-                  <div><b>Permanent actions</b><br>Deleting your account removes your entire order history
-                    for good. This cannot be undone.</div>
-                </div>
-
                 <div class="flex gap-2 wrap">
                   <button class="btn btn-ghost" id="reverify"><svg class="ic" aria-hidden="true"><use href="#i-mail"></use></svg> Send a verification email</button>
                   <a class="btn btn-ghost" href="./contact.html"><svg class="ic" aria-hidden="true"><use href="#i-support"></use></svg> Contact support</a>
-                  <button class="btn btn-danger" id="delBtn"><svg class="ic" aria-hidden="true"><use href="#i-trash"></use></svg> Delete my account</button>
                 </div>
 
                 <div class="divider"></div>

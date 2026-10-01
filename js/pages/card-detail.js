@@ -140,11 +140,17 @@ function bind() {
   const q = $("#qty");
   const clamp = () => {
     let v = Number(q.value) || 1;
-    q.value = Math.max(1, Math.min(v, product.stock || 1));
+    /* an uncounted product is not capped at 1 — that `|| 1` read a stock of
+       zero as one, which is a sold-out card being offered one at a time */
+    const stock = (product.stock === undefined || product.stock === null || product.stock === "")
+      ? Infinity : Math.max(0, Number(product.stock) || 0);
+    q.value = Math.max(1, Math.min(v, stock));
+    $("#qPlus")?.toggleAttribute("disabled", stock !== Infinity && q.value >= stock);
   };
   $("#qMinus").addEventListener("click", () => { q.value = Number(q.value) - 1; clamp(); });
   $("#qPlus").addEventListener("click", () => { q.value = Number(q.value) + 1; clamp(); });
   q.addEventListener("change", clamp);
+  clamp();
 
   /* phone: sticky bottom action bar */
   if (window.matchMedia("(max-width: 860px)").matches) {

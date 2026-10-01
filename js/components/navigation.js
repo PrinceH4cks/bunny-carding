@@ -21,17 +21,25 @@ const MOBILE = () => window.matchMedia("(max-width: 860px)").matches;
 /* ---------- tab definitions ---------- */
 const ic = (n) => '<svg class="ic" aria-hidden="true"><use href="#i-' + n + '"></use></svg>';
 
-/* Home is the account dashboard, because that is where somebody holding a phone
-   with one thumb expects the house button to take them — straight to where they
-   last were. The shop front is still part of Home, so arriving at it from a
-   search or a shared link lights the same tab. Account keeps its own tab for the
-   things that are settings rather than the everyday screen. */
+/* The five places a phone customer goes, in the order a thumb reaches them: the
+   account dashboard, the wallet, the card list, what they have bought, and
+   their profile. Cart is not one of them — the cart is not somewhere you go, it
+   is something you finish — so it lives in the top bar beside the wallet and
+   keeps its count there. Account stays separate from the dashboard because the
+   dashboard is the everyday screen and the profile is the settings.
+
+   Shop sits in the middle and is drawn as a raised button rather than as one of
+   four equals. It is the one place on this list you go to do something — look
+   at what there is to buy — while the other four are where you check on
+   something you already have. The shop's mark is a store, drawn as a shop; it
+   was a grid, which is the mark for a category list and read as a fourth option
+   rather than as the main one. */
 const TABS = [
-  { id: "home",    href: pageUrl("pages/dashboard.html"), label: "Home",    ic: "home"       },
-  { id: "shop",    href: pageUrl("pages/cards.html"),     label: "Shop",    ic: "grid"       },
-  { id: "wallet",  href: pageUrl("pages/wallet.html"),    label: "Wallet",  ic: "wallet",    badge: false },
-  { id: "cart",    href: pageUrl("pages/cart.html"),      label: "Cart",    ic: "cart",      badge: true  },
-  { id: "account", href: pageUrl("pages/profile.html"),   label: "Account", ic: "user"       }
+  { id: "home",    href: pageUrl("pages/dashboard.html"), label: "Home",    ic: "home"  },
+  { id: "wallet",  href: pageUrl("pages/wallet.html"),    label: "Wallet",  ic: "wallet" },
+  { id: "shop",    href: pageUrl("pages/cards.html"),     label: "Shop",    ic: "store" },
+  { id: "orders",  href: pageUrl("pages/orders.html"),    label: "Orders",  ic: "box"   },
+  { id: "account", href: pageUrl("pages/profile.html"),   label: "Profile", ic: "user"  }
 ];
 
 const here = () => {
@@ -78,14 +86,14 @@ function syncTabs() {
     if (!t) return;
     /* Every tab has its own href, so a plain match lights exactly one of them.
        The pages a tab also stands for are listed in `also` — a product is part
-       of Shop, and the account pages all belong to Account. Without this the
-       shop front, the orders and the account dashboard were each left with no
-       tab lit, which reads as a broken bar. The href is a full address from
-       pageUrl, so it is compared by the page name it ends with. */
+       of Shop, and the sign-in screens are part of Account. Without this the
+       shop front and the account pages were each left with no tab lit, which
+       reads as a broken bar. The href is a full address from pageUrl, so it is
+       compared by the page name it ends with. */
     const also = {
       home: ["index.html", "about.html", "contact.html"],
       shop: ["card-detail.html"],
-      account: ["orders.html", "login.html", "register.html", "forgot-password.html"]
+      account: ["login.html", "register.html", "forgot-password.html"]
     };
     const on = t.href.endsWith("/" + page) || (also[id] || []).includes(page);
     a.classList.toggle("active", on);

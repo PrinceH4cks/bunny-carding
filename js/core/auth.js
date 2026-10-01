@@ -253,7 +253,13 @@ export async function logout() {
 export async function saveProfile(data, { reauth = null } = {}) {
   if (!CURRENT) throw new Error("Please sign in first.");
 
-  const emailChanged = data.email && data.email !== CURRENT.email;
+  /* compared case-insensitively: the form lower-cases what it sends and
+     Firebase keeps the case it was given, so a plain !== said "changed" when
+     only the capitalisation differed and asked for a password for nothing */
+  const want = String(data.email || "").trim().toLowerCase();
+  const have = String(CURRENT.email || "").trim().toLowerCase();
+  const emailChanged = !!want && want !== have;
+
   if (emailChanged) {
     if (!reauth) {
       const err = new Error("Please confirm your password to change your email address.");
@@ -263,14 +269,27 @@ export async function saveProfile(data, { reauth = null } = {}) {
     await signInWithEmailAndPassword(auth, CURRENT.email, reauth);
   }
 
-  /* write Firestore first: if the Auth call below fails we have not left the
-     profile half-updated */
+  /* name and phone go to Firestore first: if the Auth call below fails, the
+     profile is not left half-updated */
   const patch = { ...data };
   delete patch.email;
   await updateDoc(doc(db, COL.users, CURRENT.uid), { ...patch, updatedAt: serverTimestamp() });
 
   if (data.name) await updateProfile(CURRENT, { displayName: data.name });
-  if (emailChanged) await updateEmail(CURRENT, data.email);
+
+  if (emailChanged) {
+    await updateEmail(CURRENT, data.email.trim());
+    /* And this is the part that was missing, which is why the box kept turning
+       the old address back: the profile is read from Firestore, not from Auth.
+       updateEmail moved the account, but the document every other part of the
+       site looks at still held the address they had typed over. So the change
+       appeared to do nothing, and the only way to be sure was to sign out and
+       back in — where it then worked, because Auth had it after all. */
+    await updateDoc(doc(db, COL.users, CURRENT.uid), { email: data.email.trim().toLowerCase() });
+    /* the verification has to go to the new address, and the old one is verified
+       while the new one is not, so the state has to be asked for again */
+    await CURRENT.reload();
+  }
 
   await loadProfile(CURRENT);
 }
