@@ -666,9 +666,13 @@ async function applyWallet(u) {
   btn.innerHTML = '<span class="spinner"></span> Applying';
   try {
     /* ref carries who did it, so a support question about a balance change can
-       be traced back to this admin account. */
+       be traced back to this admin account. It stays in the ledger and stays out
+       of the note: the note is the customer's line on their wallet, and it was
+       ending up as "Manual credit by admin (admin:Hku49smD1xhjdZn9KybkqREH3of2)" —
+       the shop's own account id, printed in the one place the person affected by
+       the change is going to read. */
     const ref = "admin:" + (CURRENT?.uid || "unknown");
-    const noteText = (note || (wMode === "add" ? "Manual credit by admin" : wMode === "sub" ? "Manual debit by admin" : "Balance set by admin")) + " (" + ref + ")";
+    const noteText = note || (wMode === "add" ? "Manual credit by admin" : wMode === "sub" ? "Manual debit by admin" : "Balance set by admin");
     const r = wMode === "set"
       ? await setWalletBalance(u.id, raw, noteText, ref)
       : await adjustWallet(u.id, wMode === "add" ? raw : -raw, noteText, ref);
