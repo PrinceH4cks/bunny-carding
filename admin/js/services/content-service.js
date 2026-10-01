@@ -1,7 +1,7 @@
 import { db, storage, COL } from "../core/firebase-config.js";
 
 import {
-  collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, addDoc,
+  collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, addDoc, writeBatch,
   query, where, orderBy, limit, serverTimestamp, increment, runTransaction
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { ref as sref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
@@ -77,4 +77,20 @@ export async function setAllMessagesRead(read) {
 
 export async function removeMessage(id) {
   await deleteDoc(doc(db, COL.messages, id));
+}
+
+/* Clears every message already dealt with, in one go. This list is the one place
+   in the panel that fills up on its own: the contact form takes a message from
+   anyone, signed in or not, so it is the one that grows without anybody choosing
+   to add to it. Deleting handled ones is what keeps that from turning into a
+   list nobody reads. Anything still waiting is left alone. */
+export async function removeHandledMessages(ids) {
+  const list = [...new Set((ids || []).filter(Boolean))];
+  if (!list.length) return 0;
+  for (let i = 0; i < list.length; i += 400) {
+    const b = writeBatch(db);
+    for (const id of list.slice(i, i + 400)) b.delete(doc(db, COL.messages, id));
+    await b.commit();
+  }
+  return list.length;
 }

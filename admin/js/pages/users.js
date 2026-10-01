@@ -4,7 +4,7 @@ import { auth } from "../core/firebase-config.js";
 import { db } from "../core/db.js";
 
 /* PANEL - js/users.js */
-import { $, $$, inr, esc, fmtDate, timeAgo, initials } from "../core/app.js";
+import { $, $$, inr, esc, fmtDate, timeAgo, initials, fitAll } from "../core/app.js";
 import { toast } from "../components/toast.js";
 import { skRows, emptyState } from "../components/ui.js";
 import { openModal, confirmBox } from "../components/modal.js";
@@ -94,11 +94,27 @@ const isLocked = (uid) => !!(walletOf(uid)?.locked);
    old lifetime-value tile would be misleading next to it. */
 const walletTotal = () => Object.keys(WALLETS).reduce((s, u) => s + balanceOf(u), 0);
 
-const mini = (icName, label, val, bg, fg) =>
-  '<div class="card card-pad"><div class="stat">' +
+/* data-fit on the value: three of these five are rupee figures that grow without
+   bound — held in wallets, the largest balance, the lifetime total — and the
+   width they are given is whatever is left after the tile and the label. Without
+   the fit they push out through the card and over the next one.
+
+   The wide flag is the other half of that. Fitting stops at a size where the
+   digits are still countable, and below that it clips: on a phone, where the grid
+   is two columns, a fourteen figure balance is given half the row and ends up
+   ellipsised at nine pixels, which is not a number anyone can read. The counts
+   beside it are two digits and are perfectly happy in half a row, so the figures
+   that can be long are given the whole of it and the short ones stay paired. */
+const mini = (icName, label, val, bg, fg, wide) =>
+  '<div class="card card-pad' + (wide ? " stat-wide" : "") + '"><div class="stat">' +
   '<div class="stat-ic" style="background:' + bg + ";color:" + fg + '">' + icon(icName) + "</div>" +
-  '<div style="min-width:0"><div class="stat-v" style="font-size:1.3rem">' + val + "</div>" +
+  '<div style="min-width:0"><div class="stat-v" data-fit style="font-size:1.3rem" title="' + esc(plain(val)) + '">' + val + "</div>" +
   "<div class='stat-l'>" + label + "</div></div></div></div>";
+
+/* the number without the rupee sign and the separators, for the tooltip a clipped
+   figure gets — a title of "₹1,35,220" is not much help, a title of the same
+   string is, but the one that matters is the plain digits */
+const plain = (v) => String(v).replace(/[₹,\s]/g, "");
 
 /* Sorting reads the same derived numbers the cells show, so a "Wallet" sort
    can never disagree with the balance printed in the row. */
@@ -132,8 +148,8 @@ function render() {
   $("#mini").innerHTML =
     mini("users", "Total users", USERS.length, "var(--brand-50)", "var(--brand-600)") +
     mini("cart", "Buyers", buyers.length, "var(--ok-50)", "var(--ok-600)") +
-    mini("wallet", "Held in wallets", inr(walletTotal()), "var(--ink-900)", "var(--accent-400)") +
-    mini("coins", "Largest balance", richest ? inr(balanceOf(richest.id)) : inr(0), "var(--ok-50)", "var(--ok-600)") +
+    mini("wallet", "Held in wallets", inr(walletTotal()), "var(--ink-900)", "var(--accent-400)", true) +
+    mini("coins", "Largest balance", richest ? inr(balanceOf(richest.id)) : inr(0), "var(--ok-50)", "var(--ok-600)", true) +
     mini("chart", "Lifetime value", inr(ltv), "var(--brand-50)", "var(--brand-600)");
 
   const list = filtered();
@@ -143,8 +159,12 @@ function render() {
 
   const title = $("#tblTitle");
   if (title) title.textContent = "All users";
-  $("#count").textContent = list.length + " user(s)" +
-    (frozen ? " Â· " + frozen + " frozen" : "");
+  /* "(s)" is a placeholder leaking into the interface. Said properly it also
+     reads better next to the frozen count, which is the part an admin is
+     actually looking for. */
+  $("#count").textContent =
+    list.length + (list.length === 1 ? " user" : " users") +
+    (frozen ? " · " + frozen + (frozen === 1 ? " frozen" : " frozen") : "");
 
   /* chips + sort arrows always mirror the state, never the other way round */
   $$("#filters .chip").forEach((c) => c.classList.toggle("is-on", c.dataset.filter === S.filter));
@@ -158,12 +178,21 @@ function render() {
   paintBulk(slice);
 
   if (!slice.length) {
-    $("#rows").innerHTML = '<tr><td colspan="8">' + emptyState({
+    const empty = '<tr><td colspan="8">' + emptyState({
       icon: "users",
       title: USERS.length ? "Nobody matches this filter" : "No users yet",
       text: USERS.length ? "Try a different chip above."
             : "New sign-ups will appear here."
     }) + "</td></tr>";
+    $("#rows").innerHTML = empty;
+    /* the same message for the card list, or the phone would show a blank panel
+       where the table's explanation should be */
+    $("#cards").innerHTML = '<div class="card card-pad">' + emptyState({
+      icon: "users",
+      title: USERS.length ? "Nobody matches this filter" : "No users yet",
+      text: USERS.length ? "Try a different chip above."
+            : "New sign-ups will appear here."
+    }) + "</div>";
     $("#pager").innerHTML = "";
     return;
   }
@@ -171,9 +200,10 @@ function render() {
   $("#rows").innerHTML = slice.map((u) => {
     const o = userOrders(u.id);
     const me = u.id === CURRENT.uid;
+    const bal = balanceOf(u.id);
     return `<tr data-id="${esc(u.id)}">
       <td class="w-pick"><input type="checkbox" class="js-pick" data-id="${esc(u.id)}" ${S.sel.has(u.id) ? "checked" : ""} aria-label="Select ${esc(u.name || u.email || "user")}"></td>
-      <td>
+      <td class="u-name">
         <div class="flex gap-2 center">
           <span class="avatar avatar-sm">${esc(initials(u.name || u.email))}</span>
           <div style="min-width:0">
@@ -182,30 +212,99 @@ function render() {
           </div>
         </div>
       </td>
-      <td>
+      <td class="u-contact">
         <div class="fs-sm">${esc(u.email || "—")}</div>
         <small class="text-muted">${esc(u.phone || "no phone")}</small>
       </td>
       <td class="num tr">${o.length}</td>
-      <td class="num fw-7 tr">${inr(userSpent(u.id))}</td>
+      <td class="num fw-7 tr u-amt"><b data-fit title="${esc(plain(inr(userSpent(u.id))))}">${inr(userSpent(u.id))}</b></td>
       <td class="tr">
-        <button class="btn btn-ghost btn-xs js-wallet" data-id="${esc(u.id)}" title="Control this wallet">
-          ${icon("wallet", "ic ic-sm")} <span class="mono">${inr(balanceOf(u.id))}</span>
-        </button>
+        ${bal > 0
+          ? '<button class="btn btn-ghost btn-xs u-bal u-bal--live js-wallet" data-id="' + esc(u.id) + '" title="Control this wallet">' +
+            icon("wallet", "ic ic-sm") + ' <span class="mono" data-fit title="' + esc(plain(inr(bal))) + '">' + inr(bal) + "</span></button>"
+          : '<span class="u-bal u-bal--zero">&mdash;</span>'}
         ${isLocked(u.id) ? ' <span class="badge badge-warn">Frozen</span>' : ""}
       </td>
       <td>
         ${u.disabled ? '<span class="badge badge-danger badge-dot">Blocked</span>' : '<span class="badge badge-ok badge-dot">Active</span>'}
       </td>
       <td>
-        <div class="flex gap-1 justify-end">
-          <button class="btn btn-ghost btn-xs js-view" data-id="${esc(u.id)}" title="View details">${icon("eye", "ic ic-sm")}</button>
-          <button class="btn btn-ghost btn-xs js-copy" data-id="${esc(u.id)}" title="Copy user ID">${icon("copy", "ic ic-sm")}</button>
-          <button class="btn btn-danger btn-xs js-block" data-id="${esc(u.id)}" title="Block or unblock" ${me ? "disabled" : ""}>${icon("lock", "ic ic-sm")}</button>
+        <div class="flex gap-1 justify-end u-acts">
+          <button class="btn btn-ghost btn-xs js-view" data-id="${esc(u.id)}" title="View details" aria-label="View ${esc(u.name || "user")}">${icon("eye", "ic ic-sm")}</button>
+          <button class="btn btn-ghost btn-xs js-copy" data-id="${esc(u.id)}" title="Copy user ID" aria-label="Copy user ID">${icon("copy", "ic ic-sm")}</button>
+          <button class="btn btn-danger btn-xs js-block" data-id="${esc(u.id)}" title="${u.disabled ? "Unblock" : "Block"} this account" aria-label="${u.disabled ? "Unblock" : "Block"} ${esc(u.name || "user")}" ${me ? "disabled" : ""}>${icon("lock", "ic ic-sm")}</button>
         </div>
       </td>
     </tr>`;
   }).join("");
+
+  /* The same customers as cards. Rendered from the same slice as the rows above,
+     so the two cannot drift.
+
+     The cards used to replace the table only on a phone, and a laptop was the
+     worst of both: at 1024px the panel's own sidebar takes a quarter of the
+     width, the remaining 770px is not enough for eight columns, and the table
+     simply ran off the edge — the wallet figure was cut in half and the status
+     and the buttons were not on the screen at all, with no way to tell that
+     except scrolling sideways through a list you were reading. So the switch is
+     now at 1180px, which is the width below which eight columns stop fitting
+     once the sidebar is counted.
+
+     Between 721px and 1180px the cards are two across and carry the figures,
+     because that is a screen with room for them. Below 720px — a phone — the
+     figures go: three numbers per card is three nobody chose to look at, and a
+     long balance is what pushed the row apart. The wallet stays on the phone
+     card either way. It is the one figure that changes the situation rather
+     than describing it, and it opens the wallet controls, so it is a button. */
+  $("#cards").innerHTML = slice.map((u) => {
+    const o = userOrders(u.id);
+    const me = u.id === CURRENT.uid;
+    const bal = balanceOf(u.id);
+    const frozen = isLocked(u.id);
+    return `<div class="u-card" data-id="${esc(u.id)}">
+      <div class="u-card-top">
+        <span class="u-card-pick"><input type="checkbox" class="js-pick" data-id="${esc(u.id)}" ${S.sel.has(u.id) ? "checked" : ""} aria-label="Select ${esc(u.name || u.email || "user")}"></span>
+        <span class="avatar avatar-sm">${esc(initials(u.name || u.email))}</span>
+        <span class="u-card-mid">
+          <b>${esc(u.name || "Unnamed")} ${me ? '<span class="badge badge-brand">You</span>' : ""}</b>
+          <span class="u-card-contact">${esc(u.email || "—")}</span>
+          ${u.phone ? '<span class="u-card-contact">' + esc(u.phone) + "</span>" : ""}
+        </span>
+        <span class="u-card-state">
+          ${u.disabled ? '<span class="badge badge-danger badge-dot">Blocked</span>' : '<span class="badge badge-ok badge-dot">Active</span>'}
+          ${frozen ? '<span class="badge badge-warn">Frozen</span>' : ""}
+        </span>
+      </div>
+
+      <div class="u-card-figures">
+        <span class="u-fig">Orders<b>${o.length}</b></span>
+        <span class="u-fig">Spent<b data-fit title="${esc(plain(inr(userSpent(u.id))))}">${inr(userSpent(u.id))}</b></span>
+        <span class="u-fig ${bal > 0 ? "" : "is-empty"}">Wallet<b data-fit title="${esc(plain(inr(bal)))}">${bal > 0 ? inr(bal) : "—"}</b></span>
+        <span class="u-fig">Joined<b>${u.createdAt ? esc(timeAgo(u.createdAt)) : "—"}</b></span>
+      </div>
+
+      <div class="u-card-foot">
+        <span class="u-card-bal">
+          ${bal > 0
+            ? '<button class="u-bal u-bal--live js-wallet" data-id="' + esc(u.id) + '" title="Control this wallet" aria-label="Wallet">' +
+              icon("wallet", "ic ic-sm") + '<b data-fit title="' + esc(plain(inr(bal))) + '">' + inr(bal) + "</b></button>"
+            : ""}
+        </span>
+        <span class="u-card-acts">
+          <button class="btn btn-primary js-view" data-id="${esc(u.id)}" title="View details" aria-label="View ${esc(u.name || "user")}">${icon("eye", "ic ic-sm")}<span>Details</span></button>
+          <button class="btn btn-ghost js-copy" data-id="${esc(u.id)}" title="Copy user ID" aria-label="Copy user ID">${icon("copy", "ic ic-sm")}<span>Copy ID</span></button>
+          <button class="btn btn-ghost js-block" data-id="${esc(u.id)}" title="${u.disabled ? "Unblock" : "Block"} this account" aria-label="${u.disabled ? "Unblock" : "Block"} ${esc(u.name || "user")}" ${me ? "disabled" : ""}>${icon("lock", "ic ic-sm")}<span>${u.disabled ? "Unblock" : "Block"}</span></button>
+        </span>
+      </div>
+    </div>`;
+  }).join("");
+
+  /* fitAll at the end, once, over everything drawn. Every amount on this page is
+     a rupee figure with no maximum length — the balance and the lifetime total
+     are the two that grow without bound — and each is given a box that clips
+     rather than grows, so the size is worked out from the text. Doing it here
+     rather than per element means one layout pass instead of one per number. */
+  fitAll(document, "[data-fit]");
 
   $$(".js-view").forEach((b) => b.addEventListener("click", () => detail(b.dataset.id)));
   $$(".js-wallet").forEach((b) => b.addEventListener("click", () => detail(b.dataset.id)));
@@ -240,11 +339,18 @@ function paintBulk(slice) {
   if (bar) bar.classList.toggle("hidden", n === 0);
   const lbl = $("#bulkN");
   if (lbl) lbl.textContent = n === 1 ? "1 user selected" : n + " users selected";
-  const all = $("#pickAll");
-  if (all) {
-    const onPage = slice.filter((u) => S.sel.has(u.id)).length;
-    all.checked = slice.length > 0 && onPage === slice.length;
-    all.indeterminate = onPage > 0 && onPage < slice.length;
+  /* Both header checkboxes are kept in step: the one in the table's <thead>, and
+     the one that survives on a phone where the table does not. */
+  const onPage = slice.filter((u) => S.sel.has(u.id)).length;
+  const state = {
+    checked: slice.length > 0 && onPage === slice.length,
+    indeterminate: onPage > 0 && onPage < slice.length
+  };
+  for (const sel of ["#pickAll", "#pickAllCards"]) {
+    const all = $(sel);
+    if (!all) continue;
+    all.checked = state.checked;
+    all.indeterminate = state.indeterminate;
   }
 }
 
@@ -477,7 +583,7 @@ function walletPanel(u, bal, locked) {
 
     <div class="grid g-2 gap-2">
       <label class="field">
-        <span class="fs-xs text-muted" id="wAmtLbl">Amount to add (â‚¹)</span>
+        <span class="fs-xs text-muted" id="wAmtLbl">Amount to add (₹)</span>
         <input class="input mono" id="wAmt" type="number" min="0" step="1" inputmode="numeric" placeholder="0">
       </label>
       <label class="field">
@@ -527,7 +633,7 @@ function bindWallet(u) {
 function paintHint(u) {
   const v = Number(($("#wAmt") || {}).value || 0);
   const bal = balanceOf(u.id);
-  const lbl = { add: "Amount to add (â‚¹)", sub: "Amount to remove (â‚¹)", set: "Set balance to exactly (â‚¹)" }[wMode];
+  const lbl = { add: "Amount to add (₹)", sub: "Amount to remove (₹)", set: "Set balance to exactly (₹)" }[wMode];
   $("#wAmtLbl").textContent = lbl;
   let hint = "";
   if (wMode === "add") hint = v > 0 ? "New balance " + inr(bal + v) : "Enter an amount to add.";
@@ -620,7 +726,7 @@ async function loadTxns(id) {
         return "<tr>" +
           '<td><span class="badge ' + (credit ? "badge-ok" : "badge-warn") + '">' + (credit ? "Credit" : "Debit") + "</span></td>" +
           '<td class="num fw-7" style="color:' + (credit ? "var(--ok-600)" : "var(--danger-600)") + '">' +
-            (credit ? "+" : "âˆ’") + inr(t.amount) + "</td>" +
+            (credit ? "+" : "−") + inr(t.amount) + "</td>" +
           '<td class="num">' + inr(t.balanceAfter) + "</td>" +
           '<td class="fs-xs text-muted">' + esc(t.note || "—") + "</td>" +
           '<td class="fs-xs text-muted">' + fmtDate(t.createdAt, false) + "</td></tr>";
@@ -673,11 +779,15 @@ function bind() {
     render();
   }));
 
-  $("#pickAll").addEventListener("change", (e) => {
+  /* one handler for both checkboxes — the table's and the phone's — so the two
+     can never end up disagreeing about who is selected */
+  const pickAll = (e) => {
     const list = filtered().slice((page - 1) * PER, page * PER);
     list.forEach((u) => { if (e.target.checked) S.sel.add(u.id); else S.sel.delete(u.id); });
     render();
-  });
+  };
+  $("#pickAll").addEventListener("change", pickAll);
+  $("#pickAllCards")?.addEventListener("change", pickAll);
 
   $("#bCredit").addEventListener("click", openBulkCredit);
   $("#bGo").addEventListener("click", runBulkCredit);

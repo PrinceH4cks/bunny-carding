@@ -77,12 +77,18 @@ export async function getPaymentSettings() {
       upi: { ...methodDefaults("upi"), ...(saved.upi || {}) },
       crypto: { ...methodDefaults("crypto"), ...(saved.crypto || {}) }
     };
+    /* An admin verifies a manual UPI deposit before the wallet is credited, so
+       the customer has to be asked for the UTR. The old form offered a switch to
+       skip that, which let a deposit be credited on nothing but the amount
+       arriving — anyone could send that. The switch is gone from the panel, and
+       this clears the value on the way out so a document saved while it existed
+       cannot keep asking for the amount alone. */
+    methods.upi.requireUtr = true;
     /* an install saved before methods existed still has its manual UPI settings
        at the top level, so lift them into the method rather than losing them */
     if (!saved.upi && d.upiId) {
       methods.upi.vpa = d.upiId;
       methods.upi.payeeName = d.payeeName || methods.upi.payeeName;
-      methods.upi.requireUtr = d.requireUtr !== false;
       if (d.qrMinutes) methods.upi.expiryMinutes = Number(d.qrMinutes) || 10;
       if (d.notes) methods.upi.notes = d.notes;
     }
@@ -223,7 +229,7 @@ export function startCountdown(el, minutes, onEnd) {
 export async function paymentSheet(mount, opts) {
   const {
     upiId = "", payee = "", amount = 0,
-    note = "", ref = "", minutes = 10, requireUtr = true,
+    note = "", ref = "", minutes = 10,
     onSubmit = null, expiredText = "This payment window has expired."
   } = opts || {};
 
@@ -252,7 +258,6 @@ export async function paymentSheet(mount, opts) {
 
     ${appButtons()}
 
-    ${requireUtr ? `
     <form class="mt-3" id="utrForm" novalidate>
       <div class="field" style="text-align:left;margin-bottom:12px">
         <label>I have paid &mdash; enter the UTR / reference number</label>
@@ -263,7 +268,7 @@ export async function paymentSheet(mount, opts) {
       <button class="btn btn-ok btn-block" type="submit" id="utrBtn">
         ${icon("check")} I have paid &mdash; submit
       </button>
-    </form>` : ""}
+    </form>
 
     <p class="fs-xs text-muted mt-2 mb-0" id="payNote">
       ${esc(opts.notes || "Pay the exact amount shown. This page refreshes automatically.")}
@@ -362,11 +367,8 @@ export const METHODS = [
     /* A picture of the merchant QR, if there is one. The customer sees this
        instead of a code drawn from the UPI id, which matters when the shop
        collects into a merchant account whose id cannot be typed into an app. */
-    { name: "qrImage", label: "QR image link", type: "url",
-      hint: "Paste a link to a QR image. Leave empty and the customer's app is given a code drawn from the UPI ID." },
+    { name: "qrImage", label: "QR image link", type: "url" },
     { name: "expiryMinutes", label: "QR valid for (minutes)", type: "number", min: 1, max: 120 },
-    { name: "requireUtr", label: "Ask the customer for a UTR", type: "select",
-      options: [["yes", "Yes - admin verifies it"], ["no", "No - only the amount is checked"]] },
     { name: "notes", label: "Note for customers", type: "area" }
     ],
     required: ["vpa"]
@@ -382,8 +384,7 @@ export const METHODS = [
     { name: "address",  label: "Deposit address", type: "text", mono: true, required: true },
     /* A picture of the wallet QR, for the coins and networks where the address
        is too long to type by hand on a phone. */
-    { name: "qrImage", label: "QR image link", type: "url",
-      hint: "Paste a link to a QR image for this wallet. Leave empty to show the address instead." },
+    { name: "qrImage", label: "QR image link", type: "url" },
     { name: "minAmount", label: "Minimum deposit", type: "number", min: 0 },
     { name: "confirmations", label: "Confirmations needed", type: "number", min: 0, max: 200 },
     { name: "notes", label: "Note for customers", type: "area" }

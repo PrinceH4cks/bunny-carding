@@ -14,7 +14,7 @@ import { $, $$, esc, timeAgo, fmtDate, initials } from "../core/app.js";
 import { toast } from "../components/toast.js";
 import { emptyState, skRows } from "../components/ui.js";
 import { confirmBox } from "../components/modal.js";
-import { getMessages, setMessageRead, setAllMessagesRead, removeMessage } from "../services/content-service.js";
+import { getMessages, setMessageRead, setAllMessagesRead, removeMessage, removeHandledMessages } from "../services/content-service.js";
 import { requireAdmin } from "../core/auth.js";
 import { icon } from "../components/icons.js";
 
@@ -55,8 +55,37 @@ function paintStats() {
   }
 }
 
+/* keeps the button's count honest after every load */
+function paintClear() {
+  const btn = $("#clearHandled");
+  if (!btn) return;
+  const n = all.filter((m) => isHandled(m)).length;
+  btn.hidden = !n;
+  btn.innerHTML = icon("trash", "ic ic-sm") + " Clear " + n + " handled";
+}
+
+async function clearHandled() {
+  const gone = all.filter((m) => isHandled(m));
+  if (!gone.length) { toast("Nothing handled to clear.", "info"); return; }
+  const go = await confirmBox({
+    title: "Delete " + gone.length + " handled message" + (gone.length === 1 ? "?" : "s?"),
+    text: "These have already been dealt with. Anything still waiting is kept.",
+    ok: "Delete them"
+  });
+  if (!go) return;
+  try {
+    await removeHandledMessages(gone.map((m) => m.id));
+    toast(gone.length + " message" + (gone.length === 1 ? "" : "s") + " removed.", "ok");
+    await load();
+  } catch (err) {
+    console.error(err);
+    toast("Could not delete: " + (err.message || err), "err");
+  }
+}
+
 function paint() {
   paintStats();
+  paintClear();
 
   const rows = filter === "unread" ? all.filter((m) => !isHandled(m)) : all;
   if (!rows.length) {
@@ -117,13 +146,14 @@ await requireAdmin();
 
   $("#reloadBtn").addEventListener("click", load);
 
+  $("#clearHandled")?.addEventListener("click", clearHandled);
+
   $("#filter").addEventListener("change", (e) => {
     filter = e.target.value;
     paint();
   });
 
-  $("#readAll").addEventListener("click", async () => {
-    const open = all.filter((m) => !isHandled(m)).length;
+  $("#readAll").addEventListener("click", async () => {    const open = all.filter((m) => !isHandled(m)).length;
     if (!open) return toast("There is nothing waiting.", "warn");
     const go = await confirmBox({
       title: "Mark every message as handled?",

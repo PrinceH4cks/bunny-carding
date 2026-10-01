@@ -1432,27 +1432,93 @@ td.w-pick input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; a
 .x-btn { background: var(--ink-100); border: 0; width: 34px; height: 34px; border-radius: var(--r-xs); cursor: pointer; color: var(--ink-600); display: grid; place-items: center; transition: all .2s; }
 .x-btn:hover { background: var(--danger-50); color: var(--danger-600); }
 
-/* ---------- 17. TOAST ---------- */
-.toast-wrap { position: fixed; top: 20px; right: 20px; z-index: 500; display: flex; flex-direction: column; gap: 10px; max-width: min(380px, calc(100vw - 40px)); }
-.toast {
-  display: flex; gap: 12px; align-items: flex-start;
-  background: rgba(255, 255, 255, .97);
-  backdrop-filter: blur(14px);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--brand-500);
-  border-radius: var(--r-sm); padding: 14px 16px;
-  box-shadow: var(--sh-lg);
-  animation: slideIn .35s var(--ease);
-  font-size: .91rem;
+/* ---------- 17. TOAST ----------
+   Same shape as the shop's, so a message looks the same wherever it appears. A
+   small glass card that slides in from the corner, holds, and slides out. The
+   message itself is the large text and the label is a quiet kicker above it —
+   "Success" over "Order deleted" spent the biggest line saying nothing. The
+   mark sits in a tinted tile, and a bar runs out over the message's life so the
+   wait is visible rather than something to sit through. */
+.toast-wrap {
+  position: fixed; top: 20px; right: 20px; z-index: 500;
+  display: flex; flex-direction: column; gap: 10px;
+  max-width: min(380px, calc(100vw - 40px));
+  align-items: flex-end;
+  pointer-events: none;
 }
-.toast.out { animation: slideOut .3s var(--ease) forwards; }
-.toast .t-ic { display: flex; margin-top: 1px; }
-.toast b { display: block; color: var(--ink-900); margin-bottom: 1px; font-weight: 600; }
-.toast p { margin: 0; color: var(--ink-500); font-size: .85rem; }
-.toast.ok { border-left-color: var(--ok-500); } .toast.ok .t-ic { color: var(--ok-500); }
-.toast.err { border-left-color: var(--danger-500); } .toast.err .t-ic { color: var(--danger-500); }
-.toast.warn { border-left-color: var(--warn-500); } .toast.warn .t-ic { color: var(--warn-500); }
-.toast.info .t-ic { color: var(--brand-500); }
+.toast {
+  position: relative; overflow: hidden;
+  display: flex; gap: 12px; align-items: flex-start;
+  width: 100%;
+  background: rgba(255, 255, 255, .96);
+  backdrop-filter: saturate(180%) blur(18px);
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 13px 14px 14px 13px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .9),
+    0 1px 2px rgba(12, 18, 34, .05),
+    0 10px 26px -8px rgba(12, 18, 34, .22);
+  animation: toastIn .34s var(--ease) both;
+  font-size: .9rem;
+  pointer-events: auto;
+}
+.toast.out { animation: toastOut .24s var(--ease) forwards; }
+.toast .t-mark {
+  flex: 0 0 auto;
+  width: 30px; height: 30px; border-radius: 10px;
+  display: grid; place-items: center;
+}
+.toast .t-mark .ic { width: 1.05rem; height: 1.05rem; stroke-width: 2.2; }
+.toast .t-body { min-width: 0; flex: 1 1 auto; }
+.toast .t-kicker {
+  display: block; margin-bottom: 2px;
+  font-size: .64rem; font-weight: 700; letter-spacing: .085em; text-transform: uppercase;
+}
+.toast p { margin: 0; color: var(--ink-800); line-height: 1.42; overflow-wrap: anywhere; }
+.toast .t-x {
+  flex: 0 0 auto; width: 24px; height: 24px; margin: -2px -2px 0 0;
+  display: grid; place-items: center;
+  background: none; border: 0; border-radius: 7px; cursor: pointer;
+  color: var(--ink-300); opacity: 0;
+  transition: all .2s var(--ease);
+}
+.toast:hover .t-x, .t-x:focus-visible { opacity: 1; color: var(--ink-600); }
+.toast .t-x:hover { background: var(--ink-100); color: var(--ink-800); }
+.toast .t-x .ic { width: .9rem; height: .9rem; stroke-width: 2.2; }
+@media (hover: none) { .toast .t-x { opacity: .55; } }
+.toast .t-life {
+  position: absolute; left: 0; bottom: 0; height: 2.5px; width: 100%;
+  transform-origin: 0 50%;
+  background: currentColor; opacity: .5;
+  animation: toastLife var(--life, 3200ms) linear forwards;
+}
+.toast.held .t-life { animation-play-state: paused; }
+.toast.ok   { color: var(--ok-600); }
+.toast.err  { color: var(--danger-600); }
+.toast.warn { color: var(--warn-600); }
+.toast.info { color: var(--brand-600); }
+.toast.ok   .t-mark { background: var(--ok-50); }
+.toast.err  .t-mark { background: var(--danger-50); }
+.toast.warn .t-mark { background: var(--warn-50); }
+.toast.info .t-mark { background: var(--brand-50); }
+.toast.ok   .t-kicker { color: var(--ok-600); }
+.toast.err  .t-kicker { color: var(--danger-600); }
+.toast.warn .t-kicker { color: var(--warn-600); }
+.toast.info .t-kicker { color: var(--brand-600); }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(-10px) scale(.97); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes toastOut {
+  from { opacity: 1; transform: none; max-height: 200px; }
+  to   { opacity: 0; transform: translateX(14px) scale(.97); max-height: 0; }
+}
+@keyframes toastLife {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
 
 /* ---------- 18. SKELETON / LOADING ---------- */
 .sk {
@@ -2729,3 +2795,512 @@ body:has(> .auth-wrap) { background: var(--surface-2, #fbfcfe); }
 @media (prefers-contrast: more) {
   .pcard.is-picked { outline: 2px solid var(--brand-700); }
 }
+
+/* =====================================================================
+   USERS PAGE
+
+   The one page in the panel where the list is the point and the numbers above
+   it are only there to be glanced at. Two problems came out of looking at it at
+   real sizes.
+
+   On a desktop, five stat cards across the width left each one too narrow for
+   its own value, so "₹11,120 Held in wallets" wrapped onto two lines and the
+   lifetime figure onto three. A figure that wraps is a figure you have to read
+   twice, and the five cards came out taller than the first three rows of the
+   list they were summarising. The tiles now size to their content and the labels
+   are allowed one line, so a row of five is one row.
+
+   On a phone, the same five cards stacked full width and about 750px tall — the
+   entire screen, twice over, before a single customer was visible. They are now
+   two across and about half the height, and the table becomes a list of cards,
+   because a seven-column table at 390px is not a small table, it is a sideways
+   one. ------------------------------------------------------------------ */
+
+.u-stats {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.u-stats .card { padding: 14px 16px; }
+/* the value and the label sit in their own column beside the tile, and the
+   label is clamped to one line rather than wrapping under itself */
+.u-stats .stat { gap: 12px; }
+.u-stats .stat-ic { width: 40px; height: 40px; border-radius: 12px; }
+.u-stats .stat-v { font-size: 1.24rem; }
+.u-stats .stat-l {
+  font-size: .74rem; line-height: 1.25;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ---- the list on a wide screen: denser rows, and no empty-looking cells ---- */
+.u-table .table th { font-size: .7rem; letter-spacing: .06em; }
+.u-table .table td { padding: 11px 14px; vertical-align: middle; }
+.u-table .u-name { min-width: 0; }
+.u-table .u-contact { min-width: 0; }
+.u-table .u-contact > div,
+.u-table .u-contact > small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* a zero balance is not a button that does something, so it is not drawn as one */
+.u-bal { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.u-bal--zero { color: var(--ink-400); font-family: var(--ff-mono); font-size: .82rem; }
+.u-bal--live { background: var(--ok-50); color: var(--ok-700); border-color: var(--ok-200); }
+/* the block button was a solid red block on every single row, which made the
+   page read as a wall of danger; it is quiet until the row is the one being
+   looked at */
+.u-table .u-acts .js-block { background: var(--ink-100); color: var(--ink-500); border-color: transparent; }
+.u-table .u-acts .js-block:hover:not(:disabled) { background: var(--danger-600); color: #fff; }
+.u-table .u-acts .js-block:disabled { opacity: .35; }
+
+/* ---- the same list on a phone, as cards ---- */
+.u-cards { display: none; }
+@media (max-width: 720px) {
+  .u-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .u-stats .card { padding: 11px 12px; }
+  .u-stats .stat { gap: 9px; }
+  .u-stats .stat-ic { width: 30px; height: 30px; border-radius: 9px; }
+  .u-stats .stat-ic .ic { width: 1rem; height: 1rem; }
+  .u-stats .stat-v { font-size: 1.02rem; }
+  .u-stats .stat-l { font-size: .68rem; }
+  /* the fifth card would sit alone in a row of two and look like an accident,
+     so it is allowed to run the full width instead */
+  .u-stats > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+  .u-table { display: none; }
+  .u-cards { display: grid; gap: 10px; }
+}
+@media (min-width: 721px) and (max-width: 1100px) {
+  .u-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* one customer, as a card */
+.u-card {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 13px 14px;
+  border: 1px solid var(--border); border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(12, 18, 34, .04);
+}
+.u-card-ic { flex: 0 0 auto; }
+.u-card-mid { flex: 1 1 auto; min-width: 0; }
+.u-card-mid b { display: block; font-size: .92rem; }
+.u-card-contact { font-size: .78rem; color: var(--ink-500); overflow-wrap: anywhere; }
+.u-card-figures {
+  display: flex; flex-wrap: wrap; gap: 6px 14px;
+  margin-top: 9px; padding-top: 9px; border-top: 1px dashed var(--border-2);
+  font-size: .76rem; color: var(--ink-500);
+}
+.u-card-figures b { display: inline; font-family: var(--ff-mono); font-size: .8rem; color: var(--ink-800); margin-left: 4px; }
+.u-card-acts { display: flex; gap: 6px; flex: 0 0 auto; align-items: center; }
+.u-card-acts .btn { width: 34px; height: 34px; padding: 0; }
+.u-card-acts .js-block { background: var(--ink-100); color: var(--ink-500); border-color: transparent; }
+.u-card-acts .js-block:hover:not(:disabled) { background: var(--danger-600); color: #fff; }
+.u-card-pick { flex: 0 0 auto; align-self: center; }
+
+/* the bulk bar and the chips have to sit above the cards, not inside a table */
+.u-head {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.u-filters { display: flex; flex-wrap: wrap; gap: 7px; }
+
+/* The "select everyone on this page" control only exists for the phone, where the
+   table's own header checkbox goes with the table. It is a chip so it sits in the
+   same row as the filters rather than on a line of its own above them. */
+.u-pickall { display: none; align-items: center; gap: 7px; cursor: pointer; }
+.u-pickall input { width: 15px; height: 15px; accent-color: var(--brand-600); }
+@media (max-width: 720px) { .u-pickall { display: inline-flex; } }
+
+/* ---- the phone card, laid out as two rows ----
+   Top row: choose, who, and how they stand right now.
+   Foot:    the figures, and the three things an admin does to them.
+
+   The actions were beside the name in the first attempt and took a third of the
+   card. What was left for the figures was narrower than the three numbers in it,
+   so they wrapped one per line and the card ended up taller than a table row
+   while carrying less. Down at the foot they cost nothing, and the name gets the
+   full width so a long email address is not cut in half. */
+.u-card { display: block; padding: 12px 13px; }
+.u-card-top { display: flex; align-items: flex-start; gap: 10px; }
+.u-card-top .avatar { flex: 0 0 auto; }
+.u-card-pick { display: flex; align-items: center; height: 32px; flex: 0 0 auto; }
+.u-card-pick input { width: 17px; height: 17px; accent-color: var(--brand-600); }
+.u-card-mid { flex: 1 1 auto; min-width: 0; }
+.u-card-mid b { display: flex; align-items: center; gap: 6px; font-size: .93rem; }
+.u-card-contact {
+  display: block; font-size: .78rem; color: var(--ink-500);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.u-card-state { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+
+.u-card-foot {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-top: 10px; padding-top: 9px; border-top: 1px dashed var(--border-2);
+}
+.u-card-figures {
+  display: flex; flex: 1 1 auto; min-width: 0; flex-wrap: wrap;
+  gap: 4px 12px;
+  font-size: .74rem; color: var(--ink-500);
+}
+.u-card-figures > span { white-space: nowrap; }
+.u-card-figures b { display: inline; font-family: var(--ff-mono); font-size: .78rem; color: var(--ink-800); margin-left: 4px; }
+.u-card-acts { display: flex; gap: 5px; flex: 0 0 auto; }
+.u-card-acts .btn { width: 32px; height: 32px; padding: 0; border-radius: 10px; }
+
+/* Two corrections to the first version of the card.
+
+   The foot was set to wrap, so the three action buttons dropped onto a line of
+   their own whenever the figures needed more than the remaining width — which
+   they usually did, and so each card came out three lines tall. The foot does not
+   wrap; the figures inside it do. Same content, two lines instead of three.
+
+   And the dashed rule was drawn twice: once by .u-card-figures from the earlier
+   draft and once by .u-card-foot. The first is cancelled here rather than left to
+   be edited out of the middle of the file, so the two cannot both apply. */
+.u-card-figures { margin-top: 0; padding-top: 0; border-top: 0; }
+.u-card-foot { flex-wrap: nowrap; }
+.u-card-figures { flex-wrap: wrap; }
+/* the block button is quiet on the card too — a solid red on every row made the
+   page read as a wall of danger, which is the opposite of what it is for */
+.u-card-acts .js-block { background: var(--ink-100); color: var(--ink-500); border-color: transparent; box-shadow: none; }
+.u-card-acts .js-block:hover:not(:disabled) { background: var(--danger-600); color: #fff; }
+.u-card-acts .js-block:disabled { opacity: .35; }
+
+/* The block button still carried a red glow from .btn-danger's own shadow, and a
+   shadow on a 30px square button reads as an error even when the row is fine. It
+   is cleared here; the colour still arrives on hover. */
+.u-table .u-acts .js-block,
+.u-card-acts .js-block { box-shadow: none; }
+
+/* =====================================================================
+   The card, third time — and the reason is a length, not a layout.
+
+   A balance can be four figures and a lifetime total five, and a row of
+   amounts that fits "₹28,448" does not fit "₹1,61,681". With the three action
+   buttons sharing the line, the figures were left about 215px — already narrower
+   than three ordinary amounts — so the longer ones pushed past it and the card
+   came apart. Cutting the number of figures per line would have hidden the
+   numbers instead of fixing anything.
+
+   So the card is three rows now: who they are, what they have done, and what you
+   can do to them. The amounts get the whole width, the actions get a line to
+   themselves, and neither can squeeze the other. The buttons carry their names
+   as well as their marks, which is what makes a line of three feel deliberate
+   rather than like three leftovers — and it makes them proper tap targets
+   instead of three 32px squares.
+   ------------------------------------------------------------------ */
+.u-card { display: block; padding: 13px 14px 11px; }
+
+.u-card-top { display: flex; align-items: flex-start; gap: 10px; }
+.u-card-top .avatar { flex: 0 0 auto; }
+.u-card-pick { display: flex; align-items: center; height: 32px; flex: 0 0 auto; }
+.u-card-pick input { width: 17px; height: 17px; accent-color: var(--brand-600); }
+.u-card-mid { flex: 1 1 auto; min-width: 0; }
+.u-card-mid b { display: flex; align-items: center; gap: 6px; font-size: .94rem; }
+.u-card-contact {
+  display: block; font-size: .78rem; color: var(--ink-500);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* the figures: a full-width row of their own, each one allowed to be as wide as
+   its own number needs */
+.u-card-figures {
+  display: flex; flex-wrap: wrap; gap: 7px;
+  margin: 11px 0 0;
+}
+.u-fig {
+  display: inline-flex; align-items: baseline; gap: 5px;
+  padding: 5px 10px; border-radius: 10px;
+  background: var(--ink-50); border: 1px solid var(--border);
+  font-size: .72rem; color: var(--ink-500); white-space: nowrap;
+}
+.u-fig b {
+  font-family: var(--ff-mono); font-size: .82rem; font-weight: 700;
+  color: var(--ink-900); letter-spacing: -.02em;
+}
+.u-fig.is-empty b { color: var(--ink-300); }
+.u-fig .u-bal {
+  background: var(--ok-50); color: var(--ok-700); border: 1px solid var(--ok-200);
+  padding: 1px 8px; border-radius: 99px; cursor: pointer; font-size: .72rem;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.u-fig .u-bal b { color: var(--ok-800); }
+
+/* the actions: their own line, named, and pushed to the right */
+.u-card-foot {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-2);
+}
+.u-card-state { display: flex; gap: 5px; flex: 1 1 auto; min-width: 0; flex-wrap: wrap; }
+.u-card-acts { display: flex; gap: 6px; flex: 0 0 auto; margin-left: auto; }
+.u-card-acts .btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  height: 38px; padding: 0 12px; border-radius: 11px;
+  font-size: .76rem; font-weight: 600; white-space: nowrap;
+}
+.u-card-acts .btn .ic { width: 1rem; height: 1rem; flex: 0 0 auto; }
+.u-card-acts .js-block {
+  background: var(--ink-100); color: var(--ink-600); border-color: transparent; box-shadow: none;
+}
+.u-card-acts .js-block:hover:not(:disabled) { background: var(--danger-600); color: #fff; }
+.u-card-acts .js-block:disabled { opacity: .4; }
+
+/* the narrowest phones: the button names would not fit three across beside the
+   badges, so the line is given over to them entirely */
+@media (max-width: 380px) {
+  .u-card-acts { width: 100%; margin-left: 0; }
+  .u-card-acts .btn { flex: 1 1 0; padding: 0 6px; }
+  .u-card-state { flex: 1 1 100%; }
+}
+
+/* The figures row was taken off the phone card entirely.
+
+   Orders, spent, wallet and joined are four numbers per person, pushed in
+   between the name and the buttons, and none of them is what an admin is doing
+   on a phone — comparing people is what the table is for, on a screen wide
+   enough to hold a table. The rule for the stylesheet is that they stay: so the
+   pills, the dashed row that held them and the wallet button inside them are
+   cancelled here rather than left behind in case they are wanted later. */
+.u-card-figures, .u-fig, .u-fig b, .u-fig .u-bal { display: none; }
+
+/* Two rows now, so the gap the figures used to leave is gone and the buttons sit
+   directly under the contact details. */
+.u-card { padding: 13px 14px 12px; }
+.u-card-foot { margin-top: 11px; }
+
+/* "Details" is the button worth reaching for on a phone — it is where the figures
+   are — so it is the only one in the brand colour, and the other two stay quiet.
+   That is also what stops three equal buttons reading as three equal choices. */
+.u-card-acts .js-view { background: var(--brand-600); color: #fff; border-color: transparent; }
+.u-card-acts .js-view:hover { background: var(--brand-700); }
+.u-card-acts .js-copy { background: var(--ink-100); color: var(--ink-600); border-color: transparent; }
+.u-card-acts .js-block { background: var(--ink-100); color: var(--ink-600); border-color: transparent; }
+.u-card-acts .js-block:hover:not(:disabled) { background: var(--danger-600); color: #fff; }
+
+/* The wallet pill, back on the card — and the reason it is the one that stayed.
+
+   It sits with the status badges on the second row rather than in a row of its
+   own, so it costs no vertical space, and it is a button because it opens the
+   wallet controls. A balance of any length fits: the pill grows, and the
+   buttons on the right shrink to their icons before anything is pushed off the
+   card. That is what three figures in a row would not do.
+*/
+.u-card-state { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.u-bal {
+  display: inline-flex; align-items: center; gap: 5px;
+  height: 30px; padding: 0 10px; border-radius: 99px;
+  border: 1px solid transparent; font-size: .74rem; font-weight: 600;
+  white-space: nowrap; cursor: pointer;
+}
+.u-bal .ic { width: .95rem; height: .95rem; flex: 0 0 auto; }
+.u-bal b { font-family: var(--ff-mono); font-size: .78rem; font-weight: 700; letter-spacing: -.02em; }
+.u-bal--live { background: var(--ok-50); color: var(--ok-700); border-color: var(--ok-200); }
+.u-bal--live b { color: var(--ok-800); }
+.u-bal--live:hover { background: var(--ok-100); }
+.u-bal--zero {
+  background: var(--ink-50); color: var(--ink-400);
+  border-color: var(--border); cursor: default;
+}
+
+/* the three buttons give up their names before anything else gives up its place,
+   so a long balance shortens the labels rather than pushing the row wide */
+@media (max-width: 430px) {
+  .u-card-acts .btn span { display: none; }
+  .u-card-acts .btn { width: 38px; padding: 0; }
+}
+@media (min-width: 431px) {
+  .u-card-acts .btn span { display: inline; }
+}
+
+/* =====================================================================
+   Where the table stops and the cards start
+
+   It used to be 720px, which left a laptop as the worst of both. The panel's own
+   sidebar takes roughly a quarter of a 1024px window, so the table was left about
+   770px for eight columns — not enough — and it ran off the edge: the wallet
+   figure cut in half, the status column and all three buttons off the screen
+   entirely, with nothing to suggest it except scrolling sideways through a list
+   being read. Eight columns need about 980px of their own, so the switch is at
+   1180px and below that the cards are what you get.
+
+   The cards then carry the figures, because a card at 721px and up has room for
+   them, and two of them sit side by side so the page is not a single slow
+   column. On a phone the figures go — three numbers nobody asked for, and a long
+   balance is what pushed the row apart — but the wallet stays, in the footer,
+   because it is the one that opens the wallet controls.
+
+   The table is still given a horizontal scrollbar as a backstop. It should never
+   be reached now, and a page that can scroll sideways without saying so is
+   exactly the problem this is fixing.
+   ------------------------------------------------------------------ */
+@media (max-width: 1180px) {
+  .u-table { display: none; }
+  .u-cards { display: grid; gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .u-cards .u-card { min-width: 0; }
+}
+@media (min-width: 1181px) {
+  .u-cards { display: none; }
+  .u-table { display: block; }
+}
+@media (min-width: 721px) and (max-width: 1180px) {
+  /* the status badges sit beside the name on a card this size, and the footer is
+     the figures and the buttons */
+  .u-card-state { flex-direction: row; }
+}
+@media (min-width: 900px) and (max-width: 1180px) {
+  .u-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1181px) {
+  .u-cards { display: none !important; }
+}
+@media (max-width: 899px) {
+  .u-cards { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* figures: shown on the card everywhere except a phone */
+.u-card-figures { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.u-fig {
+  display: inline-flex; align-items: baseline; gap: 5px;
+  padding: 4px 9px; border-radius: 9px;
+  background: var(--ink-50); border: 1px solid var(--border);
+  font-size: .71rem; color: var(--ink-500); white-space: nowrap;
+}
+.u-fig b {
+  font-family: var(--ff-mono); font-size: .79rem; font-weight: 700;
+  color: var(--ink-900); letter-spacing: -.02em;
+}
+.u-fig.is-empty b { color: var(--ink-300); }
+
+@media (max-width: 720px) {
+  .u-card-figures { display: none; }
+}
+
+/* =====================================================================
+   What fitText needs in order to work
+
+   It measures an element against its own width, which only means something if
+   the element is allowed to be narrower than its text — so every amount that
+   can grow is given a box that clips, a min-width of 0 so it can shrink at all
+   inside a flex row, and data-fit so the helper knows to come looking.
+
+   Without the clipping the measurement is of a box that grew to match the
+   number, so the helper would conclude everything fits and do nothing. That is
+   the whole reason the number used to escape the card: nothing was stopping it.
+   ------------------------------------------------------------------ */
+[data-fit] {
+  min-width: 0;
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* the stat value has a block beside it, so it fills what is left rather than
+   sitting at its natural width */
+.u-stats .stat-v[data-fit] { display: block; }
+
+/* the wallet pill: the number is the part that grows, and the pill is only as
+   wide as it needs to be — up to the card, at which point the number shrinks */
+.u-bal { max-width: 100%; min-width: 0; }
+.u-bal b[data-fit] { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.u-bal .ic { flex: 0 0 auto; }
+
+/* the table's spent column: a number that used to push the wallet and the
+   actions out of the frame */
+.u-amt { max-width: 150px; }
+.u-amt b[data-fit] { display: block; text-align: right; }
+
+/* the figure pills on a card: each is allowed to be as wide as its own number,
+   and shrink only when even the card's width is not enough */
+.u-fig { max-width: 100%; min-width: 0; }
+.u-fig b[data-fit] { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+
+/* =====================================================================
+   Numbers that have outgrown their box
+
+   A balance and a lifetime total are the two figures on these pages with no
+   upper bound, and they are written in a column that was sized for four digits.
+   When they outgrow it they do not stop — they push over the column beside them
+   and off the card, and whatever was in the next column is left sitting under
+   the wrong heading.
+
+   So any element holding a figure of eight digits or more is measured, and if it
+   is out of its box the type is stepped down until it fits. The measurement is
+   in app.js; this is the part that makes it measurable, and it has to be here
+   rather than there: an element that grows to match its own text reports no
+   overflow, so nothing would ever be shrunk.
+
+   min-width:0 is the other half. Inside a flex row the default is min-width:auto,
+   which refuses to go below the content, so the box would be pushed wide instead
+   of the type being made smaller. That is the difference between the number
+   fitting and the number shrinking.
+   ===================================================================== */
+[data-fit] {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* an inline element has no width to report until it is told to have one, and
+   without this the measurement reads 0 and concludes everything fits */
+[data-fit] { display: inline-block; }
+/* a figure sitting next to an icon keeps the icon and gives up its own width */
+[data-fit] > .ic, [data-fit] > svg { flex: 0 0 auto; }
+
+/* A rupee figure is given the whole row on a phone.
+
+   The grid is two columns there, and half a row minus the tile and the label is
+   not enough for a balance that has eleven digits: the fitting bottoms out at the
+   smallest size it will use and the number is ellipsised at nine pixels, which
+   technically fits and is useless to read. The two counts above it are single
+   digits and are happy in half a row, so the figures that can grow take the
+   whole of it. Measured at 390px: held-in-wallets and largest-balance went from
+   clipped at 9.3px to the full fourteen digits at a readable size. */
+@media (max-width: 720px) {
+  .u-stats .stat-wide { grid-column: 1 / -1; }
+}
+
+/* The three action buttons drop their names based on the width of the card, not
+   the width of the screen.
+
+   Keyed to the viewport — which is what the rules above do — they stayed on at
+   1024px, where the grid gives each card about 490px and three named buttons
+   sharing a line with a wallet balance do not fit. The words were cut mid-letter:
+   "Detai", "Cop", "Bloc". The card is a size container now, so the question is
+   asked of the box the buttons are actually sitting in rather than of a number
+   that has nothing to do with it. Narrow card, icons. Card with room for them,
+   names. The viewport rules above are kept as the fallback for anything without
+   container queries, and these come after so they win where both apply. */
+.u-card { container-type: inline-size; }
+@container (max-width: 420px) {
+  .u-card-acts .btn span { display: none; }
+  .u-card-acts .btn { width: 38px; padding: 0; }
+}
+@container (min-width: 421px) {
+  .u-card-acts .btn span { display: inline; }
+}
+
+/* The table was eighteen pixels wider than the card that holds it, and the
+   difference came out of the last action button, which sat against the edge with
+   four of its pixels outside. The card scrolls sideways, so nothing was lost —
+   but a button clipped at the edge of a panel reads as broken, and nobody
+   discovers it by scrolling.
+
+   The contact column gives up the difference instead. Its cell already truncates,
+   but the truncation never engaged: nothing was constraining the column, so it was
+   laid out at its full width and the ellipsis had no reason to appear. Capping the
+   text inside the cell bounds what the column asks for, and the table fits. The
+   actions column is told not to wrap, so the three buttons keep their width
+   whatever the address is. */
+.u-table .u-contact > div,
+.u-table .u-contact > small { max-width: 230px; }
+.u-table .u-acts { white-space: nowrap; }
+
+/* Six pixels off each side of every cell, which is 48 across the eight columns —
+   more than the eighteen the table was over by, and less than anyone would
+   notice. The alternative was taking it out of one column, and the Wallet column
+   is the one that was widest: it holds a balance, and a balance is the last thing
+   on this page that should be given less room. */
+.u-table .table td,
+.u-table .table th { padding-left: 11px; padding-right: 11px; }

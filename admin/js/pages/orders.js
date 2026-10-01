@@ -24,6 +24,7 @@ async function load() {
   try {
     ALL = await getOrders({ limitN: 500 });
     render();
+    paintClear();
   } catch (e) {
     console.error(e);
     $("#rows").innerHTML = '<tr><td colspan="8"><div class="alert alert-err">' + icon("alert") +
@@ -255,6 +256,47 @@ async function del(id) {
   } catch (e) { console.error(e); toast("Could not delete the order.", "err"); }
 }
 
+/* Canceled orders one at a time is one dialog per row. The same question as with
+   the payment requests: a row nobody will act on again is not a record, it is
+   something to scroll past. Only `cancelled` is taken — an order that is open,
+   paid, packed or delivered is a live thing, and a rule that guessed at "old"
+   by date would one day throw away an order the customer is waiting for.
+
+   The card numbers and PINs inside a canceled order go with it. That is the
+   point: nothing is served from these rows, and card details are the last thing
+   to leave a database. */
+async function clearCancelled() {
+  const gone = ALL.filter((o) => o.status === "cancelled");
+  if (!gone.length) { toast("No cancelled orders to clear.", "info"); return; }
+  const ok = await confirmBox({
+    title: "Delete " + gone.length + " cancelled order" + (gone.length === 1 ? "?" : "s?"),
+    text: "Their rows are removed permanently, including the card numbers and PINs stored in them. " +
+      "Any live order is left alone.",
+    ok: "Delete them"
+  });
+  if (!ok) return;
+  const btn = $("#clearCancelled");
+  try {
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>'; }
+    for (const o of gone) await deleteOrder(o.id);
+    toast(gone.length + " order" + (gone.length === 1 ? "" : "s") + " removed.", "ok");
+    await load();
+  } catch (e) {
+    console.error(e);
+    toast("Could not remove those orders.", "err");
+    if (btn) { btn.disabled = false; btn.innerHTML = icon("trash", "ic ic-sm") + " Clear cancelled"; }
+  }
+}
+
+/* keeps the button's count honest after every reload and every filter change */
+function paintClear() {
+  const btn = $("#clearCancelled");
+  if (!btn) return;
+  const n = ALL.filter((o) => o.status === "cancelled").length;
+  btn.hidden = !n;
+  btn.innerHTML = icon("trash", "ic ic-sm") + " Clear " + n + " cancelled";
+}
+
 function bind() {
   let t;
   $("#q").addEventListener("input", (e) => {
@@ -268,6 +310,8 @@ function bind() {
     $("#refresh").innerHTML = icon("refresh");
     toast("Orders refreshed.", "ok");
   });
+
+  $("#clearCancelled")?.addEventListener("click", clearCancelled);
 
   $("#chips").addEventListener("click", (e) => {
     const c = e.target.closest(".chip");

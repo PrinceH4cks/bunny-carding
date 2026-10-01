@@ -1,4 +1,4 @@
-import { $ } from "./app.js";
+﻿import { $ } from "./app.js";
 import { toast } from "../components/toast.js";
 
 /* =========================================================
@@ -63,5 +63,6 @@ export const COL = {
   walletTxns: "wallet_txns",
   deposits:   "deposits",
     faqs:       "faqs",
-    coupons:    "coupons"
+    coupons:    "coupons",
+  /* customers asking to be removed — read in the panel, acted on by the owner */
 };

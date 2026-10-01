@@ -67,16 +67,16 @@ export async function loadProfile(u) {
 }
 
 /* ==================================================================
-   OWNER UID â€” yahan apna Firebase UID paste karo.
+   OWNER UID — yahan apna Firebase UID paste karo.
    Firebase Console > Authentication > Users > apna account > UID
    Example:  Zx9Kq2Lm7pQrStUvWxYz
    ================================================================== */
   export const OWNER_UID = "Hku49smD1xhjdZn9KybkqREH3of2";
 
 /* Panel sirf usi UID ka hai. Role koi rasta nahi: pehle role 'admin' bhi
-   chalti thi, aur Firestore rules bhi role maante the â€” matlab panel ek band
+   chalti thi, aur Firestore rules bhi role maante the — matlab panel ek band
    tha par database khola. Ab dono jagah sirf UID hai, to dono me wahi UID
-   honi chahiye. UID paste nahi hui to koi andar nahi aa sakta â€” ye jaan
+   honi chahiye. UID paste nahi hui to koi andar nahi aa sakta — ye jaan
    boojh kar hai, warna panel khula dikhe aur kuch na kar sake. */
 export const isAdmin = () =>
   OWNER_UID.length > 10 && !OWNER_UID.startsWith("PASTE") && CURRENT?.uid === OWNER_UID;
@@ -128,7 +128,7 @@ export function watchAuth(cb) {
   return () => subscribers.delete(cb);   // returns an unsubscribe fn
 }
 
-/* resolves once, with the very first auth state â€” no side effects */
+/* resolves once, with the very first auth state — no side effects */
 export function whenReady() {
   startListener();
   return firstSettle;
@@ -244,8 +244,8 @@ export async function requireAdmin() {
   const u = await whenReady();
   if (!u) {
     /* The destination goes in as an absolute address inside the panel. It used
-       to be the relative string "../../pages/dashboard.html", which â€” read from
-       /admin/index.html â€” resolves to the *storefront's* dashboard: so signing in
+       to be the relative string "../../pages/dashboard.html", which — read from
+       /admin/index.html — resolves to the *storefront's* dashboard: so signing in
        after being bounced landed you in the shop instead of the panel. Build it
        with pageUrl and the mistake cannot be made again. */
     bounce(pageUrl("index.html") + "?next=" + encodeURIComponent(pageUrl("pages/dashboard.html")));

@@ -4,7 +4,7 @@ import { queryTolerant } from "./order-service.js";
 import { db, storage, COL } from "../core/firebase-config.js";
 
 import {
-  collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, addDoc,
+  collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, addDoc, writeBatch,
   query, where, orderBy, limit, serverTimestamp, increment, runTransaction
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { ref as sref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
@@ -113,6 +113,29 @@ export async function approveDeposit(id, uid_, amount) {
 
 export async function rejectDeposit(id) {
   await updateDoc(doc(db, COL.deposits, id), { status: "rejected", updatedAt: serverTimestamp() });
+}
+
+/* Deletes requests that are finished with, so the list an admin works through is
+   only the work still to do.
+
+   "Finished" means a decision has been made and recorded: approved, rejected, or
+   created and then abandoned by the customer. Nothing awaiting review is ever
+   touched, and a request that is still `pending` with a UTR against it is left
+   alone as well — the admin may not have come to it yet, and a row nobody has
+   looked at is not clutter. The caller passes exactly the ids it wants gone, so
+   the decision of what counts as old stays in the page, and the rule that only
+   the owner can delete anything stays in the rules.
+
+   In batches, because the SDK refuses a write batch above 500 operations. */
+export async function deleteDeposits(ids) {
+  const list = [...new Set((ids || []).filter(Boolean))];
+  if (!list.length) return 0;
+  for (let i = 0; i < list.length; i += 400) {
+    const b = writeBatch(db);
+    for (const id of list.slice(i, i + 400)) b.delete(doc(db, COL.deposits, id));
+    await b.commit();
+  }
+  return list.length;
 }
 
 

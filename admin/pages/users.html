@@ -71,7 +71,7 @@
       </div>
     </div>
 
-    <div class="grid g-5 mb-3" id="mini">
+    <div class="u-stats" id="mini">
       <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
       <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
       <div class="card card-pad"><div class="sk sk-line" style="width:50%"></div><div class="sk sk-title"></div></div>
@@ -95,6 +95,13 @@
           <button class="chip" data-filter="wallet">Has balance</button>
           <button class="chip" data-filter="frozen">Frozen</button>
           <button class="chip" data-filter="blocked">Blocked</button>
+          <!-- the table's own header checkbox disappears with the table on a
+               phone, and "select everyone on this page" is not a thing that can
+               be allowed to go missing just because the screen is narrow -->
+          <label class="chip u-pickall">
+            <input type="checkbox" id="pickAllCards" aria-label="Select every user on this page">
+            <span>Select page</span>
+          </label>
         </div>
 
         <div class="bulkbar hidden" id="bulk">
@@ -107,7 +114,11 @@
           </div>
         </div>
 
-        <div class="table-wrap">
+        <!-- A seven-column table is not a small table on a phone, it is a sideways
+             one. So the same customers are rendered twice from the same data: a
+             row for the table, and a card for the list, and the stylesheet shows
+             whichever the width can carry. -->
+        <div class="table-wrap u-table">
           <table class="table">
             <thead>
               <tr>
@@ -124,6 +135,7 @@
             <tbody id="rows"></tbody>
           </table>
         </div>
+        <div class="u-cards" id="cards"></div>
       </section>
 
     </div>
@@ -152,7 +164,7 @@
       </div>
       <div class="grid g-2 gap-2">
         <label class="field">
-          <span class="fs-xs text-muted">Amount per user (â‚¹)</span>
+          <span class="fs-xs text-muted">Amount per user (₹)</span>
           <input class="input mono" id="bAmt" type="number" min="0" step="1" inputmode="numeric" placeholder="0">
         </label>
         <label class="field">

@@ -17,7 +17,7 @@ import { $, $$, inr, esc, fmtDate, timeAgo } from "../core/app.js";
 import { toast } from "../components/toast.js";
 import { emptyState } from "../components/ui.js";
 import { confirmBox } from "../components/modal.js";
-import { getDeposits, approveDeposit, rejectDeposit } from "../services/user-service.js";
+import { getDeposits, approveDeposit, rejectDeposit, deleteDeposits } from "../services/user-service.js";
 import { requireAdmin } from "../core/auth.js";
 import { icon } from "../components/icons.js";
 
@@ -76,11 +76,20 @@ async function load() {
 
 function paint() {
   const all = mine();
+  const clr = all.filter(clearable).length;
   $("#mini").innerHTML =
     mini("hourglass", "Waiting for you", all.filter((d) => d.status === "submitted").length, "var(--warn-50)", "var(--warn-600)") +
     mini("coins", "Credited to wallets", inr(all.filter((d) => d.status === "approved").reduce((s, d) => s + Number(d.amount || 0), 0)), "var(--ok-50)", "var(--ok-600)") +
     mini("clock", "Created, not submitted", all.filter((d) => d.status === "pending").length, "var(--ink-100)", "var(--ink-500)") +
     mini("x", "Rejected", all.filter((d) => d.status === "rejected").length, "var(--danger-50)", "var(--danger-600)");
+  /* The button says how much it would take away, and it is only there when
+     there is something to take away — a button that is always on and usually
+     does nothing is one more thing to read past. */
+  const btn = $("#clearDone");
+  if (btn) {
+    btn.hidden = !clr;
+    btn.innerHTML = icon("trash", "ic ic-sm") + " Clear " + clr + " finished";
+  }
   render();
 }
 
@@ -149,6 +158,46 @@ function details(d) {
 }
 
 /* ---------- actions ---------- */
+
+/* A request nobody is going to act on any more is not history to keep, it is
+   rows in a list an admin has to scroll past every day. Approved and rejected
+   are decided; a `pending` request with nothing in it is one the customer
+   walked away from, and both are safe to remove. A `pending` row that has a
+   reference against it is a payment the customer says they made and nobody has
+   looked at yet — that is work, not clutter, and it stays.
+
+   The row's own status decides this, not its age. Age would need a date the
+   rules do not verify and would throw away a request the customer made this
+   morning, which is exactly the one worth seeing. */
+function clearable(d) {
+  if (d.status === "approved" || d.status === "rejected") return true;
+  const hasRef = String(d.hash || d.utr || "").trim().length > 0;
+  return d.status === "pending" && !hasRef;
+}
+
+async function clearFinished() {
+  const gone = mine().filter(clearable);
+  if (!gone.length) { toast("Nothing finished to clear.", "info"); return; }
+
+  const money = gone.filter((d) => d.status === "approved")
+    .reduce((s, d) => s + Number(d.amount || 0), 0);
+  const ok = await confirmBox({
+    title: "Delete " + gone.length + " finished request" + (gone.length === 1 ? "?" : "s?"),
+    text: "Approved, rejected and abandoned requests will be removed from this list. " +
+      (money ? inr(money) + " of already-credited deposits is included — the wallets keep the credit, " +
+        "only the request row goes. " : "") +
+      "Anything still waiting for review stays.",
+    ok: "Delete them"
+  });
+  if (!ok) return;
+
+  try {
+    await deleteDeposits(gone.map((d) => d.id));
+    toast(gone.length + " request" + (gone.length === 1 ? "" : "s") + " removed.", "ok");
+    await load();
+  } catch (e) { console.error(e); toast("Could not remove those requests.", "err"); }
+}
+
 async function okDeposit(id, amount) {
   const d = mine().find((x) => x.id === id);
   /* the confirm box repeats the two things that decide it: who, and how much */
@@ -190,6 +239,8 @@ function bind() {
     b.innerHTML = icon("refresh", "ic ic-sm") + " Refresh";
     toast("Page refreshed.", "ok");
   });
+
+  $("#clearDone")?.addEventListener("click", clearFinished);
 
   $("#depChips")?.addEventListener("click", (e) => {
     const c = e.target.closest("[data-df]");

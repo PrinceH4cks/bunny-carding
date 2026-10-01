@@ -6,11 +6,27 @@
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Badalna ho to yahan aur admin/js/auth.js ke OWNER_UID me wahi UID.
+    // Badalna ho to yahan aur admin/js/core/auth.js ke OWNER_UID me wahi UID.
     function OWNER_UID() { return 'Hku49smD1xhjdZn9KybkqREH3of2'; }
 
     function signedIn() { return request.auth != null; }
     function isSelf(uid) { return signedIn() && request.auth.uid == uid; }
+
+    // Free plan par daily reads hi pehle khatam hoti hain, aur ek bina limit
+    // wali query poori collection kheench leti hai — website par chalti hai to
+    // normal hai, par koi script chalakar ek hi baar me database nikal sakta hai.
+    //
+    // request.query.limit use hone par padha jata hai; query me limit na ho to
+    // error padhta hai aur rule false ho jaata hai. Yani bina limit wala query
+    // ab chalega hi nahi, chahe koi bheje. App ke saare public LIST queries me
+    // limit lagi hai, isliye site chalti rehti hai — sirf unlimited maangna
+    // band hua.
+    //
+    // Sirf un collection par lagta hai jahan app list query karti hai. Jahan
+    // app getDoc se ek document padhti hai (settings) wahan yeh lagana galat
+    // hota — get() par limit access karna error deta hai aur rule band ho
+    // jaata hai, jabki security ka wahan koi faida tha hi nahi.
+    function capped(n) { return request.query.limit <= n; }
 
     // Sirf wo UID. Role 'admin' likha kar kisi ko bhi panel ya database ka
     // access nahi milta — role sirf record rahta hai, power nahi.
@@ -20,14 +36,27 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow read: if isSelf(userId) || isAdmin();
-      allow create: if isSelf(userId);
+      // Sirf apne liye, aur sirf wahi fields jo signup form bhejta hai. Bade
+      // ya lambe text bhi nahi — ek 40KB document bhi free quota jaldi khaata hai.
+      //
+      // createdAt ka server ka time hona zaroori hai: isse profile par khud ka
+      // date nahi likh sakte, aur signup/delete ka loop bhi band rehta hai —
+      // delete to sirf owner kar sakta hai, customer ke liye koi rasta hi nahi.
+      allow create: if isSelf(userId)
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.name is string
+        && request.resource.data.name.size() <= 120
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 200
+        && request.resource.data.phone is string
+        && request.resource.data.phone.size() <= 24;
       // disabled aur createdAt ko value se rokte hain, naam se nahi - profile
       // form har field spread karta hai, to naye field par bhi ye sahi rehta hai.
       allow update: if isAdmin()
         || (isSelf(userId)
             && request.resource.data.disabled == resource.data.get('disabled', false)
             && request.resource.data.createdAt == resource.data.get('createdAt', null));
-      allow delete: if isAdmin() || isSelf(userId);
+      allow delete: if isAdmin();
     }
 
     // Read jaan bujh kar public hai: cart aur checkout bina filter ke saare
@@ -35,7 +64,7 @@ service cloud.firestore {
     // hai — cart khali ho jata. Band karna hai to cart.js me onlyActive:true
     // karke cart ko "ab available nahi" dikhana padega.
     match /products/{productId} {
-      allow read: if true;
+      allow read: if isAdmin() || capped(200);
       allow create, update, delete: if isAdmin();
     }
 
@@ -55,14 +84,22 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
-    // Append-only ledger. 'credit' tab likha jata hai jab admin deposit approve
-    // karta hai, isliye customer sirf apna debit likh sakta hai.
+    // Ledger, append-only. Customer apna debit likh sakta hai, admin credit
+    // likhta hai deposit approve karte waqt.
+    //
+    // Owner ka allowance yahan zaroori hai, warna approve karna hi nahi ho sakta:
+    // creditWallet() ledger me userId CUSTOMER ka likhta hai aur type 'credit'
+    // rakhta hai, isliye dono taraf check fail hote — admin khud ko 'self' nahi
+    // hai, aur type 'debit' nahi hai. Wallet ka balance to badh jaata tha (us
+    // collection par admin chal sakta hai), par ledger likhna fail hota, poora
+    // approve ruk jaata, aur deposit 'Awaiting' me hi atak rehta tha.
     match /wallet_txns/{txnId} {
       allow read: if isSelf(resource.data.userId) || isAdmin();
-      allow create: if isSelf(request.resource.data.userId)
-        && request.resource.data.type == 'debit'
-        && request.resource.data.amount is number
-        && request.resource.data.amount > 0;
+      allow create: if isAdmin()
+        || (isSelf(request.resource.data.userId)
+            && request.resource.data.type == 'debit'
+            && request.resource.data.amount is number
+            && request.resource.data.amount > 0);
       allow update, delete: if isAdmin();
     }
 
@@ -71,8 +108,18 @@ service cloud.firestore {
         && request.resource.data.status == 'pending'
         && request.resource.data.amount is number
         && request.resource.data.amount > 0
+        /* 10 lakh se upar ka deposit kabhi nahi hoga. Badi value likhne se koi
+           fayda nahi, par bina iske koi bhi number bhej sakta tha. */
+        && request.resource.data.amount <= 1000000
         && request.resource.data.method is string
-        && request.resource.data.method.size() > 0;
+        && request.resource.data.method.size() > 0
+        && request.resource.data.method.size() <= 20
+        && request.resource.data.userName is string
+        && request.resource.data.userName.size() <= 120
+        && request.resource.data.userEmail is string
+        && request.resource.data.userEmail.size() <= 200
+        && request.resource.data.userPhone is string
+        && request.resource.data.userPhone.size() <= 24;
       allow read: if isSelf(resource.data.userId) || isAdmin();
       // Sirf UTR/hash, sirf pending deposit me. Amount aur userId list me nahi.
       allow update: if isAdmin()
@@ -81,7 +128,13 @@ service cloud.firestore {
             && request.resource.data.diff(resource.data).affectedKeys()
                  .hasOnly(['utr', 'hash', 'gatewayOrderId', 'gatewayStatusAt', 'updatedAt'])
             && request.resource.data.userId == resource.data.userId
-            && request.resource.data.amount == resource.data.amount);
+            && request.resource.data.amount == resource.data.amount
+            /* UTR 12 digit, hash lambi hex — inke alawa kuch bhi is field me
+               nahi aa sakta, to ek document me 1MB bharne se nahi ho paata. */
+            && (!('utr' in request.resource.data.diff(resource.data).affectedKeys())
+                || (request.resource.data.utr is string && request.resource.data.utr.size() <= 24))
+            && (!('hash' in request.resource.data.diff(resource.data).affectedKeys())
+                || (request.resource.data.hash is string && request.resource.data.hash.size() <= 130)));
       allow delete: if isAdmin();
     }
 
@@ -101,15 +154,41 @@ service cloud.firestore {
     }
 
     match /reviews/{reviewId} {
-      allow read: if true;
-      allow create: if isSelf(request.resource.data.userId);
+      allow read: if isAdmin() || capped(200);
+      // Rating 1 se 5 ke beech aur text chhota — ek 1MB ka "review" likh kar
+      // database bharne ka raasta band. createdAt form bhejta hai, isliye use
+      // nahi rok sakte; size aur range kaafi hain.
+      //
+      // Naam ka field 'userName' hai, 'name' nahi — review form wahi bhejta
+      // hai. Yahan 'name' maangne se har review reject ho raha tha, kyunki
+      // missing field null hoti hai aur `is string` us par fail hota hai.
+      allow create: if isSelf(request.resource.data.userId)
+        && request.resource.data.rating is int
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5
+        && request.resource.data.productId is string
+        && request.resource.data.productId.size() > 0
+        && request.resource.data.productId.size() <= 60
+        && request.resource.data.text is string
+        && request.resource.data.text.size() <= 1000
+        && request.resource.data.userName is string
+        && request.resource.data.userName.size() <= 120;
       allow update: if isAdmin()
-        || (isSelf(resource.data.userId) && request.resource.data.userId == resource.data.userId);
-      allow delete: if isAdmin() || isSelf(resource.data.userId);
+        || (isSelf(request.resource.data.userId)
+            && request.resource.data.userId == resource.data.userId
+            && request.resource.data.text is string
+            && request.resource.data.text.size() <= 1000);
+      allow delete: if isAdmin() || isSelf(request.resource.data.userId);
     }
 
     // Bina login bhi bheja ja sakta hai. Length ki zaroorat isliye ki koi 5MB
     // ka blob daal kar database bhar na de.
+    //
+    // Yehi ek jagah hai jahan bina login koi likh sakta hai, isliye yehi free
+    // quota khaane ka sabse aasan raasta hai. Rules se "kitne message bheje"
+    // gin nahi sakte — iske liye Firebase console me App Check chalu karna
+    // padega (Project settings > App Check, free hai). Tab tak jitna chhota
+    // rakhna utna behtar.
     match /messages/{msgId} {
       allow create: if request.resource.data.name is string
         && request.resource.data.name.size() > 0
@@ -123,17 +202,24 @@ service cloud.firestore {
     }
 
     match /faqs/{faqId} {
-      allow read: if true;
+      allow read: if isAdmin() || capped(200);
       allow write: if isAdmin();
     }
 
     match /coupons/{couponId} {
-      allow read: if true;
+      allow read: if isAdmin() || capped(200);
       allow write: if isAdmin();
     }
 
     // Checkout ko gateway ki details chahiye. Jo browser me chahiye wo browser
     // me chhupi nahi hoti — secret keys Cloud Functions me rakho, yahan nahi.
+    //
+    // Ise capped() nahi kiya ja raha, aur jaan-boojhkar nahi kiya gaya. Yahan
+    // koi list query nahi hoti: app inhe ek-ek karke getDoc se padhti hai
+    // (settings/payment, settings/site), aur request.query.limit ek get() par
+    // access karne se error deta hai — rule false ho jaata aur poora wallet,
+    // deposit aur checkout padh hi nahi paata. Aur yahan cap ka koi kaam bhi
+    // nahi: do-teen chhote documents, har baar ek-ek document.
     match /settings/{any} {
       allow read: if true;
       allow write: if isAdmin();
