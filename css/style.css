@@ -4368,3 +4368,44 @@ body:has(.dash-page) {
 [data-fit] { display: inline-block; }
 /* a figure sitting next to an icon keeps the icon and gives up its own width */
 [data-fit] > .ic, [data-fit] > svg { flex: 0 0 auto; }
+
+/* Half the trim, which is where it reads as snug rather than cramped.
+
+   The first attempt took the bar from 76px to 53px and the air inside each tab
+   from thirty pixels to ten, which is correct as a measurement and wrong as a
+   bar to look at: the marks ended up floating in a slot with a fifth of a
+   centimetre above them, and the row stopped being a row and became a strip. A
+   tab bar is mostly padding by design - that is the whole reason a thumb can hit
+   it - so the height is not the thing to economise on, the surplus is.
+
+   Kept: the mark, the name and the fifty-six pixel disc, all at the size they
+   were. Given back: a little of the height the disc was taking from the four
+   tabs beside it, and about half the air inside them. Seventy-six became sixty-
+   three, with nine pixels above and below the content instead of thirty.
+
+   Scoped to a screen with room for it. A phone on its side has a rule of its own
+   further up that drops the tabs to forty pixels and lays them on their side; this
+   comes later in the file and would otherwise quietly undo that, which on a
+   360px-tall screen is most of it. */
+@media (min-height: 481px) {
+  .tab-bar { padding: 3px 5px 4px; }
+  .tab-bar .tab { min-height: 56px; padding: 8px 2px 6px; }
+  .tab-bar .tab[data-tab-id="shop"] .tab-ic { margin-bottom: -14px; }
+}
+
+/* The room a page keeps at its foot follows the bar down. It was ninety-two
+   pixels, worked out for the seventy-six pixel bar plus the ten it floats in
+   plus the disc standing above it; with the bar at sixty-three that is nineteen
+   pixels of dead gap under the last row of every page. */
+@media (min-height: 481px) {
+  .pb-safe, .pb-dock { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* The same correction for a phone on its side, where the tabs lie on their side
+   but the shop's disc is still the tallest thing in the row and still decides how
+   tall the bar is — twenty-one pixels of air above the mark and twenty-six below
+   it. The disc stops paying for its own height there too, by rather less, because
+   on a 360px screen the bar cannot be pushed as far. */
+@media (max-height: 480px) and (orientation: landscape) {
+  .tab-bar .tab[data-tab-id="shop"] .tab-ic { margin-bottom: -16px; }
+}

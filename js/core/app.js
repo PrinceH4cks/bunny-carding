@@ -23,6 +23,35 @@ export function el(tag, attrs = {}, html = "") {
 export const inr = (n) =>
   "\u20B9" + Number(n || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 });
 
+/* An amount that has outgrown the box it is printed in.
+
+   At eleven digits a balance stops being a figure anyone reads at a glance and
+   becomes a row of digits they have to count across. The shop's own wallet row
+   was doing exactly that: a fourteen figure number in a box meant for four, and
+   the fitting that stopped it overflowing had also stopped it being readable.
+
+   Past a crore it is written the way the figure is said out loud in India — in
+   crores — and below one it is left exactly as it was. A crore is the boundary
+   because that is where a grouped number stops being glanceable; the ones between
+   a lakh and a crore are still nine characters and still read fine, so they are
+   left alone rather than abbreviated for the sake of a rule.
+
+   Whole crores, no decimals. 12,34,56,789 is "12 Cr" and not "12.35 Cr": a
+   balance is rounded to the rupee everywhere else in this app, and carrying two
+   decimal places on a rounded-down crore would imply a precision the figure does
+   not have. It is a shorter, honest version of the number rather than a smaller
+   one.
+
+   The exact amount is always a hover away, and on a phone a long press away,
+   because "12 Cr" is something to recognise with and not something to check a
+   balance against. */
+export const compactInr = (n) => {
+  const v = Math.abs(Number(n || 0));
+  const negative = Number(n || 0) < 0 ? "-" : "";
+  if (v >= 1e7) return negative + "\u20B9" + Math.round(v / 1e7) + " Cr";
+  return inr(n);
+};
+
 export const rupees = (n) => Math.round(Number(n || 0));
 
 /* ---------- dates ---------- */

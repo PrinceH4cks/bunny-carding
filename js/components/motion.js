@@ -222,7 +222,14 @@ function scrollBits() {
    9. COUNT-UP
    ========================================================= */
 function counters() {
-  const nums = $$(".stat-v, .hero-stats b, .price, .wallet-balance");
+  /* A figure written in crores is left out. Its text parses perfectly well as a
+     number — the regex takes "₹12 Cr" apart into a rupee sign, a twelve and a
+     suffix — which is exactly the problem: it would count up from nothing to
+     twelve crores, showing "₹7 Cr" on the way, and a balance counting itself up
+     through figures it is not at is worse than one that simply appears. The
+     twelve is not the balance; it is the balance divided by a crore and rounded.
+     So an abbreviated figure opts out of the animation and is written once. */
+  const nums = $$(".stat-v:not([data-no-count]), .hero-stats b, .price, .wallet-balance:not([data-no-count])");
   if (!nums.length || reduce) return;
 
   const run = (n) => {

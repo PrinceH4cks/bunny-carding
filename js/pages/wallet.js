@@ -6,7 +6,7 @@ import { app, auth } from "../core/firebase-config.js";
 import { db } from "../core/db.js";
 
 /* /wallet-page.js */
-import { $, $$, inr, esc, fmtDate, pageUrl, isEmail, setError } from "../core/app.js";
+import { $, $$, inr, compactInr, esc, fmtDate, pageUrl, isEmail, setError } from "../core/app.js";
 import { toast } from "../components/toast.js";
 import { emptyState } from "../components/ui.js";
 import { openModal, closeModal } from "../components/modal.js";
@@ -38,21 +38,57 @@ const TYPE = {
 
 /* motion.js counts .wallet-balance up from zero and re-reads dataset.raw on the
    last frame, so a plain textContent write gets clobbered when the animation is
-   still running. Writing both keeps the animation and the real value in step. */
-function setNum(node, text) {
+   still running. Writing both keeps the animation and the real value in step.
+
+   Past a crore the figure is shortened to "₹12 Cr" and the full amount goes into
+   the title, where a hover or a long press will find it. The node is also marked
+   so the count-up leaves it alone: it would otherwise read the twelve as the
+   balance and count up to it, passing through amounts that are not real. */
+function setNum(node, text, full) {
   if (!node) return;
   node.textContent = text;
   node.dataset.raw = text;
+  if (full && full !== text) {
+    node.title = full;
+    node.dataset.noCount = "";
+  } else {
+    node.removeAttribute("title");
+    node.removeAttribute("data-no-count");
+  }
 }
+
+/* What the customer is shown of a ledger entry, as opposed to what the shop
+   keeps.
+
+   A reference is worth printing when it means something to the person reading it
+   — a deposit reference they can quote to support. An adjustment made by staff
+   carries an internal marker instead, "admin:" followed by the account that made
+   it, and that is the shop's own business rather than theirs. It stays in the
+   ledger where support can reach it; it is not printed here.
+
+   The same applies to the note, and for the note it also covers the entries
+   written before this was noticed: those have the marker welded onto the end of
+   the text, so a trailing one is trimmed for display rather than left sitting
+   under a date in a list the customer is reading. Both were showing the account
+   id twice on one line, once as the heading and again beside the date. */
+const customerNote = (note, type) => {
+  const raw = String(note || "").replace(/\s*\(\s*admin:[^)]*\)\s*$/i, "").trim();
+  return raw || (type === "credit" ? "Wallet top-up" : "Purchase");
+};
+
+const customerRef = (ref) => {
+  const s = String(ref || "").trim();
+  return /^admin:/i.test(s) ? "" : s;
+};
 
 function paint() {
   const w = getWalletCache || { balance: 0 };
   const credit = TXNS.filter((t) => t.type === "credit").reduce((s, t) => s + Number(t.amount || 0), 0);
   const spent = TXNS.filter((t) => t.type === "debit").reduce((s, t) => s + Number(t.amount || 0), 0);
 
-  setNum($("#wBalance"), inr(w.balance));
-  setNum($("#wCredit"), inr(credit));
-  setNum($("#wSpent"), inr(spent));
+  setNum($("#wBalance"), compactInr(w.balance), inr(w.balance));
+  setNum($("#wCredit"), compactInr(credit), inr(credit));
+  setNum($("#wSpent"), compactInr(spent), inr(spent));
   setNum($("#wCount"), String(TXNS.length));
   $("#wSince").textContent = w.createdAt ? "since " + fmtDate(w.createdAt, false) : "";
 
@@ -84,13 +120,17 @@ function paint() {
 
   box.innerHTML = TXNS.map((t) => {
     const m = TYPE[t.type] || TYPE.debit;
+    const ref = customerRef(t.ref);
+    const shown = compactInr(t.amount);
+    const full = inr(t.amount);
     return '<div class="txn-row">' +
       '<span class="txn-ic ' + m.cls + '">' + icon(m.ic) + "</span>" +
       "<div style=\"min-width:0\">" +
-        '<b class="fs-sm" style="display:block">' + esc(t.note || (t.type === "credit" ? "Wallet top-up" : "Purchase")) + "</b>" +
-        '<small class="text-muted">' + fmtDate(t.createdAt) + (t.ref ? " &middot; " + esc(t.ref) : "") + "</small>" +
+        '<b class="fs-sm" style="display:block">' + esc(customerNote(t.note, t.type)) + "</b>" +
+        '<small class="text-muted">' + fmtDate(t.createdAt) + (ref ? " &middot; " + esc(ref) : "") + "</small>" +
       "</div>" +
-      '<div class="txn-amt ' + m.cls + '">' + m.sign + inr(t.amount) + "</div>" +
+      '<div class="txn-amt ' + m.cls + '"' + (shown === full ? "" : ' title="' + esc(full) + '"') + ">" +
+        m.sign + shown + "</div>" +
       "</div>";
   }).join("");
 }
